@@ -1,6 +1,5 @@
 package com.example.pruebastfg.ui
 import android.content.Context
-import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -15,11 +14,30 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.example.pruebastfg.ui.data.storage.PreferencesRepository
+import kotlinx.coroutines.flow.Flow
 
-class AppViewModel: ViewModel() {
+//private val Context.dataStore by preferencesDataStore(name = "settings")
+
+class AppViewModel(private val repository: PreferencesRepository): ViewModel() {
+
 
     private val _uiState = MutableStateFlow(AppUiState())
     val uiState: StateFlow<AppUiState> = _uiState.asStateFlow()
+
+    fun updateUserName(userName: String) {
+        _uiState.value = _uiState.value.copy(userName = userName)
+    }
+
+//    fun saveUserName(userName: String) {
+//        viewModelScope.launch {
+//            repository.saveUserName(userName)
+//        }
+//    }
+//
+//    fun getUserName(): Flow<String?> {
+//        return repository.getUserName()
+//    }
 
     fun getInstalledApps(context: Context): List<AppModel> {
         val packageManager = context.packageManager
@@ -50,6 +68,8 @@ class AppViewModel: ViewModel() {
                 )
             }
     }
+
+
     fun logInstalledApps(context: Context) {
         val packageManager = context.packageManager
         val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
@@ -68,5 +88,8 @@ class AppViewModel: ViewModel() {
         draw(canvas)
         return bitmap
     }
+
+
+
 
 }

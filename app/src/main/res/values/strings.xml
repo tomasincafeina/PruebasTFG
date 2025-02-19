@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PruebasTFG</string>
+    <string name="preference_file_key">preference_file\n</string>
 </resources>
