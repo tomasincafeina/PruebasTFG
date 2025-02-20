@@ -29,15 +29,6 @@ class AppViewModel(private val repository: PreferencesRepository): ViewModel() {
         _uiState.value = _uiState.value.copy(userName = userName)
     }
 
-//    fun saveUserName(userName: String) {
-//        viewModelScope.launch {
-//            repository.saveUserName(userName)
-//        }
-//    }
-//
-//    fun getUserName(): Flow<String?> {
-//        return repository.getUserName()
-//    }
 
     fun getInstalledApps(context: Context): List<AppModel> {
         val packageManager = context.packageManager
