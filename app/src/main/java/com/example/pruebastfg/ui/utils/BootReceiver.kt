@@ -1,8 +1,9 @@
-package com.example.pruebastfg
+package com.example.pruebastfg.ui.utils
 
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.example.pruebastfg.MainActivity
 
 class BootReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {

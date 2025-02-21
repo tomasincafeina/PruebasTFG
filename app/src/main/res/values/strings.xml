@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">PruebasTFG</string>
     <string name="preference_file_key">preference_file\n</string>
+    <string name="setup">Setup</string>
+    <string name="home">Home</string>
+    <string name="configuration">Configuration</string>
+    <string name="back_button">back_button\n</string>
 </resources>

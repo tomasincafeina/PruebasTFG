@@ -17,7 +17,8 @@ class PreferencesRepository(context: Context) {
 
     companion object {
         // Use a more descriptive name for the key and make it a constant
-        val USER_NAME_KEY = androidx.datastore.preferences.core.stringPreferencesKey("user_name")
+        private val USER_NAME_KEY = androidx.datastore.preferences.core.stringPreferencesKey("user_name")
+        private val SETUP_DONE_KEY = androidx.datastore.preferences.core.booleanPreferencesKey("setup_done")
     }
 
     /**
@@ -35,7 +36,6 @@ class PreferencesRepository(context: Context) {
             }
         }
     }
-
     /**
      * Retrieves the user's name from DataStore.
      *
@@ -46,13 +46,23 @@ class PreferencesRepository(context: Context) {
             preferences[USER_NAME_KEY] ?: "desconocido"
         }
     }
-
     /**
      * Clears the user's name from DataStore.
      */
     suspend fun clearUserName() {
         dataStore.edit { preferences ->
             preferences.remove(USER_NAME_KEY)
+        }
+    }
+
+    fun setupStatus(): Flow<Boolean> {
+        return dataStore.data.map { preferences ->
+            preferences[SETUP_DONE_KEY] ?: false
+        }
+    }
+    suspend fun setSetupDone() {
+        dataStore.edit { preferences ->
+            preferences[SETUP_DONE_KEY] = true
         }
     }
 }

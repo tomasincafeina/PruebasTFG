@@ -19,10 +19,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            MainScreen { packageName ->
-                val intent = packageManager.getLaunchIntentForPackage(packageName)
-                startActivity(intent)
+            PruebasTFGTheme {
+                MainScreen(
+                    { packageName ->
+                    val intent = packageManager.getLaunchIntentForPackage(packageName)
+                    startActivity(intent)
+                }
+                )
             }
+
         }
     }
 }
