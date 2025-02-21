@@ -58,6 +58,8 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.data.storage.AppViewModelFactory
 import com.example.pruebastfg.ui.data.storage.PreferencesRepository
+import com.example.pruebastfg.ui.screens.setup.UserNameSetupScreen
+import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
 import com.example.pruebastfg.ui.theme.Purple40
 import kotlinx.coroutines.launch
 
@@ -65,6 +67,14 @@ enum class AppScreens(@StringRes val title: Int) {
     Setup(title = R.string.setup),
     Home(title = R.string.home),
     Configuration(title = R.string.configuration)
+}
+
+enum class SetupSubScreens(@StringRes val title: Int) {
+    welcome(title = R.string.welcome),
+    username(title = R.string.username),
+    modecolor(title = R.string.modecolor),
+    fontsize(title = R.string.fontsize),
+    launcher(title = R.string.launcher)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,33 +99,33 @@ fun AppTopBar(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         modifier = modifier,
-        navigationIcon = {
-            if (canNavigateBack) {
-                IconButton(onClick = navigateUp) {
-                    Icon(
-                        imageVector = Icons.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back_button)
-                    )
-                }
-            }
-        }
+//        navigationIcon = {
+//            if (canNavigateBack) {
+//                IconButton(onClick = navigateUp) {
+//                    Icon(
+//                        imageVector = Icons.Filled.ArrowBack,
+//                        contentDescription = stringResource(R.string.back_button)
+//                    )
+//                }
+//            }
+//        }
     )
 }
-
 @Composable
 fun MainScreen(
     onAppClick: (String) -> Unit,
     navController: NavHostController = rememberNavController()
-
 ) {
-    //navhost
-    // Get current back stack entry
+    // Obtener la entrada actual de la pila de navegación
     val backStackEntry by navController.currentBackStackEntryAsState()
-    // Get the name of the current screen
+
+    // Determinar la pantalla actual
     val currentScreen = AppScreens.entries.find {
         it.name == backStackEntry?.destination?.route
     } ?: AppScreens.Home
 
+    // Determinar si la pantalla actual es parte del flujo de Setup
+    val isSetupFlow = backStackEntry?.destination?.route in SetupSubScreens.entries.map { it.name }
 
     val context = LocalContext.current
     val repository = remember { PreferencesRepository(context) }
@@ -123,7 +133,6 @@ fun MainScreen(
 
     val uiState by viewModel.uiState.collectAsState()
     val userName by repository.getUserName().collectAsState(initial = "Cargando...")
-
     val apps = viewModel.getInstalledApps(LocalContext.current)
 
     Scaffold(
@@ -138,55 +147,67 @@ fun MainScreen(
             )
         },
         bottomBar = {
-            BottomAppBar(
-                currentScreen = currentScreen,
-                navController = navController,
-                canNavigateBack = navController.previousBackStackEntry != null,
-                navigateUp = { navController.popBackStack() },
-                modifier = Modifier
-            )
+            // Mostrar el BottomAppBar solo si estamos en el flujo de Setup
+            if (isSetupFlow) {
+                SetupBottomAppBar(
+                    currentScreen = SetupSubScreens.entries.find {
+                        it.name == backStackEntry?.destination?.route
+                    } ?: SetupSubScreens.welcome,
+                    navController = navController,
+                    onNext = {
+                        when (backStackEntry?.destination?.route) {
+                            SetupSubScreens.welcome.name -> navController.navigate(SetupSubScreens.username.name)
+                            SetupSubScreens.username.name -> navController.navigate(AppScreens.Home.name)
+                        }
+                    },
+                    onBack = { navController.popBackStack() }
+                )
+            }
         }
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination = AppScreens.Setup.name,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-
         ) {
+            // Pantalla de Setup
             composable(route = AppScreens.Setup.name) {
-                NameInput(
+                WelcomeSetupScreen(
+                    navController = navController,
+                    navigateForward = { navController.navigate(SetupSubScreens.username.name) },
+                    modifier = Modifier
+                )
+            }
+
+            // Subpantallas de Setup
+            composable(route = SetupSubScreens.username.name) {
+                UserNameSetupScreen(
+                    navController = navController,
                     userName = uiState.userName,
                     onNameChange = { viewModel.updateUserName(it) },
                     btnSaveOnClick = {
                         viewModel.viewModelScope.launch {
-                            repository.saveUserName(
-                                uiState.userName,
-                                context
-                            ) // Guarda el nombre correctamente
+                            repository.saveUserName(uiState.userName, context)
                         }
-//                    viewModelScope.launch:
-//                    viewModelScope is a CoroutineScope tied to the ViewModel.
-//                    It automatically cancels any running coroutines when the ViewModel is cleared
-//                    (e.g., when the Activity/Fragment is destroyed).
-//                    launch is used to start a new coroutine for non-blocking tasks.
                     },
                     btnClearOnClick = {
                         viewModel.viewModelScope.launch {
-                            repository.clearUserName() // Borra el nombre correctamente
+                            repository.clearUserName()
                         }
                     },
                     btnNextOnClick = {
-                        navController.navigate(AppScreens.Home.name)
+                        navController.navigate(AppScreens.Home.name) {
+                            popUpTo(AppScreens.Setup.name) { inclusive = true }
+                        }
                     }
                 )
             }
+
+            // Pantalla de Home
             composable(route = AppScreens.Home.name) {
                 AppsListScreen(apps = apps, onAppClick = onAppClick)
-
             }
         }
     }
@@ -209,7 +230,7 @@ fun BottomAppBar(
             if (canNavigateBack) {
                 Card(
                     modifier = Modifier
-                        .clickable {navigateUp()}
+                        .clickable { navigateUp() }
                         .padding(10.dp)
                         .fillMaxSize()
                 )
@@ -238,51 +259,6 @@ fun BottomAppBar(
         }
     )
 }
-
-@Composable
-fun NameInput(
-    userName: String,
-    onNameChange: (String) -> Unit,
-    btnSaveOnClick: () -> Unit = {},
-    btnClearOnClick: () -> Unit = {},
-    btnNextOnClick: () -> Unit = {}
-
-) {
-
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(10.dp)
-    ) {
-        OutlinedTextField(
-            value = userName,
-            onValueChange = { onNameChange(it) },
-            label = { Text("Escribe tu nombre") }
-        )
-
-        Row {
-            Button(
-                onClick = btnSaveOnClick
-            ) {
-                Text("Guardar nombre")
-            }
-            Button(
-                onClick = btnClearOnClick
-            ) {
-                Text("Borrar nombre")
-            }
-        }
-        Button(
-            onClick = btnNextOnClick
-        ) {
-            Text("Siguiente")
-
-        }
-    }
-}
-
 
 @Composable
 fun AppsListScreen(apps: List<AppModel>, onAppClick: (String) -> Unit) {

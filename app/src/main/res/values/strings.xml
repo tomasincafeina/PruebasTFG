@@ -5,4 +5,9 @@
     <string name="home">Home</string>
     <string name="configuration">Configuration</string>
     <string name="back_button">back_button\n</string>
+    <string name="welcome">Welcome</string>
+    <string name="username">username</string>
+    <string name="modecolor">modecolor</string>
+    <string name="fontsize">fontsize</string>
+    <string name="launcher">launcher</string>
 </resources>
