@@ -13,6 +13,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -33,7 +34,8 @@ import com.example.pruebastfg.R
 fun WelcomeSetupScreen(
     navController: NavHostController,
     navigateForward: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    setUpStatus: () -> Unit
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -52,9 +54,9 @@ fun WelcomeSetupScreen(
         )
     }
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
-        Card(
+        ElevatedCard(
+            onClick = {navigateForward()},
             modifier = Modifier
-                .clickable { navigateForward() }
                 .padding(10.dp)
                 .fillMaxWidth()
         )

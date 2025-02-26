@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -17,8 +18,10 @@ class PreferencesRepository(context: Context) {
 
     companion object {
         // Use a more descriptive name for the key and make it a constant
-        private val USER_NAME_KEY = androidx.datastore.preferences.core.stringPreferencesKey("user_name")
-        private val SETUP_DONE_KEY = androidx.datastore.preferences.core.booleanPreferencesKey("setup_done")
+        private val USER_NAME_KEY =
+            androidx.datastore.preferences.core.stringPreferencesKey("user_name")
+        private val SETUP_DONE_KEY =
+            androidx.datastore.preferences.core.booleanPreferencesKey("setup_done")
     }
 
     /**
@@ -29,13 +32,18 @@ class PreferencesRepository(context: Context) {
     suspend fun saveUserName(userName: String, context: Context) {
         // Use DataStore's edit function for atomic updates.
         if (userName.isBlank()) {
-            Toast.makeText(context, "El nombre de usuario no puede estar en blanco", Toast.LENGTH_SHORT).show()
-        }else{
+            Toast.makeText(
+                context,
+                "El nombre de usuario no puede estar en blanco",
+                Toast.LENGTH_SHORT
+            ).show()
+        } else {
             dataStore.edit { preferences ->
                 preferences[USER_NAME_KEY] = userName
             }
         }
     }
+
     /**
      * Retrieves the user's name from DataStore.
      *
@@ -46,6 +54,7 @@ class PreferencesRepository(context: Context) {
             preferences[USER_NAME_KEY] ?: "desconocido"
         }
     }
+
     /**
      * Clears the user's name from DataStore.
      */
@@ -55,7 +64,7 @@ class PreferencesRepository(context: Context) {
         }
     }
 
-    fun setupStatus(): Flow<Boolean> {
+    fun getSetupStatus(): Flow<Boolean?> {
         return dataStore.data.map { preferences ->
             preferences[SETUP_DONE_KEY] ?: false
         }
@@ -65,4 +74,12 @@ class PreferencesRepository(context: Context) {
             preferences[SETUP_DONE_KEY] = true
         }
     }
+    suspend fun setSetupDoneContrario() {
+        dataStore.edit { preferences ->
+            val currentStatus = preferences[SETUP_DONE_KEY] ?: false
+            preferences[SETUP_DONE_KEY] = !currentStatus
+
+        }
+    }
+
 }

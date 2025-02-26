@@ -19,12 +19,10 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.BottomAppBarDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -43,11 +41,7 @@ import com.example.pruebastfg.ui.models.AppModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavHostController
@@ -60,8 +54,9 @@ import com.example.pruebastfg.ui.data.storage.AppViewModelFactory
 import com.example.pruebastfg.ui.data.storage.PreferencesRepository
 import com.example.pruebastfg.ui.screens.setup.UserNameSetupScreen
 import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
-import com.example.pruebastfg.ui.theme.Purple40
+
 import kotlinx.coroutines.launch
+
 
 enum class AppScreens(@StringRes val title: Int) {
     Setup(title = R.string.setup),
@@ -111,6 +106,7 @@ fun AppTopBar(
 //        }
     )
 }
+
 @Composable
 fun MainScreen(
     onAppClick: (String) -> Unit,
@@ -132,7 +128,8 @@ fun MainScreen(
     val viewModel: AppViewModel = viewModel(factory = AppViewModelFactory(repository))
 
     val uiState by viewModel.uiState.collectAsState()
-    val userName by repository.getUserName().collectAsState(initial = "Cargando...")
+    val userName by repository.getUserName().collectAsState(initial = "...")
+    val setupStatus by repository.getSetupStatus().collectAsState(initial = null)
     val apps = viewModel.getInstalledApps(LocalContext.current)
 
     Scaffold(
@@ -167,7 +164,11 @@ fun MainScreen(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = AppScreens.Setup.name,
+            startDestination = if (setupStatus == false) {
+                AppScreens.Setup.name
+            } else {
+                AppScreens.Home.name
+            },
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
@@ -177,7 +178,12 @@ fun MainScreen(
                 WelcomeSetupScreen(
                     navController = navController,
                     navigateForward = { navController.navigate(SetupSubScreens.username.name) },
-                    modifier = Modifier
+                    modifier = Modifier,
+                    setUpStatus = {
+                        viewModel.viewModelScope.launch {
+                            repository.setSetupDone()
+                        }
+                    }
                 )
             }
 
@@ -201,77 +207,51 @@ fun MainScreen(
                         navController.navigate(AppScreens.Home.name) {
                             popUpTo(AppScreens.Setup.name) { inclusive = true }
                         }
-                    }
+                    },
+                    setupStatus = setupStatus!!
                 )
             }
 
             // Pantalla de Home
             composable(route = AppScreens.Home.name) {
-                AppsListScreen(apps = apps, onAppClick = onAppClick)
+                setupStatus?.let { it1 ->
+                    AppsListScreen(
+                        apps = apps, onAppClick = onAppClick,
+                        changeSetupDoneStatus = {
+                            viewModel.viewModelScope.launch {
+                                repository.setSetupDoneContrario()
+                            }
+                        },
+                        setupStatus = it1
+                    )
+                }
             }
         }
     }
 }
 
 @Composable
-fun BottomAppBar(
-    currentScreen: AppScreens,
-    navController: NavHostController,
-    canNavigateBack: Boolean,
-    navigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+fun AppsListScreen(
+    apps: List<AppModel>,
+    onAppClick: (String) -> Unit,
+    changeSetupDoneStatus: () -> Unit,
+    setupStatus: Boolean
 ) {
-    androidx.compose.material3.BottomAppBar(
-        modifier = modifier.fillMaxWidth(),
-        containerColor = MaterialTheme.colorScheme.surface,
-        tonalElevation = 0.dp,
-        contentColor = MaterialTheme.colorScheme.primaryContainer,
-        actions = {
-            if (canNavigateBack) {
-                Card(
-                    modifier = Modifier
-                        .clickable { navigateUp() }
-                        .padding(10.dp)
-                        .fillMaxSize()
-                )
-                {
-                    Row(
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxSize(),
-
-                        ) {
-                        Icon(
-                            imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = stringResource(R.string.back_button)
-                        )
-                        Text(
-                            text = "Atrás",
-                            textAlign = TextAlign.Center,
-                            fontSize = 20.sp,
-                            modifier = Modifier.padding(10.dp)
-
-                        )
-                    }
-
-                }
-            }
+    Column {
+        Button(onClick = (changeSetupDoneStatus)) {
+            Text(text = "Cambiar estado del Setup")
         }
-    )
-}
-
-@Composable
-fun AppsListScreen(apps: List<AppModel>, onAppClick: (String) -> Unit) {
-
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        contentPadding = PaddingValues(10.dp),
-        modifier = Modifier.fillMaxSize(),
-        horizontalArrangement = Arrangement.Center,
-        verticalArrangement = Arrangement.Top
-    ) {
-        items(apps) { app ->
-            AppItem(app = app, onClick = { onAppClick(app.packageName) })
+        Text(text = setupStatus.toString())
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            contentPadding = PaddingValues(10.dp),
+            modifier = Modifier.fillMaxSize(),
+            horizontalArrangement = Arrangement.Center,
+            verticalArrangement = Arrangement.Top
+        ) {
+            items(apps) { app ->
+                AppItem(app = app, onClick = { onAppClick(app.packageName) })
+            }
         }
     }
 }

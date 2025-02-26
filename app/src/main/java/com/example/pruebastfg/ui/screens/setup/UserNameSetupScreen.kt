@@ -9,6 +9,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -21,7 +22,8 @@ fun UserNameSetupScreen(
     onNameChange: (String) -> Unit,
     btnSaveOnClick: () -> Unit = {},
     btnClearOnClick: () -> Unit = {},
-    btnNextOnClick: () -> Unit = {}
+    btnNextOnClick: () -> Unit = {},
+    setupStatus: Boolean
 
 ) {
 
@@ -32,6 +34,7 @@ fun UserNameSetupScreen(
             .fillMaxWidth()
             .padding(10.dp)
     ) {
+        Text(text = setupStatus.toString())
         OutlinedTextField(
             value = userName,
             onValueChange = { onNameChange(it) },
