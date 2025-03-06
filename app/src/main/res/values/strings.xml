@@ -10,4 +10,8 @@
     <string name="modecolor">modecolor</string>
     <string name="fontsize">fontsize</string>
     <string name="launcher">launcher</string>
+    <string name="addapps">AddApps</string>
+    <string name="removeapps">RemoveApps</string>
+    <string name="terminar">Terminar</string>
+    <string name="favoriteapps">favoriteapps</string>
 </resources>

@@ -1,5 +1,6 @@
 package com.example.pruebastfg.ui.screens.setup
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,7 +39,7 @@ fun UserNameSetupScreen(
         OutlinedTextField(
             value = userName,
             onValueChange = { onNameChange(it) },
-            label = { Text("Escribe tu nombre") }
+            label = { Text("Escribe tu nombre") },
         )
 
         Row {
@@ -54,7 +55,7 @@ fun UserNameSetupScreen(
             }
         }
         Button(
-            onClick = btnNextOnClick
+            onClick = btnNextOnClick,
         ) {
             Text("Siguiente")
 

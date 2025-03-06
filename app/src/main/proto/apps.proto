@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "com.example.pruebastfg";
+option java_multiple_files = true;
+
+// AppInfo es un mensaje TOP-LEVEL (no anidado)
+message AppInfo {
+    string id = 1;
+    string name = 2;
+    bytes icon = 3;
+    string package_name = 4;
+    bool is_favorite = 5;
+}
+
+// UserApps contiene una lista de AppInfo
+message UserApps {
+    repeated AppInfo apps = 1;
+}
