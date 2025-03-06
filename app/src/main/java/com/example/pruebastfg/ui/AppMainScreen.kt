@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -46,11 +47,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.Button
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Shapes
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -94,7 +97,7 @@ fun AppTopBar(
     CenterAlignedTopAppBar(
         title = {
             Text(
-                text = topBarTitle, style = MaterialTheme.typography.headlineLarge
+                text = topBarTitle, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.SemiBold
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -322,6 +325,7 @@ fun AllAppsListScreen(
             onClick = onClickTerminar, modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
+                .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
         ) {
             Row(
                 modifier = Modifier
@@ -363,8 +367,8 @@ fun AppItem(app: AppModel, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = app.name, fontSize = 20.sp, maxLines = 2, textAlign = TextAlign.Center
-            )
+                text = app.name, fontSize = 20.sp, maxLines = 2, textAlign = TextAlign.Center,
+                )
         }
     }
 }
@@ -479,6 +483,8 @@ fun RemoveAppsFromProto(
             onClick = onClickTerminar, modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp)
+                .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
+
         ) {
             Row(
                 modifier = Modifier
@@ -539,7 +545,7 @@ fun AppItemProto(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                    Spacer(modifier = Modifier.width(25.dp))
+                    Spacer(modifier = Modifier.width(32.dp))
 
 
                 Text(

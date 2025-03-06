@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,7 +54,7 @@ fun SetupBottomAppBar(
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp)
-                            .border(1.dp, Color.Black, shape = Shapes().large)
+                            .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
                     ) {
                         Row(
                             modifier = Modifier
@@ -70,6 +71,7 @@ fun SetupBottomAppBar(
                                 modifier = Modifier.padding(start = 10.dp),
                                 text = "Atrás",
                                 fontSize = 20.sp,
+                                fontWeight = FontWeight.SemiBold,
                                 textAlign = TextAlign.Center
                             )
                         }
@@ -85,7 +87,7 @@ fun SetupBottomAppBar(
                     modifier = Modifier
                         .weight(1f)
                         .padding(start = 8.dp)
-                        .border(1.dp, Color.Black, shape = Shapes().large)
+                        .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
                 ) {
                     Row(
                         modifier = Modifier
@@ -97,6 +99,7 @@ fun SetupBottomAppBar(
                         Text(
                             text = "Siguiente",
                             fontSize = 20.sp,
+                            fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center
                         )
                     }

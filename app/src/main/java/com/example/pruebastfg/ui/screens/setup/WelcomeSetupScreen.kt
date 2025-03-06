@@ -1,5 +1,6 @@
 package com.example.pruebastfg.ui.screens.setup
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.CardColors
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -59,6 +61,8 @@ fun WelcomeSetupScreen(
             modifier = Modifier
                 .padding(10.dp)
                 .fillMaxWidth()
+                .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
+
         )
         {
             Row(
@@ -71,6 +75,7 @@ fun WelcomeSetupScreen(
                     text = "Comenzar",
                     textAlign = TextAlign.Center,
                     fontSize = 20.sp,
+                    fontWeight = FontWeight.SemiBold,
                     modifier = Modifier.padding(10.dp)
 
                 )
