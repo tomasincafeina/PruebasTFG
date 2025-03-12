@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
@@ -39,50 +40,32 @@ fun AppItemProto(
 //    val bitmap = remember(appInfo.icon) {
 //        appInfo.icon?.toBitmap()
 //    }
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f) // Make the card square
-            .padding(12.dp)
-    ) {
-        Column(
+    Column(modifier = Modifier.padding(bottom = 10.dp)) {
+        Card(
             modifier = Modifier
-                .fillMaxSize()
-                .clickable { onClick() },
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+                .fillMaxWidth()
+                .aspectRatio(1f) // Make the card square
+                .padding(10.dp)
         ) {
-            Image(
-                bitmap = bitmap!!.asImageBitmap(),
-                contentDescription = appInfo.name,
-                modifier = Modifier.size(90.dp),
-                contentScale = ContentScale.Fit
-            )
-            Spacer(modifier = Modifier.height(10.dp))
-            Row(
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .run {
-                        if (appInfo.isFavorite == true) {
-                            padding(horizontal = 10.dp)
-                        } else {
-                            this
-                        }
-                    },
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .fillMaxSize().clickable { onClick() }.padding(10.dp),
+                contentAlignment = Alignment.BottomEnd
+
             ) {
-                Spacer(modifier = Modifier.width(32.dp))
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Image(
+                        bitmap = bitmap!!.asImageBitmap(),
+                        contentDescription = appInfo.name,
+                        modifier = Modifier.size(110.dp),
+                        contentScale = ContentScale.Fit
+                    )
 
-
-                Text(
-                    modifier = Modifier.weight(1f),
-                    text = appInfo.name,
-                    fontSize = 20.sp,
-                    maxLines = 2,
-                    textAlign = TextAlign.Center,
-                )
+                }
                 // Espacio reservado para el ícono de la estrella
                 Box(
                     modifier = Modifier.size(30.dp), // Tamaño fijo para el ícono
@@ -98,6 +81,20 @@ fun AppItemProto(
                     }
                 }
             }
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                modifier = Modifier,
+                text = appInfo.name,
+                fontSize = 20.sp,
+                maxLines = 2,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
