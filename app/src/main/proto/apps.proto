@@ -16,3 +16,4 @@ message AppInfo {
 message UserApps {
     repeated AppInfo apps = 1;
 }
+

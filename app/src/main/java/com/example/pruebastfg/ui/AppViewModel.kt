@@ -3,7 +3,6 @@ package com.example.pruebastfg.ui
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -18,11 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.example.pruebastfg.ui.data.storage.PreferencesRepository
-import com.example.pruebastfg.ui.utils.toBitmap
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.io.ByteArrayOutputStream
-import java.util.UUID
 
 //private val Context.dataStore by preferencesDataStore(name = "settings")
 
@@ -68,6 +64,7 @@ class AppViewModel(
             prefsRepo.setSetupDoneContrario()
         }
     }
+
     // Métodos para Proto DataStore
     fun addApp(name: String, packageName: String, icon: Bitmap) {
         viewModelScope.launch {
@@ -88,6 +85,9 @@ class AppViewModel(
         return result
     }
 
+    fun toogleIsSelected(app: AppModel) {
+        app.isSelected = !app.isSelected
+    }
 
     fun toggleFavorite(appId: String) {
         viewModelScope.launch {
@@ -117,7 +117,8 @@ class AppViewModel(
                 AppModel(
                     name = it.loadLabel(packageManager).toString(),
                     icon = it.loadIcon(packageManager).toBitmap(),
-                    packageName = it.packageName
+                    packageName = it.packageName,
+                    isSelected = false
                 )
             }
     }
@@ -158,7 +159,4 @@ class AppViewModel(
         draw(canvas)
         return bitmap
     }
-
-
-
 }
