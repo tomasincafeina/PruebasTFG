@@ -10,21 +10,27 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pruebastfg.AppInfo
-import com.example.pruebastfg.ui.data.AppUiState
-import com.example.pruebastfg.ui.data.storage.AppsProtoRepository
+import com.example.pruebastfg.data.AppUiState
+import com.example.pruebastfg.data.storage.AppsProtoRepository
 import com.example.pruebastfg.ui.models.AppModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import com.example.pruebastfg.ui.data.storage.PreferencesRepository
+import com.example.pruebastfg.data.storage.PreferencesRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 //private val Context.dataStore by preferencesDataStore(name = "settings")
 
 class AppViewModel(
     private val prefsRepo: PreferencesRepository,
-    private val appsRepo: AppsProtoRepository
+    private val appsRepo: AppsProtoRepository,
+    context: Context
 ) : ViewModel() {
 
 
@@ -37,6 +43,15 @@ class AppViewModel(
 
     // Datos de Proto DataStore
     val apps: Flow<List<Pair<AppInfo, Bitmap?>>> = appsRepo.userApps
+
+    val allApps: StateFlow<List<AppModel>> get() = appsRepo.allApps
+
+    val startDestination: StateFlow<String> = setupDone
+        .map { isSetupDone ->
+            if (isSetupDone == false) AppScreens.Setup.name else AppScreens.Home.name
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), AppScreens.Home.name)
+
 
     // Lista de paquetes esenciales que queremos incluir
     val essentialPackages = listOf(
@@ -51,7 +66,6 @@ class AppViewModel(
         "com.google.android.deskclock",   // Reloj (Google)
         "com.android.deskclock",      // Reloj (AOSP)
     )
-
     // Métodos para Preferences DataStore
     fun saveUserName(name: String, context: Context) {
         viewModelScope.launch {
@@ -67,14 +81,14 @@ class AppViewModel(
 
     // Métodos para Proto DataStore
     fun addApp(name: String, packageName: String, icon: Bitmap) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepo.addApp(name, packageName, icon)
         }
     }
 
     fun addAppXX(name: String, packageName: String, icon: Bitmap): Boolean {
         var result = false
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             result = try {
                 appsRepo.addApp(name, packageName, icon)
                 true // App añadida correctamente
@@ -90,7 +104,7 @@ class AppViewModel(
     }
 
     fun toggleFavorite(appId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepo.toggleFavorite(appId)
         }
     }

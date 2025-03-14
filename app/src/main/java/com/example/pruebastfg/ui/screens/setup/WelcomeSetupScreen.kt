@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.pruebastfg.R
+import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 @Composable
 fun WelcomeSetupScreen(
@@ -55,32 +57,6 @@ fun WelcomeSetupScreen(
             text = "Vamos a comenzar con el proceso de ajuste"
         )
     }
-    Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center) {
-        ElevatedCard(
-            onClick = {navigateForward()},
-            modifier = Modifier
-                .padding(10.dp)
-                .fillMaxWidth()
-                .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
+    BigLowButton({ navigateForward() }, "Comenzar", false)
 
-        )
-        {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
-
-                ) {
-                Text(
-                    text = "Comenzar",
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    modifier = Modifier.padding(10.dp)
-
-                )
-            }
-
-        }
-    }
 }

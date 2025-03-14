@@ -1,29 +1,64 @@
-package com.example.pruebastfg.ui.data.storage
+package com.example.pruebastfg.data.storage
 
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.provider.ContactsContract.Data
+import androidx.core.graphics.drawable.toBitmap
 import androidx.datastore.core.DataStore
 import com.example.pruebastfg.UserApps
 import com.example.pruebastfg.AppInfo
+import com.example.pruebastfg.ui.models.AppModel
 import com.example.pruebastfg.ui.utils.toBitmap
 import com.example.pruebastfg.ui.utils.toByteString
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
 import java.util.UUID
 
 class AppsProtoRepository(
+    private val context: Context,
     private val dataStoreUserApps: DataStore<UserApps>,
 ) {
-
     // Obtener la lista de apps con Bitmap
     val userApps: Flow<List<Pair<AppInfo, Bitmap?>>> = dataStoreUserApps.data
         .map { userApps ->
-            userApps.appsList.map { appInfo ->
+            userApps.appsList
+                .map { appInfo ->
                 appInfo to appInfo.icon.toBitmap() // Convertir ByteString a Bitmap
             }
+                .sortedWith(
+                    compareByDescending<Pair<AppInfo, Bitmap?>> { (appInfo, _) -> appInfo.isFavorite } // Ordenar primero por isFavorite (true primero)
+                        .thenBy { (appInfo, _) -> appInfo.name } // Luego ordenar por nombre
+                )
         }
+
+    // Variable privada para almacenar allApps
+    private val _allApps = MutableStateFlow<List<AppModel>>(emptyList())
+
+    // StateFlow público para observar allApps
+    val allApps: StateFlow<List<AppModel>> get() = _allApps
+
+    init {
+        loadAllApps()
+    }
+
+    // Función para cargar allApps
+    fun loadAllApps() {
+        val packageManager = context.packageManager
+        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+
+        _allApps.value = apps.filter {
+            packageManager.getLaunchIntentForPackage(it.packageName) != null
+        }.map {
+            AppModel(
+                name = it.loadLabel(packageManager).toString(),
+                icon = it.loadIcon(packageManager).toBitmap(),
+                packageName = it.packageName
+            )
+        }.sortedBy { it.name  }
+    }
 
     suspend fun addApp(name: String, packageName: String, icon: Bitmap) {
         dataStoreUserApps.updateData { current ->

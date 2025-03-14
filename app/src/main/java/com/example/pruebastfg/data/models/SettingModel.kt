@@ -1,4 +1,4 @@
-package com.example.pruebastfg.ui.data.models
+package com.example.pruebastfg.data.models
 
 import androidx.compose.ui.graphics.vector.ImageVector
 

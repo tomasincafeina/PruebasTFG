@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -25,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 @Composable
 fun SetupBottomAppBar(
@@ -35,7 +37,9 @@ fun SetupBottomAppBar(
     modifier: Modifier = Modifier
 ) {
     androidx.compose.material3.BottomAppBar(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp),
         containerColor = MaterialTheme.colorScheme.surface,
         tonalElevation = 0.dp,
         contentColor = MaterialTheme.colorScheme.primaryContainer,
@@ -43,18 +47,25 @@ fun SetupBottomAppBar(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                    .padding(horizontal = 5.dp),
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 // Botón "Atrás"
                 if (navController.previousBackStackEntry != null) {
+//
                     ElevatedCard(
-                        onClick = {onBack()},
+                        shape = Shapes().large,
+                        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                        onClick = { onBack() },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(end = 8.dp)
-                            .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
+                            .padding(bottom = 10.dp, end = 5.dp)
+                            .border(
+                                2.dp,
+                                MaterialTheme.colorScheme.surfaceDim,
+                                shape = Shapes().large
+                            )
                     ) {
                         Row(
                             modifier = Modifier
@@ -64,43 +75,49 @@ fun SetupBottomAppBar(
                             horizontalArrangement = Arrangement.Center
                         ) {
                             Icon(
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "Atrás"
+                                imageVector = Icons.Rounded.ArrowBack,
+                                contentDescription = "Atrás",
+                                modifier = Modifier.size(30.dp)
                             )
+                            Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                modifier = Modifier.padding(start = 10.dp),
                                 text = "Atrás",
-                                fontSize = 20.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                textAlign = TextAlign.Center
+                                textAlign = TextAlign.Center,
+                                fontSize = 25.sp,
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
                             )
                         }
                     }
-                } else {
                     // Espacio vacío si no hay botón "Atrás"
-                    Spacer(modifier = Modifier.weight(1f))
+                    Spacer(modifier = Modifier.width(8.dp))
                 }
-
                 // Botón "Siguiente"
                 ElevatedCard(
+                    shape = Shapes().large,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                     onClick = { onNext() },
                     modifier = Modifier
                         .weight(1f)
-                        .padding(start = 8.dp)
-                        .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
+                        .padding(bottom = 10.dp)
+                        .border(
+                            2.dp,
+                            MaterialTheme.colorScheme.surfaceDim,
+                            shape = Shapes().large
+                        )
                 ) {
                     Row(
                         modifier = Modifier
                             .padding(20.dp)
-                            .fillMaxWidth(),
+                            .fillMaxSize(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
                         Text(
+                            modifier = Modifier.fillMaxHeight(),
                             text = "Siguiente",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            fontSize = 25.sp,
+                            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
                         )
                     }
                 }

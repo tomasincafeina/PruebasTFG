@@ -1,4 +1,4 @@
-package com.example.pruebastfg.ui.data.storage
+package com.example.pruebastfg.data.storage
 
 import android.app.AlertDialog
 import android.content.Context

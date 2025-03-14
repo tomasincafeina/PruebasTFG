@@ -1,4 +1,4 @@
-package com.example.pruebastfg.ui.data
+package com.example.pruebastfg.data
 
 data class AppUiState(
     val ActualScreen: String = "home",

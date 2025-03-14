@@ -66,6 +66,9 @@ dependencies {
     //material icons
     implementation("androidx.compose.material:material-icons-core")
 
+    //transiciones
+    implementation ("androidx.navigation:navigation-compose:2.7.7") // Revisa la versión más reciente
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

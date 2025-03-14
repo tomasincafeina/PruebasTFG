@@ -1,4 +1,4 @@
-package com.example.pruebastfg.ui.data.serializers
+package com.example.pruebastfg.data.serializers
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

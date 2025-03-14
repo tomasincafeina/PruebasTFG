@@ -14,4 +14,6 @@
     <string name="removeapps">RemoveApps</string>
     <string name="terminar">Terminar</string>
     <string name="favoriteapps">favoriteapps</string>
+    <string name="atras">Atrás</string>
+    <string name="colorsetting">Color\n</string>
 </resources>

@@ -3,29 +3,20 @@ package com.example.pruebastfg.ui
 import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.annotation.StringRes
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
-import androidx.compose.material3.Card
+import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -37,22 +28,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pruebastfg.ui.models.AppModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.Button
-import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Shapes
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -61,13 +45,17 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pruebastfg.AppInfo
 import com.example.pruebastfg.R
-import com.example.pruebastfg.ui.data.items.AppItem
-import com.example.pruebastfg.ui.data.items.AppItemProto
-import com.example.pruebastfg.ui.data.storage.AppsProtoRepository
-import com.example.pruebastfg.ui.data.storage.appsDataStore
-import com.example.pruebastfg.ui.data.storage.ViewModelFactory
-import com.example.pruebastfg.ui.data.storage.PreferencesRepository
+import com.example.pruebastfg.data.items.AppItem
+import com.example.pruebastfg.data.items.AppItemProto
+import com.example.pruebastfg.data.storage.AppsProtoRepository
+import com.example.pruebastfg.data.storage.appsDataStore
+import com.example.pruebastfg.data.storage.ViewModelFactory
+import com.example.pruebastfg.data.storage.PreferencesRepository
+import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
+import com.example.pruebastfg.ui.screens.settings.ColorSettingScreen
+import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
+import com.example.pruebastfg.ui.screens.settings.RemoveApps
 import com.example.pruebastfg.ui.screens.setup.UserNameSetupScreen
 import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
 
@@ -77,13 +65,15 @@ enum class AppScreens(@StringRes val title: Int) {
     AddApp(title = R.string.addapps),
     RemoveApp(title = R.string.removeapps),
     FavoriteApps(title = R.string.favoriteapps),
-    Settings(title = R.string.settings)
+    Settings(title = R.string.settings),
+    ColorSetting(title = R.string.colorsetting)
 }
 
 enum class SetupSubScreens(@StringRes val title: Int) {
-    welcome(title = R.string.welcome), username(title = R.string.username), modecolor(title = R.string.modecolor), fontsize(
-        title = R.string.fontsize
-    ),
+    welcome(title = R.string.welcome),
+    username(title = R.string.username),
+    modecolor(title = R.string.modecolor),
+    fontsize(title = R.string.fontsize),
     launcher(title = R.string.launcher)
 }
 
@@ -104,18 +94,23 @@ fun AppTopBar(
             Text(
                 text = topBarTitle,
                 style = MaterialTheme.typography.headlineLarge,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.surface
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
         ),
         actions = {
-            IconButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = Icons.Default.Settings, // Icono de configuración
-                    contentDescription = "Settings"
-                )
+            if (currentScreen.name == AppScreens.Home.name) {
+                IconButton(onClick = onSettingsClick) {
+                    Icon(
+                        imageVector = Icons.Rounded.Settings, // Icono de configuración
+                        contentDescription = "Settings",
+                        modifier = Modifier.size(30.dp),
+                        tint = MaterialTheme.colorScheme.surface
+                    )
+                }
             }
         },
 
@@ -146,20 +141,20 @@ fun MainScreen(
     } ?: AppScreens.Home
 
     // Determinar si la pantalla actual es parte del flujo de Setup
-    val isSetupFlow = backStackEntry?.destination?.route in SetupSubScreens.entries.map { it.name }
-
+    val isSetupFlow = remember(backStackEntry) {
+        backStackEntry?.destination?.route in SetupSubScreens.entries.map { it.name }
+    }
     val context = LocalContext.current
     val prefsRepo = remember { PreferencesRepository(context) }
-    val appsRepo = remember { AppsProtoRepository(context.appsDataStore) }
+    val appsRepo = remember { AppsProtoRepository(context,context.appsDataStore) }
 
-    val viewModel: AppViewModel = viewModel(factory = ViewModelFactory(prefsRepo, appsRepo))
+    val viewModel: AppViewModel = viewModel(factory = ViewModelFactory(prefsRepo, appsRepo, context))
     // Observar datos
     val userName by viewModel.userName.collectAsState(initial = "")
 //    val apps by viewModel.apps.collectAsState(initial = emptyList())
-    val apps = viewModel.getEssencialApps(context)
-    val allApps = viewModel.getAllApps(context)
-
+    val startDestination by viewModel.startDestination.collectAsState()
     val appsProto by viewModel.apps.collectAsState(initial = emptyList())
+
 
     val uiState by viewModel.uiState.collectAsState()
     val setupStatus by prefsRepo.getSetupStatus().collectAsState(initial = null)
@@ -178,7 +173,8 @@ fun MainScreen(
                 ""
             }else{
                 currentScreen.name
-            }
+            },
+
         )
     }, bottomBar = {
         // Mostrar el BottomAppBar solo si estamos en el flujo de Setup
@@ -203,7 +199,7 @@ fun MainScreen(
                 .padding(innerPadding)
         ) {
             // Pantalla de Setup
-            composable(route = AppScreens.Setup.name) {
+            composable(route = AppScreens.Setup.name,) {
                 WelcomeSetupScreen(navController = navController,
                     navigateForward = { navController.navigate(SetupSubScreens.username.name) },
                     modifier = Modifier,
@@ -243,6 +239,7 @@ fun MainScreen(
 //                        setupStatus = it
 //
 //                    )
+
                     AppsFromProto(appsProto, onAppClick = onAppClick, changeSetupDoneStatus = {
                         viewModel.toggleSetupDone()
                     }, {
@@ -260,9 +257,16 @@ fun MainScreen(
                     { navController.navigate(AppScreens.AddApp.name) },
                     { navController.navigate(AppScreens.RemoveApp.name) },
                     { navController.navigate(AppScreens.FavoriteApps.name) },
+                    { navController.navigate(AppScreens.ColorSetting.name) },
+                    { navController.popBackStack() }
                     )
             }
+            composable(route = AppScreens.ColorSetting.name) {
+                ColorSettingScreen()
+            }
             composable(route = AppScreens.AddApp.name) {
+                val allApps by viewModel.allApps.collectAsState()
+
                 AllAppsListScreen(apps = allApps, onAppClickAdd = { app ->
                     val appExists = appsProto.any { it.first.packageName == app.packageName }
 
@@ -283,12 +287,14 @@ fun MainScreen(
                 }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
             }
             composable(route = AppScreens.RemoveApp.name) {
-                RemoveAppsFromProto(appsProto, onAppClick = { app ->
+
+                RemoveApps(appsProto, onAppClick = { app ->
                     viewModel.removeApp(app.id)
                 }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
             }
             composable(route = AppScreens.FavoriteApps.name) {
-                FavoriteAppsFromProto(appsProto, onAppClick = { app ->
+
+                SelectFavoriteApps(appsProto, onAppClick = { app ->
                     viewModel.toggleFavorite(app.id)
                 }, onClickTerminar = { navController.navigate(AppScreens.Home.name) }
                 )
@@ -327,51 +333,6 @@ fun AppsListScreen(
 
     }
 }
-
-@Composable
-fun AllAppsListScreen(
-    apps: List<AppModel>, onAppClickAdd: (AppModel) -> Unit, onClickTerminar: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Lista de aplicaciones en un grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(10.dp),
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalArrangement = Arrangement.Top
-        ) {
-            items(apps) { app ->
-                AppItem(app = app, onClick = { onAppClickAdd(app) })
-            }
-        }
-        ElevatedCard(
-            onClick = onClickTerminar, modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.terminar),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp
-                )
-            }
-        }
-    }
-}
-
 
 @Composable
 fun AppsFromProto(
@@ -426,102 +387,3 @@ fun AppsFromProto(
 }
 
 
-@Composable
-fun RemoveAppsFromProto(
-    apps: List<Pair<AppInfo, Bitmap?>>, // Lista de aplicaciones con sus iconos
-    onAppClick: (AppInfo) -> Unit, // Callback cuando se hace clic en una app
-    onClickTerminar: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Lista de aplicaciones en un grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(10.dp),
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalArrangement = Arrangement.Top
-        ) {
-            items(apps) { (appInfo, bitmap) ->
-                AppItemProto(
-                    appInfo = appInfo,
-                    bitmap = bitmap,
-                    onClick = { onAppClick(appInfo) })
-            }
-        }
-        ElevatedCard(
-            onClick = onClickTerminar, modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-                .border(2.dp, MaterialTheme.colorScheme.outline, shape = Shapes().large)
-
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.terminar),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp
-                )
-            }
-        }
-    }
-}
-
-
-
-@Composable
-fun FavoriteAppsFromProto(
-    apps: List<Pair<AppInfo, Bitmap?>>, // Lista de aplicaciones con sus iconos
-    onAppClick: (AppInfo) -> Unit, // Callback cuando se hace clic en una app
-    onClickTerminar: () -> Unit
-) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        // Lista de aplicaciones en un grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(10.dp),
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalArrangement = Arrangement.Top
-        ) {
-            items(apps) { (appInfo, bitmap) ->
-                AppItemProto(
-                    appInfo = appInfo,
-                    bitmap = bitmap,
-                    onClick = { onAppClick(appInfo) })
-            }
-        }
-        ElevatedCard(
-            onClick = onClickTerminar, modifier = Modifier
-                .fillMaxWidth()
-                .padding(10.dp)
-        ) {
-            Row(
-                modifier = Modifier
-                    .padding(20.dp)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.terminar),
-                    textAlign = TextAlign.Center,
-                    fontSize = 20.sp
-                )
-            }
-        }
-    }
-}
