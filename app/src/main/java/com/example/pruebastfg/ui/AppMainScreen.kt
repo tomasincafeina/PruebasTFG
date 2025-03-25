@@ -61,7 +61,8 @@ import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
 
 
 enum class AppScreens(@StringRes val title: Int) {
-    Setup(title = R.string.setup), Home(title = R.string.home),
+    Setup(title = R.string.setup),
+    Home(title = R.string.home),
     AddApp(title = R.string.addapps),
     RemoveApp(title = R.string.removeapps),
     FavoriteApps(title = R.string.favoriteapps),
@@ -159,7 +160,8 @@ fun MainScreen(
     val uiState by viewModel.uiState.collectAsState()
     val setupStatus by prefsRepo.getSetupStatus().collectAsState(initial = null)
 
-    Scaffold(containerColor = MaterialTheme.colorScheme.surface, topBar = {
+    Scaffold(containerColor = MaterialTheme.colorScheme.surface,
+        topBar = {
         AppTopBar(
             currentScreen = currentScreen,
             canNavigateBack = navController.previousBackStackEntry != null,
@@ -190,6 +192,7 @@ fun MainScreen(
         }
     }) { innerPadding ->
         NavHost(
+            //cambiar nmbre setupStatus
             navController = navController, startDestination = if (setupStatus == false) {
                 AppScreens.Setup.name
             } else {

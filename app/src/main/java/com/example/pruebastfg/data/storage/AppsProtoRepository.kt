@@ -11,10 +11,13 @@ import com.example.pruebastfg.AppInfo
 import com.example.pruebastfg.ui.models.AppModel
 import com.example.pruebastfg.ui.utils.toBitmap
 import com.example.pruebastfg.ui.utils.toByteString
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class AppsProtoRepository(
@@ -46,39 +49,45 @@ class AppsProtoRepository(
 
     // Función para cargar allApps
     fun loadAllApps() {
-        val packageManager = context.packageManager
-        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+        // Lanzar una corrutina en el contexto de IO (hilo secundario)
+        CoroutineScope(Dispatchers.IO).launch {
+            val packageManager = context.packageManager
+            val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
-        _allApps.value = apps.filter {
-            packageManager.getLaunchIntentForPackage(it.packageName) != null
-        }.map {
-            AppModel(
-                name = it.loadLabel(packageManager).toString(),
-                icon = it.loadIcon(packageManager).toBitmap(),
-                packageName = it.packageName
-            )
-        }.sortedBy { it.name  }
+            _allApps.value = apps.filter {
+                packageManager.getLaunchIntentForPackage(it.packageName) != null
+            }.map {
+                AppModel(
+                    name = it.loadLabel(packageManager).toString(),
+                    icon = it.loadIcon(packageManager).toBitmap(),
+                    packageName = it.packageName
+                )
+            }.sortedBy { it.name }
+        }
     }
 
     suspend fun addApp(name: String, packageName: String, icon: Bitmap) {
-        dataStoreUserApps.updateData { current ->
-            // Verificar si la app ya existe en la lista
-            val appExists = current.appsList.any { it.packageName == packageName }
+        // Lanzar una corrutina en el contexto de IO (hilo secundario)
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStoreUserApps.updateData { current ->
+                // Verificar si la app ya existe en la lista
+                val appExists = current.appsList.any { it.packageName == packageName }
 
-            if (appExists) {
-                // Si la app ya existe, no la añadimos y devolvemos la lista actual
-                current
-            } else {
-                // Si la app no existe, la añadimos a la lista
-                val newApp = AppInfo.newBuilder()
-                    .setId(UUID.randomUUID().toString())
-                    .setName(name)
-                    .setIcon(icon.toByteString()) // Convertir Bitmap a ByteString
-                    .setPackageName(packageName)
-                    .setIsFavorite(false)
-                    .build()
+                if (appExists) {
+                    // Si la app ya existe, no la añadimos y devolvemos la lista actual
+                    current
+                } else {
+                    // Si la app no existe, la añadimos a la lista
+                    val newApp = AppInfo.newBuilder()
+                        .setId(UUID.randomUUID().toString())
+                        .setName(name)
+                        .setIcon(icon.toByteString()) // Convertir Bitmap a ByteString
+                        .setPackageName(packageName)
+                        .setIsFavorite(false)
+                        .build()
 
-                current.toBuilder().addApps(newApp).build()
+                    current.toBuilder().addApps(newApp).build()
+                }
             }
         }
     }
@@ -98,12 +107,15 @@ class AppsProtoRepository(
             userApps.appsList.find { it.id == appId }
         }
     }
-
+//no pude guarpor nombre, no me dejaba
     suspend fun removeApp(appId: String) {
-        dataStoreUserApps.updateData { current ->
-            current.toBuilder().removeApps(
-                current.appsList.indexOfFirst { it.id == appId }
-            ).build()
+        // Lanzar una corrutina en el contexto de IO (hilo secundario)
+        CoroutineScope(Dispatchers.IO).launch {
+            dataStoreUserApps.updateData { current ->
+                current.toBuilder().removeApps(
+                    current.appsList.indexOfFirst { it.id == appId }
+                ).build()
+            }
         }
     }
 

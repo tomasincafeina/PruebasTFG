@@ -68,13 +68,13 @@ class AppViewModel(
     )
     // Métodos para Preferences DataStore
     fun saveUserName(name: String, context: Context) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             prefsRepo.saveUserName(name, context)
         }
     }
 
     fun toggleSetupDone() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             prefsRepo.setSetupDoneContrario()
         }
     }
@@ -110,7 +110,7 @@ class AppViewModel(
     }
 
     fun removeApp(appId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             appsRepo.removeApp(appId)
         }
     }
@@ -119,49 +119,49 @@ class AppViewModel(
         _uiState.value = _uiState.value.copy(userName = userName)
     }
 
+//ya no lo uso
+//    fun getEssencialApps(context: Context): List<AppModel> {
+//        val packageManager = context.packageManager
+//        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+//
+//        return apps.filter { app ->
+//            app.packageName in essentialPackages
+//        }
+//            .map {
+//                AppModel(
+//                    name = it.loadLabel(packageManager).toString(),
+//                    icon = it.loadIcon(packageManager).toBitmap(),
+//                    packageName = it.packageName,
+//                    isSelected = false
+//                )
+//            }
+//    }
 
-    fun getEssencialApps(context: Context): List<AppModel> {
-        val packageManager = context.packageManager
-        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-        return apps.filter { app ->
-            app.packageName in essentialPackages
-        }
-            .map {
-                AppModel(
-                    name = it.loadLabel(packageManager).toString(),
-                    icon = it.loadIcon(packageManager).toBitmap(),
-                    packageName = it.packageName,
-                    isSelected = false
-                )
-            }
-    }
-
-
-    fun getAllApps(context: Context): List<AppModel> {
-        val packageManager = context.packageManager
-        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-        return apps.filter {
-            packageManager.getLaunchIntentForPackage(it.packageName) != null
-        }
-            .map {
-                AppModel(
-                    name = it.loadLabel(packageManager).toString(),
-                    icon = it.loadIcon(packageManager).toBitmap(),
-                    packageName = it.packageName
-                )
-            }
-    }
-
-    fun logInstalledApps(context: Context) {
-        val packageManager = context.packageManager
-        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-        apps.forEach { app ->
-            Log.d("InstalledApps", "${app.loadLabel(packageManager)} - ${app.packageName}")
-        }
-    }
+//ya no lo uso, uso directamente el de proto datastorage
+//    fun getAllApps(context: Context): List<AppModel> {
+//        val packageManager = context.packageManager
+//        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+//
+//        return apps.filter {
+//            packageManager.getLaunchIntentForPackage(it.packageName) != null
+//        }
+//            .map {
+//                AppModel(
+//                    name = it.loadLabel(packageManager).toString(),
+//                    icon = it.loadIcon(packageManager).toBitmap(),
+//                    packageName = it.packageName
+//                )
+//            }
+//    }
+//
+//    fun logInstalledApps(context: Context) {
+//        val packageManager = context.packageManager
+//        val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+//
+//        apps.forEach { app ->
+//            Log.d("InstalledApps", "${app.loadLabel(packageManager)} - ${app.packageName}")
+//        }
+//    }
 
     fun Drawable.toBitmap(): Bitmap {
         if (this is BitmapDrawable) {
