@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
@@ -37,6 +38,8 @@ import com.example.pruebastfg.ui.models.AppModel
 fun AppItem(app: AppModel, onClick: () -> Unit) {
     Column(modifier = Modifier.padding(bottom = 10.dp)) {
         Card(
+            elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+            colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f) // Make the card square

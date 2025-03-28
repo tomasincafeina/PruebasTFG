@@ -59,6 +59,8 @@ dependencies {
     //Proto Datastorage
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("com.google.protobuf:protobuf-javalite:3.25.1")
+//para los iconos
+    implementation ("androidx.appcompat:appcompat:1.3.1")
 
 // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")

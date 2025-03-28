@@ -19,7 +19,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -40,16 +42,21 @@ fun AppItemProto(
 //    val bitmap = remember(appInfo.icon) {
 //        appInfo.icon?.toBitmap()
 //    }
-    Column(modifier = Modifier.padding(bottom = 10.dp)) {
+    Column(modifier = Modifier.padding(bottom = 10.dp),) {
         Card(
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f) // Make the card square
-                .padding(10.dp)
+                .padding(10.dp),
+            colors = androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+
         ) {
             Box(
                 modifier = Modifier
-                    .fillMaxSize().clickable { onClick() }.padding(10.dp),
+                    .fillMaxSize()
+                    .clickable { onClick() }
+                    .padding(10.dp),
                 contentAlignment = Alignment.BottomEnd
 
             ) {

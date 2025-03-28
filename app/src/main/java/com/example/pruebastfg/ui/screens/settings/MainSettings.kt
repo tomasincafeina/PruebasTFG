@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.pruebastfg.data.items.SettingItem
 import com.example.pruebastfg.data.models.SettingModel
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
@@ -70,33 +71,5 @@ fun MainSettoingsScreen(
             }
         }
         BigLowButton(onClickAtras, "Atrás", true)
-    }
-}
-
-@Composable
-fun SettingItem(setting: SettingModel) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f) // Make the card square
-            .padding(12.dp)
-            .clickable { setting.onClick() },
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Icon(
-                imageVector = setting.icon, // Icono de configuración
-                contentDescription = "Icono de configuración",
-                modifier = Modifier.size(80.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = setting.title, fontSize = 20.sp, maxLines = 2, textAlign = TextAlign.Center,
-            )
-        }
     }
 }

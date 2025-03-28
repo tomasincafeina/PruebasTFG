@@ -1,12 +1,10 @@
 package com.example.pruebastfg.ui
 
 import android.content.Context
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pruebastfg.AppInfo
@@ -20,7 +18,6 @@ import com.example.pruebastfg.data.storage.PreferencesRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -40,6 +37,7 @@ class AppViewModel(
     // Datos de Preferences
     val userName: Flow<String?> = prefsRepo.getUserName()
     val setupDone: Flow<Boolean?> = prefsRepo.getSetupStatus()
+    val isThemeDark: Flow<Boolean?> = prefsRepo.isThemeDark()
 
     // Datos de Proto DataStore
     val apps: Flow<List<Pair<AppInfo, Bitmap?>>> = appsRepo.userApps
@@ -66,6 +64,12 @@ class AppViewModel(
         "com.google.android.deskclock",   // Reloj (Google)
         "com.android.deskclock",      // Reloj (AOSP)
     )
+
+    fun toggleTheme() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.toggleTheme()
+        }
+    }
     // Métodos para Preferences DataStore
     fun saveUserName(name: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,7 +82,6 @@ class AppViewModel(
             prefsRepo.setSetupDoneContrario()
         }
     }
-
     // Métodos para Proto DataStore
     fun addApp(name: String, packageName: String, icon: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {

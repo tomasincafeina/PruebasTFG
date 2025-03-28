@@ -33,14 +33,14 @@ fun BigLowButton(onButtonClick: () -> Unit, text: String, isAtras: Boolean, modi
     Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.Center, modifier = modifier.padding(bottom = 10.dp)) {
         Card(
             shape = Shapes().large,
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             onClick = onButtonClick,
             modifier = Modifier
                 .width(360.dp)
                 .padding(10.dp)
-                .padding(bottom = 10.dp)
-                .border(2.dp, MaterialTheme.colorScheme.surfaceDim, shape = Shapes().large),
-            //colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
+                .padding(bottom = 10.dp),
+                //.border(2.dp, MaterialTheme.colorScheme.surfaceDim, shape = Shapes().large),
+            colors = androidx.compose.material3.CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer)
         ) {
             Row(
                 modifier = Modifier
@@ -61,7 +61,9 @@ fun BigLowButton(onButtonClick: () -> Unit, text: String, isAtras: Boolean, modi
                     text = text,
                     textAlign = TextAlign.Center,
                     fontSize = 25.sp,
-                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                    color = MaterialTheme.colorScheme.onBackground
+
                 )
             }
         }

@@ -30,38 +30,21 @@ class PreferencesRepository(context: Context) {
             androidx.datastore.preferences.core.stringPreferencesKey("user_name")
         private val SETUP_DONE_KEY =
             androidx.datastore.preferences.core.booleanPreferencesKey("setup_done")
-        private val TOP_BAR_COLOR =
-            androidx.datastore.preferences.core.stringPreferencesKey("top_bar_color")
+        private val THEME_KEY =
+            androidx.datastore.preferences.core.booleanPreferencesKey("theme_mode")
     }
 
-    /**
-     *
-     * UN SIN IMPLEMENTAR
-     * Saves the top bar color to DataStore.
-     *
-     * @param color The color to save.
-     */
-    suspend fun saveTopBarColor(color: String, context: Context) {
-        // Use DataStore's edit function for atomic updates.
-        if (color.isBlank()) {
-            Toast.makeText(
-                context,
-                "El color no puede estar en blanco",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            dataStore.edit { preferences ->
-                preferences[TOP_BAR_COLOR] = color
-            }
-        }
-    }
-
-    fun getTopBarColor(): Flow<String?> {
+    fun isThemeDark(): Flow<Boolean?> {
         return dataStore.data.map { preferences ->
-            preferences[TOP_BAR_COLOR] ?: "#FF6200EE"
+            preferences[THEME_KEY] ?: true
         }
     }
-
+    suspend fun toggleTheme() {
+        dataStore.edit { preferences ->
+            var currentTheme = preferences[THEME_KEY] ?: true
+            preferences[THEME_KEY] = !currentTheme
+        }
+    }
 
     /**
      * Saves the user's name to DataStore.

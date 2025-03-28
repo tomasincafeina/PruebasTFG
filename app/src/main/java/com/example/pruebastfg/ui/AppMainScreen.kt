@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,6 +36,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -52,7 +52,7 @@ import com.example.pruebastfg.data.storage.appsDataStore
 import com.example.pruebastfg.data.storage.ViewModelFactory
 import com.example.pruebastfg.data.storage.PreferencesRepository
 import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
-import com.example.pruebastfg.ui.screens.settings.ColorSettingScreen
+import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
 import com.example.pruebastfg.ui.screens.settings.RemoveApps
@@ -96,11 +96,11 @@ fun AppTopBar(
                 text = topBarTitle,
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.SemiBold,
-                color = MaterialTheme.colorScheme.surface
+                color = MaterialTheme.colorScheme.onBackground
             )
         },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
+            containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
         actions = {
             if (currentScreen.name == AppScreens.Home.name) {
@@ -109,7 +109,7 @@ fun AppTopBar(
                         imageVector = Icons.Rounded.Settings, // Icono de configuración
                         contentDescription = "Settings",
                         modifier = Modifier.size(30.dp),
-                        tint = MaterialTheme.colorScheme.surface
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
@@ -131,7 +131,9 @@ fun AppTopBar(
 
 @Composable
 fun MainScreen(
-    onAppClick: (String) -> Unit, navController: NavHostController = rememberNavController()
+    onAppClick: (String) -> Unit, navController: NavHostController = rememberNavController(),
+    viewModel: AppViewModel,
+    context: android.content.Context
 ) {
     // Obtener la entrada actual de la pila de navegación
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -145,20 +147,21 @@ fun MainScreen(
     val isSetupFlow = remember(backStackEntry) {
         backStackEntry?.destination?.route in SetupSubScreens.entries.map { it.name }
     }
-    val context = LocalContext.current
-    val prefsRepo = remember { PreferencesRepository(context) }
-    val appsRepo = remember { AppsProtoRepository(context,context.appsDataStore) }
+//    val context = LocalContext.current
+//    val prefsRepo = remember { PreferencesRepository(context) }
+//    val appsRepo = remember { AppsProtoRepository(context,context.appsDataStore) }
 
-    val viewModel: AppViewModel = viewModel(factory = ViewModelFactory(prefsRepo, appsRepo, context))
+    //val viewModel: AppViewModel = viewModel(factory = ViewModelFactory(prefsRepo, appsRepo, context))
     // Observar datos
     val userName by viewModel.userName.collectAsState(initial = "")
-//    val apps by viewModel.apps.collectAsState(initial = emptyList())
+    val isThemeDark = viewModel.isThemeDark.collectAsState(initial = true)
+    val setupStatus by viewModel.setupDone.collectAsState(initial = false)
+
     val startDestination by viewModel.startDestination.collectAsState()
     val appsProto by viewModel.apps.collectAsState(initial = emptyList())
 
 
     val uiState by viewModel.uiState.collectAsState()
-    val setupStatus by prefsRepo.getSetupStatus().collectAsState(initial = null)
 
     Scaffold(containerColor = MaterialTheme.colorScheme.surface,
         topBar = {
@@ -265,7 +268,7 @@ fun MainScreen(
                     )
             }
             composable(route = AppScreens.ColorSetting.name) {
-                ColorSettingScreen()
+                ThemeSettingScreen(isThemeDark = isThemeDark, { viewModel.toggleTheme() })
             }
             composable(route = AppScreens.AddApp.name) {
                 val allApps by viewModel.allApps.collectAsState()
