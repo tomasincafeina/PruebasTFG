@@ -38,6 +38,7 @@ class AppViewModel(
     val userName: Flow<String?> = prefsRepo.getUserName()
     val setupDone: Flow<Boolean?> = prefsRepo.getSetupStatus()
     val isThemeDark: Flow<Boolean?> = prefsRepo.isThemeDark()
+    val colorTheme: Flow<String?> = prefsRepo.getThemeColor()
 
     // Datos de Proto DataStore
     val apps: Flow<List<Pair<AppInfo, Bitmap?>>> = appsRepo.userApps
@@ -64,6 +65,13 @@ class AppViewModel(
         "com.google.android.deskclock",   // Reloj (Google)
         "com.android.deskclock",      // Reloj (AOSP)
     )
+
+    // Métodos para Preferences DataStore
+    fun setThemeColor(themeColor: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.setThemeColor(themeColor)
+        }
+    }
 
     fun toggleTheme() {
         viewModelScope.launch(Dispatchers.IO) {

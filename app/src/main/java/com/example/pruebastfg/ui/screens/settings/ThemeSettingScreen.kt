@@ -7,11 +7,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -20,7 +25,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,9 +32,18 @@ import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.R
+import com.example.pruebastfg.data.items.ThemeColorPickerItem
+import com.example.pruebastfg.data.models.ThemeColorPickerModel
+import com.example.pruebastfg.ui.theme.BlueprimaryLight
+import com.example.pruebastfg.ui.theme.GreenprimaryLight
 
 @Composable
-fun ThemeSettingScreen(isThemeDark: State<Boolean?>, toogleTheme: () -> Unit) {
+fun ThemeSettingScreen(
+    isThemeDark: Boolean,
+    toogleTheme: () -> Unit,
+    colorTheme: String?,
+    setColorTheme: (String) -> Unit
+) {
     val colorScheme = MaterialTheme.colorScheme
     val colors = listOf(
         "primary" to colorScheme.primary,
@@ -63,8 +76,18 @@ fun ThemeSettingScreen(isThemeDark: State<Boolean?>, toogleTheme: () -> Unit) {
         "outlineVariant" to colorScheme.outlineVariant,
         "scrim" to colorScheme.scrim,
     )
-    Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
 
+    val colorPickerList = listOf(
+        ThemeColorPickerModel("blue", BlueprimaryLight),
+        ThemeColorPickerModel("green", GreenprimaryLight)
+    )
+
+    Column(
+        modifier = Modifier
+            .verticalScroll(rememberScrollState())
+            .fillMaxSize()
+
+    ) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -74,7 +97,7 @@ fun ThemeSettingScreen(isThemeDark: State<Boolean?>, toogleTheme: () -> Unit) {
         ) {
             Card(
                 shape = CircleShape,
-                colors = if (isThemeDark.value == true) {
+                colors = if (isThemeDark == true) {
                     androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 } else {
                     androidx.compose.material3.CardDefaults.cardColors()
@@ -87,15 +110,15 @@ fun ThemeSettingScreen(isThemeDark: State<Boolean?>, toogleTheme: () -> Unit) {
                         modifier = Modifier
                             .size(100.dp)
                             .padding(10.dp),
-                        tint =  MaterialTheme.colorScheme.onBackground
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
             }
             Spacer(modifier = Modifier.width(16.dp))
             Card(
                 shape = CircleShape,
-                modifier = Modifier.clickable {toogleTheme() },
-                colors = if (isThemeDark.value == true) {
+                //modifier = Modifier.clickable { toogleTheme() },
+                colors = if (isThemeDark == true) {
                     androidx.compose.material3.CardDefaults.cardColors()
                 } else {
                     androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
@@ -113,6 +136,21 @@ fun ThemeSettingScreen(isThemeDark: State<Boolean?>, toogleTheme: () -> Unit) {
                 }
             }
 
+        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(4),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .heightIn(min = 100.dp, max = 300.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(colorPickerList) { color ->
+                ThemeColorPickerItem(
+                    color, { setColorTheme(color.themeName) }, colorTheme,
+                )
+            }
         }
         colors.forEach { (name, color) ->
             Row(

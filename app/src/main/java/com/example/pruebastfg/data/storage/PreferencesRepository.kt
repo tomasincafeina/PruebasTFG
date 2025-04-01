@@ -1,12 +1,9 @@
 package com.example.pruebastfg.data.storage
 
-import android.app.AlertDialog
 import android.content.Context
 import android.widget.Toast
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -30,19 +27,32 @@ class PreferencesRepository(context: Context) {
             androidx.datastore.preferences.core.stringPreferencesKey("user_name")
         private val SETUP_DONE_KEY =
             androidx.datastore.preferences.core.booleanPreferencesKey("setup_done")
-        private val THEME_KEY =
+        private val THEME_MODE_KEY =
             androidx.datastore.preferences.core.booleanPreferencesKey("theme_mode")
+        private val THEME_COLOR_KEY =
+            androidx.datastore.preferences.core.stringPreferencesKey("theme_color")
+
+    }
+    fun getThemeColor(): Flow<String?> {
+        return dataStore.data.map { preferences ->
+            preferences[THEME_COLOR_KEY] ?: "blue"
+        }
+    }
+    suspend fun setThemeColor(themeColor: String) {
+        dataStore.edit { preferences ->
+            preferences[THEME_COLOR_KEY] = themeColor
+        }
     }
 
     fun isThemeDark(): Flow<Boolean?> {
         return dataStore.data.map { preferences ->
-            preferences[THEME_KEY] ?: true
+            preferences[THEME_MODE_KEY] ?: true
         }
     }
     suspend fun toggleTheme() {
         dataStore.edit { preferences ->
-            var currentTheme = preferences[THEME_KEY] ?: true
-            preferences[THEME_KEY] = !currentTheme
+            var currentTheme = preferences[THEME_MODE_KEY] ?: true
+            preferences[THEME_MODE_KEY] = !currentTheme
         }
     }
 

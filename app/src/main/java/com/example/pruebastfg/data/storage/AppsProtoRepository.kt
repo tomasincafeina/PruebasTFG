@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import java.util.UUID
@@ -53,16 +54,28 @@ class AppsProtoRepository(
         CoroutineScope(Dispatchers.IO).launch {
             val packageManager = context.packageManager
             val apps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            //llamo a la lista de usuario para ver que apps tiene
+            val userAppPackages = dataStoreUserApps.data.map { userApps ->
+                userApps.appsList.map { it.packageName }
+            }.firstOrNull() ?: emptyList()
 
-            _allApps.value = apps.filter {
-                packageManager.getLaunchIntentForPackage(it.packageName) != null
-            }.map {
-                AppModel(
-                    name = it.loadLabel(packageManager).toString(),
-                    icon = it.loadIcon(packageManager).toBitmap(),
-                    packageName = it.packageName
-                )
-            }.sortedBy { it.name }
+            _allApps.value = apps
+                //filtro por las apps accesibles por el usuario
+                .filter {
+                    packageManager.getLaunchIntentForPackage(it.packageName) != null
+                }
+                //filtro por las que no estan en la lista de usuario
+                .filter {
+                    // Exclude apps that are in userApps
+                    !userAppPackages.contains(it.packageName)
+                }
+                .map {
+                    AppModel(
+                        name = it.loadLabel(packageManager).toString(),
+                        icon = it.loadIcon(packageManager).toBitmap(),
+                        packageName = it.packageName
+                    )
+                }.sortedBy { it.name }
         }
     }
 
