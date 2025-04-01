@@ -1,19 +1,10 @@
 package com.example.pruebastfg.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.pruebastfg.ui.AppViewModel
 
 private val BlueDarkColorScheme = darkColorScheme(
@@ -164,7 +155,80 @@ private val GreenLightColorScheme = lightColorScheme(
     surfaceContainerHigh = GreensurfaceContainerHighLight,
     surfaceContainerHighest = GreensurfaceContainerHighestLight,
 )
-
+private val PurpleDarkColorScheme = darkColorScheme(
+    primary = PurpleprimaryDark,
+    onPrimary = PurpleonPrimaryDark,
+    primaryContainer = PurpleprimaryContainerDark,
+    onPrimaryContainer = PurpleonPrimaryContainerDark,
+    secondary = PurplesecondaryDark,
+    onSecondary = PurpleonSecondaryDark,
+    secondaryContainer = PurplesecondaryContainerDark,
+    onSecondaryContainer = PurpleonSecondaryContainerDark,
+    tertiary = PurpletertiaryDark,
+    onTertiary = PurpleonTertiaryDark,
+    tertiaryContainer = PurpletertiaryContainerDark,
+    onTertiaryContainer = PurpleonTertiaryContainerDark,
+    error = PurpleerrorDark,
+    onError = PurpleonErrorDark,
+    errorContainer = PurpleerrorContainerDark,
+    onErrorContainer = PurpleonErrorContainerDark,
+    background = PurplebackgroundDark,
+    onBackground = PurpleonBackgroundDark,
+    surface = PurplesurfaceDark,
+    onSurface = PurpleonSurfaceDark,
+    surfaceVariant = PurplesurfaceVariantDark,
+    onSurfaceVariant = PurpleonSurfaceVariantDark,
+    outline = PurpleoutlineDark,
+    outlineVariant = PurpleoutlineVariantDark,
+    scrim = PurplescrimDark,
+    inverseSurface = PurpleinverseSurfaceDark,
+    inverseOnSurface = PurpleinverseOnSurfaceDark,
+    inversePrimary = PurpleinversePrimaryDark,
+    surfaceDim = PurplesurfaceDimDark,
+    surfaceBright = PurplesurfaceBrightDark,
+    surfaceContainerLowest = PurplesurfaceContainerLowestDark,
+    surfaceContainerLow = PurplesurfaceContainerLowDark,
+    surfaceContainer = PurplesurfaceContainerDark,
+    surfaceContainerHigh = PurplesurfaceContainerHighDark,
+    surfaceContainerHighest = PurplesurfaceContainerHighestDark,
+)
+val PurpleLightColorScheme = lightColorScheme(
+    primary = PurpleprimaryLight,
+    onPrimary = PurpleonPrimaryLight,
+    primaryContainer = PurpleprimaryContainerLight,
+    onPrimaryContainer = PurpleonPrimaryContainerLight,
+    secondary = PurplesecondaryLight,
+    onSecondary = PurpleonSecondaryLight,
+    secondaryContainer = PurplesecondaryContainerLight,
+    onSecondaryContainer = PurpleonSecondaryContainerLight,
+    tertiary = PurpletertiaryLight,
+    onTertiary = PurpleonTertiaryLight,
+    tertiaryContainer = PurpletertiaryContainerLight,
+    onTertiaryContainer = PurpleonTertiaryContainerLight,
+    error = PurpleerrorLight,
+    onError = PurpleonErrorLight,
+    errorContainer = PurpleerrorContainerLight,
+    onErrorContainer = PurpleonErrorContainerLight,
+    background = PurplebackgroundLight,
+    onBackground = PurpleonBackgroundLight,
+    surface = PurplesurfaceLight,
+    onSurface = PurpleonSurfaceLight,
+    surfaceVariant = PurplesurfaceVariantLight,
+    onSurfaceVariant = PurpleonSurfaceVariantLight,
+    outline = PurpleoutlineLight,
+    outlineVariant = PurpleoutlineVariantLight,
+    scrim = PurplescrimLight,
+    inverseSurface = PurpleinverseSurfaceLight,
+    inverseOnSurface = PurpleinverseOnSurfaceLight,
+    inversePrimary = PurpleinversePrimaryLight,
+    surfaceDim = PurplesurfaceDimLight,
+    surfaceBright = PurplesurfaceBrightLight,
+    surfaceContainerLowest = PurplesurfaceContainerLowestLight,
+    surfaceContainerLow = PurplesurfaceContainerLowLight,
+    surfaceContainer = PurplesurfaceContainerLight,
+    surfaceContainerHigh = PurplesurfaceContainerHighLight,
+    surfaceContainerHighest = PurplesurfaceContainerHighestLight,
+)
 @Composable
 fun PruebasTFGTheme(
     viewModel: AppViewModel,
@@ -177,6 +241,7 @@ fun PruebasTFGTheme(
     val colors = when (colorTheme.value) {
         "blue" -> if (isThemeDark.value == true) BlueDarkColorScheme else BlueLightColorScheme
         "green" -> if (isThemeDark.value == true) GreenDarkColorScheme else GreenLightColorScheme
+        "purple" -> if (isThemeDark.value == true) PurpleDarkColorScheme else PurpleLightColorScheme
         else -> if (isThemeDark.value == true) BlueDarkColorScheme else BlueLightColorScheme
     }
 

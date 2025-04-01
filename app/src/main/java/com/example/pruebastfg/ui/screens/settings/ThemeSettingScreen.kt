@@ -36,11 +36,14 @@ import com.example.pruebastfg.data.items.ThemeColorPickerItem
 import com.example.pruebastfg.data.models.ThemeColorPickerModel
 import com.example.pruebastfg.ui.theme.BlueprimaryLight
 import com.example.pruebastfg.ui.theme.GreenprimaryLight
+import com.example.pruebastfg.ui.theme.PurpleonPrimaryLight
+import com.example.pruebastfg.ui.theme.PurpleprimaryLight
 
 @Composable
 fun ThemeSettingScreen(
     isThemeDark: Boolean,
-    toogleTheme: () -> Unit,
+    changeThemeToDark: () -> Unit,
+    changeThemeToLight: () -> Unit,
     colorTheme: String?,
     setColorTheme: (String) -> Unit
 ) {
@@ -79,7 +82,8 @@ fun ThemeSettingScreen(
 
     val colorPickerList = listOf(
         ThemeColorPickerModel("blue", BlueprimaryLight),
-        ThemeColorPickerModel("green", GreenprimaryLight)
+        ThemeColorPickerModel("green", GreenprimaryLight),
+        ThemeColorPickerModel("purple", PurpleprimaryLight)
     )
 
     Column(
@@ -103,7 +107,7 @@ fun ThemeSettingScreen(
                     androidx.compose.material3.CardDefaults.cardColors()
                 }
             ) {
-                Box(modifier = Modifier.clickable { toogleTheme() }) {
+                Box(modifier = Modifier.clickable { changeThemeToLight() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_light_mode_20),
                         contentDescription = "light_mode",
@@ -117,14 +121,13 @@ fun ThemeSettingScreen(
             Spacer(modifier = Modifier.width(16.dp))
             Card(
                 shape = CircleShape,
-                //modifier = Modifier.clickable { toogleTheme() },
                 colors = if (isThemeDark == true) {
                     androidx.compose.material3.CardDefaults.cardColors()
                 } else {
                     androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
                 }
             ) {
-                Box(modifier = Modifier.clickable { toogleTheme() }) {
+                Box(modifier = Modifier.clickable { changeThemeToDark() }) {
                     Icon(
                         painter = painterResource(id = R.drawable.outline_dark_mode_20),
                         contentDescription = "dark_mode",

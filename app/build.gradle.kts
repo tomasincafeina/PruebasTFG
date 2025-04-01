@@ -59,10 +59,11 @@ dependencies {
     //Proto Datastorage
     implementation("androidx.datastore:datastore:1.0.0")
     implementation("com.google.protobuf:protobuf-javalite:3.25.1")
-//para los iconos
+
+    //para los iconos
     implementation ("androidx.appcompat:appcompat:1.3.1")
 
-// Coroutines
+    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
 
     //material icons
@@ -70,6 +71,7 @@ dependencies {
 
     //transiciones
     implementation ("androidx.navigation:navigation-compose:2.7.7") // Revisa la versión más reciente
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -49,10 +49,14 @@ class PreferencesRepository(context: Context) {
             preferences[THEME_MODE_KEY] ?: true
         }
     }
-    suspend fun toggleTheme() {
+    suspend fun changeThemeToDark(){
         dataStore.edit { preferences ->
-            var currentTheme = preferences[THEME_MODE_KEY] ?: true
-            preferences[THEME_MODE_KEY] = !currentTheme
+            preferences[THEME_MODE_KEY] = true
+        }
+    }
+    suspend fun changeThemeToLight(){
+        dataStore.edit { preferences ->
+            preferences[THEME_MODE_KEY] = false
         }
     }
 

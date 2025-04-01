@@ -279,7 +279,7 @@ fun MainScreen(
                     )
                 }
                 composable(route = AppScreens.ColorSetting.name) {
-                    ThemeSettingScreen(isThemeDark = isThemeDark!!, { viewModel.toggleTheme() }, colorTheme, {viewModel.setThemeColor(it)})
+                    ThemeSettingScreen(isThemeDark = isThemeDark!!, { viewModel.changeThemeToDark() },{ viewModel.changeThemeToLight()}, colorTheme, {viewModel.setThemeColor(it)})
                 }
                 composable(route = AppScreens.AddApp.name) {
                     val allApps by viewModel.allApps.collectAsState()

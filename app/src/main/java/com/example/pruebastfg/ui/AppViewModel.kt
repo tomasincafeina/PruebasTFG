@@ -73,9 +73,14 @@ class AppViewModel(
         }
     }
 
-    fun toggleTheme() {
+    fun changeThemeToDark() {
         viewModelScope.launch(Dispatchers.IO) {
-            prefsRepo.toggleTheme()
+            prefsRepo.changeThemeToDark()
+        }
+    }
+    fun changeThemeToLight() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.changeThemeToLight()
         }
     }
     // Métodos para Preferences DataStore
