@@ -65,6 +65,9 @@ class AppsProtoRepository(
                     packageManager.getLaunchIntentForPackage(it.packageName) != null
                 }
                 //filtro por las que no estan en la lista de usuario
+                //no funciona bien.
+                // 1o no se actualiza la lista en tiempo real cuando la añades, que es el objetivo
+                // 2o para que se actualice tienes que salir y volver a entrar a la app para que se ejecute el init de loadAllApps(),
                 .filter {
                     // Exclude apps that are in userApps
                     !userAppPackages.contains(it.packageName)

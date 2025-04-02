@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.AddCircle
+import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Clear
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Star
@@ -42,6 +43,7 @@ fun MainSettoingsScreen(
     goToRemoveAppClick: () -> Unit,
     goToFavoriteAppsClick: () -> Unit,
     goToColorSettingClick: () -> Unit,
+    goToDebugClick: () -> Unit,
     onClickAtras:() -> Unit,
 ) {
     val settingsItems = remember {
@@ -50,6 +52,7 @@ fun MainSettoingsScreen(
             SettingModel("Eliminar", Icons.Rounded.Clear, goToRemoveAppClick),
             SettingModel("Favoritos", Icons.Rounded.Star, goToFavoriteAppsClick),
             SettingModel("Color", Icons.Rounded.Edit, goToColorSettingClick),
+            SettingModel("Debug", Icons.Rounded.Build, goToDebugClick),
         )
     }
     Column(

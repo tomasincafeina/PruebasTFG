@@ -46,6 +46,7 @@ import com.example.pruebastfg.R
 import com.example.pruebastfg.data.items.AppItem
 import com.example.pruebastfg.data.items.AppItemProto
 import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
+import com.example.pruebastfg.ui.screens.settings.DebugSettingScreen
 import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
@@ -61,7 +62,8 @@ enum class AppScreens(@StringRes val title: Int) {
     RemoveApp(title = R.string.removeapps),
     FavoriteApps(title = R.string.favoriteapps),
     Settings(title = R.string.settings),
-    ColorSetting(title = R.string.colorsetting)
+    ColorSetting(title = R.string.colorsetting),
+
 }
 
 enum class SetupSubScreens(@StringRes val title: Int) {
@@ -257,15 +259,14 @@ fun MainScreen(
 //
 //                    )
 
-                        AppsFromProto(appsProto, onAppClick = onAppClick, changeSetupDoneStatus = {
-                            viewModel.toggleSetupDone()
-                        }, {
-                            navController.navigate(AppScreens.AddApp.name)
-                        }, {
-                            navController.navigate(AppScreens.RemoveApp.name)
-                        }, {
-                            navController.navigate(AppScreens.FavoriteApps.name)
-                        }, setupStatus = it
+                        AppsFromProto(
+                            appsProto,
+                            onAppClick = onAppClick,
+                            //changeSetupDoneStatus = { viewModel.toggleSetupDone() },
+                            { navController.navigate(AppScreens.AddApp.name) },
+                            { navController.navigate(AppScreens.RemoveApp.name) },
+                            { navController.navigate(AppScreens.FavoriteApps.name) },
+                            //setupStatus = it
                         )
                     }
                 }
@@ -275,11 +276,25 @@ fun MainScreen(
                         { navController.navigate(AppScreens.RemoveApp.name) },
                         { navController.navigate(AppScreens.FavoriteApps.name) },
                         { navController.navigate(AppScreens.ColorSetting.name) },
+                        { navController.navigate("debug") },
                         { navController.popBackStack() }
                     )
                 }
+                composable(route = "debug") {
+                    DebugSettingScreen(
+                        changeSetupDoneStatus = {
+                            viewModel.toggleSetupDone()
+                        }, setupStatus = setupStatus!!
+                    )
+                }
                 composable(route = AppScreens.ColorSetting.name) {
-                    ThemeSettingScreen(isThemeDark = isThemeDark!!, { viewModel.changeThemeToDark() },{ viewModel.changeThemeToLight()}, colorTheme, {viewModel.setThemeColor(it)})
+                    ThemeSettingScreen(
+                        isThemeDark = isThemeDark!!,
+                        { viewModel.changeThemeToDark() },
+                        { viewModel.changeThemeToLight() },
+                        colorTheme,
+                        { viewModel.setThemeColor(it) },
+                        { navController.navigate(AppScreens.Home.name) })
                 }
                 composable(route = AppScreens.AddApp.name) {
                     val allApps by viewModel.allApps.collectAsState()
@@ -318,7 +333,7 @@ fun MainScreen(
                 }
             }
         }
-    //composable de carga
+        //composable de carga
     } else {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -365,36 +380,37 @@ fun AppsListScreen(
 fun AppsFromProto(
     apps: List<Pair<AppInfo, Bitmap?>>, // Lista de aplicaciones con sus iconos
     onAppClick: (String) -> Unit, // Callback cuando se hace clic en una app
-    changeSetupDoneStatus: () -> Unit, // Callback para cambiar el estado del setup
+    //changeSetupDoneStatus: () -> Unit, // Callback para cambiar el estado del setup
     goToAddApp: () -> Unit, // Callback para navegar a la pantalla de todas las apps
     goToRemoveApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
     goToFavoriteApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
 
-    setupStatus: Boolean // Estado actual del setup
+    //setupStatus: Boolean // Estado actual del setup
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        //Esto estaba aqui para debuggear el estado del setup pero ahora esta ne debug
         // Mostrar el estado actual del setup
-        Text(
-            text = "Estado del Setup: ${if (setupStatus) "Completado" else "No completado"}",
-            fontSize = 16.sp,
-            modifier = Modifier.padding(5.dp)
-        )/* Botón para navegar a la pantalla de todas las apps */
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(5.dp),
-            horizontalArrangement = Arrangement.SpaceAround,
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            // Botón para cambiar el estado del setup
-            Button(
-                onClick = changeSetupDoneStatus, modifier = Modifier.weight(1f)
-            ) {
-                Text(text = "Setup")
-            }
-        }
+//        Text(
+//            text = "Estado del Setup: ${if (setupStatus) "Completado" else "No completado"}",
+//            fontSize = 16.sp,
+//            modifier = Modifier.padding(5.dp)
+//        )/* Botón para navegar a la pantalla de todas las apps */
+//        Row(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(5.dp),
+//            horizontalArrangement = Arrangement.SpaceAround,
+//            verticalAlignment = Alignment.CenterVertically,
+//        ) {
+//            // Botón para cambiar el estado del setup
+//            Button(
+//                onClick = changeSetupDoneStatus, modifier = Modifier.weight(1f)
+//            ) {
+//                Text(text = "Setup")
+//            }
+//        }
         // Lista de aplicaciones en un grid
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),

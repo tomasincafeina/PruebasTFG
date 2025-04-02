@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.R
 import com.example.pruebastfg.data.items.ThemeColorPickerItem
 import com.example.pruebastfg.data.models.ThemeColorPickerModel
+import com.example.pruebastfg.ui.sharedItems.BigLowButton
 import com.example.pruebastfg.ui.theme.BlueprimaryLight
 import com.example.pruebastfg.ui.theme.GreenprimaryLight
 import com.example.pruebastfg.ui.theme.PurpleonPrimaryLight
@@ -45,40 +46,43 @@ fun ThemeSettingScreen(
     changeThemeToDark: () -> Unit,
     changeThemeToLight: () -> Unit,
     colorTheme: String?,
-    setColorTheme: (String) -> Unit
+    setColorTheme: (String) -> Unit,
+    onClickTerminar: () -> Unit
+
 ) {
-    val colorScheme = MaterialTheme.colorScheme
-    val colors = listOf(
-        "primary" to colorScheme.primary,
-        "onPrimary" to colorScheme.onPrimary,
-        "primaryContainer" to colorScheme.primaryContainer,
-        "onPrimaryContainer" to colorScheme.onPrimaryContainer,
-        "inversePrimary" to colorScheme.inversePrimary,
-        "secondary" to colorScheme.secondary,
-        "onSecondary" to colorScheme.onSecondary,
-        "secondaryContainer" to colorScheme.secondaryContainer,
-        "onSecondaryContainer" to colorScheme.onSecondaryContainer,
-        "tertiary" to colorScheme.tertiary,
-        "onTertiary" to colorScheme.onTertiary,
-        "tertiaryContainer" to colorScheme.tertiaryContainer,
-        "onTertiaryContainer" to colorScheme.onTertiaryContainer,
-        "background" to colorScheme.background,
-        "onBackground" to colorScheme.onBackground,
-        "surface" to colorScheme.surface,
-        "onSurface" to colorScheme.onSurface,
-        "surfaceVariant" to colorScheme.surfaceVariant,
-        "onSurfaceVariant" to colorScheme.onSurfaceVariant,
-        "surfaceTint" to colorScheme.surfaceTint,
-        "inverseSurface" to colorScheme.inverseSurface,
-        "inverseOnSurface" to colorScheme.inverseOnSurface,
-        "error" to colorScheme.error,
-        "onError" to colorScheme.onError,
-        "errorContainer" to colorScheme.errorContainer,
-        "onErrorContainer" to colorScheme.onErrorContainer,
-        "outline" to colorScheme.outline,
-        "outlineVariant" to colorScheme.outlineVariant,
-        "scrim" to colorScheme.scrim,
-    )
+    //esto estaba aqui para poder ver los colores del tema y poder elegir bien que colores ponerles a los diferentes componentes ahora esta en debug
+//    val colorScheme = MaterialTheme.colorScheme
+//    val colors = listOf(
+//        "primary" to colorScheme.primary,
+//        "onPrimary" to colorScheme.onPrimary,
+//        "primaryContainer" to colorScheme.primaryContainer,
+//        "onPrimaryContainer" to colorScheme.onPrimaryContainer,
+//        "inversePrimary" to colorScheme.inversePrimary,
+//        "secondary" to colorScheme.secondary,
+//        "onSecondary" to colorScheme.onSecondary,
+//        "secondaryContainer" to colorScheme.secondaryContainer,
+//        "onSecondaryContainer" to colorScheme.onSecondaryContainer,
+//        "tertiary" to colorScheme.tertiary,
+//        "onTertiary" to colorScheme.onTertiary,
+//        "tertiaryContainer" to colorScheme.tertiaryContainer,
+//        "onTertiaryContainer" to colorScheme.onTertiaryContainer,
+//        "background" to colorScheme.background,
+//        "onBackground" to colorScheme.onBackground,
+//        "surface" to colorScheme.surface,
+//        "onSurface" to colorScheme.onSurface,
+//        "surfaceVariant" to colorScheme.surfaceVariant,
+//        "onSurfaceVariant" to colorScheme.onSurfaceVariant,
+//        "surfaceTint" to colorScheme.surfaceTint,
+//        "inverseSurface" to colorScheme.inverseSurface,
+//        "inverseOnSurface" to colorScheme.inverseOnSurface,
+//        "error" to colorScheme.error,
+//        "onError" to colorScheme.onError,
+//        "errorContainer" to colorScheme.errorContainer,
+//        "onErrorContainer" to colorScheme.onErrorContainer,
+//        "outline" to colorScheme.outline,
+//        "outlineVariant" to colorScheme.outlineVariant,
+//        "scrim" to colorScheme.scrim,
+//    )
 
     val colorPickerList = listOf(
         ThemeColorPickerModel("blue", BlueprimaryLight),
@@ -86,7 +90,7 @@ fun ThemeSettingScreen(
         ThemeColorPickerModel("purple", PurpleprimaryLight)
     )
 
-    Column(
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
             .verticalScroll(rememberScrollState())
             .fillMaxSize()
@@ -141,7 +145,7 @@ fun ThemeSettingScreen(
 
         }
         LazyVerticalGrid(
-            columns = GridCells.Fixed(4),
+            columns = GridCells.Fixed(3),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp)
@@ -155,16 +159,18 @@ fun ThemeSettingScreen(
                 )
             }
         }
-        colors.forEach { (name, color) ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .background(color)
-                    .padding(8.dp)
-            ) {
-                Text(text = name, color = if (color.luminance() > 0.5) Color.Black else Color.White)
-            }
-        }
+//        colors.forEach { (name, color) ->
+//            Row(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .height(48.dp)
+//                    .background(color)
+//                    .padding(8.dp)
+//            ) {
+//                Text(text = name, color = if (color.luminance() > 0.5) Color.Black else Color.White)
+//            }
+//        }
     }
+    BigLowButton(onClickTerminar, "Terminar", false)
+
 }
