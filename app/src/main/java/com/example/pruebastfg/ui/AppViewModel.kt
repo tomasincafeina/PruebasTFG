@@ -66,6 +66,16 @@ class AppViewModel(
         "com.android.deskclock",      // Reloj (AOSP)
     )
 
+    fun getPassword(): Flow<String> {
+        return prefsRepo.getPassword()
+    }
+
+    fun setPassword(password: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.setPassword(password)
+        }
+    }
+
     // Métodos para Preferences DataStore
     fun setThemeColor(themeColor: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -78,11 +88,13 @@ class AppViewModel(
             prefsRepo.changeThemeToDark()
         }
     }
+
     fun changeThemeToLight() {
         viewModelScope.launch(Dispatchers.IO) {
             prefsRepo.changeThemeToLight()
         }
     }
+
     // Métodos para Preferences DataStore
     fun saveUserName(name: String, context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -95,6 +107,7 @@ class AppViewModel(
             prefsRepo.setSetupDoneContrario()
         }
     }
+
     // Métodos para Proto DataStore
     fun addApp(name: String, packageName: String, icon: Bitmap) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -183,10 +196,12 @@ class AppViewModel(
         if (this is BitmapDrawable) {
             return bitmap
         }
-        val bitmap = Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bitmap =
+            Bitmap.createBitmap(intrinsicWidth, intrinsicHeight, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         setBounds(0, 0, canvas.width, canvas.height)
         draw(canvas)
         return bitmap
     }
+
 }

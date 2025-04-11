@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.AppInfo
-import com.example.pruebastfg.data.items.AppItemProto
+import com.example.pruebastfg.ui.items.AppItemProto
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 

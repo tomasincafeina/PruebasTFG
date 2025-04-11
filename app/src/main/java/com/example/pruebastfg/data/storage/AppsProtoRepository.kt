@@ -38,6 +38,7 @@ class AppsProtoRepository(
                 )
         }
 
+
     // Variable privada para almacenar allApps
     private val _allApps = MutableStateFlow<List<AppModel>>(emptyList())
 

@@ -31,8 +31,21 @@ class PreferencesRepository(context: Context) {
             androidx.datastore.preferences.core.booleanPreferencesKey("theme_mode")
         private val THEME_COLOR_KEY =
             androidx.datastore.preferences.core.stringPreferencesKey("theme_color")
-
+        private val PASSWORD_KEY =
+            androidx.datastore.preferences.core.stringPreferencesKey("password")
     }
+
+    fun getPassword(): Flow<String> {
+        return dataStore.data.map { preferences ->
+            preferences[PASSWORD_KEY] ?: ""
+        }
+    }
+    suspend fun setPassword(password: String) {
+        dataStore.edit { preferences ->
+            preferences[PASSWORD_KEY] = password
+        }
+    }
+
     fun getThemeColor(): Flow<String?> {
         return dataStore.data.map { preferences ->
             preferences[THEME_COLOR_KEY] ?: "blue"

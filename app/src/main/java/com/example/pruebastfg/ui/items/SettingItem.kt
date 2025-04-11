@@ -1,4 +1,4 @@
-package com.example.pruebastfg.data.items
+package com.example.pruebastfg.ui.items
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement

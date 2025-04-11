@@ -6,9 +6,7 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -28,7 +26,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.pruebastfg.ui.models.AppModel
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,14 +40,16 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pruebastfg.AppInfo
 import com.example.pruebastfg.R
-import com.example.pruebastfg.data.items.AppItem
-import com.example.pruebastfg.data.items.AppItemProto
+import com.example.pruebastfg.ui.items.AppItem
+import com.example.pruebastfg.ui.items.AppItemProto
+import com.example.pruebastfg.ui.screens.settings.pwd.PasswordScreen
 import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
 import com.example.pruebastfg.ui.screens.settings.DebugSettingScreen
 import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
 import com.example.pruebastfg.ui.screens.settings.RemoveApps
+import com.example.pruebastfg.ui.screens.settings.pwd.PasswordSetupScreen
 import com.example.pruebastfg.ui.screens.setup.UserNameSetupScreen
 import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
 
@@ -181,7 +180,7 @@ fun MainScreen(
                     currentScreen = currentScreen,
                     canNavigateBack = navController.previousBackStackEntry != null,
                     navigateUp = { navController.popBackStack() },
-                    onSettingsClick = { navController.navigate(AppScreens.Settings.name) },
+                    onSettingsClick = { navController.navigate("password") },
                     modifier = Modifier,
                     topBarTitle =
                     if (currentScreen == AppScreens.Home && userName!!.isNotBlank()) {
@@ -277,7 +276,8 @@ fun MainScreen(
                         { navController.navigate(AppScreens.FavoriteApps.name) },
                         { navController.navigate(AppScreens.ColorSetting.name) },
                         { navController.navigate("debug") },
-                        { navController.popBackStack() }
+                        { navController.navigate("password") },
+                        { navController.navigate(AppScreens.Home.name) }
                     )
                 }
                 composable(route = "debug") {
@@ -286,6 +286,16 @@ fun MainScreen(
                             viewModel.toggleSetupDone()
                         }, setupStatus = setupStatus!!
                     )
+                }
+
+                composable(route = "password") {
+                    val password by viewModel.getPassword().collectAsState(initial = "")
+                    PasswordScreen(onDoneClick = {
+                        navController.navigate(AppScreens.Settings.name)
+                    }, password)
+//                    PasswordSetupScreen(
+//                        onDoneClick = { viewModel.setPassword(it) }
+//                    )
                 }
                 composable(route = AppScreens.ColorSetting.name) {
                     ThemeSettingScreen(
