@@ -5,6 +5,10 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.pruebastfg.AppInfo
@@ -40,6 +44,38 @@ class AppViewModel(
     val isThemeDark: Flow<Boolean?> = prefsRepo.isThemeDark()
     val colorTheme: Flow<String?> = prefsRepo.getThemeColor()
 
+    // Estado mutable usando MutableState
+    private val _fontSize: MutableStateFlow<TextUnit> = MutableStateFlow(16.sp)
+
+    // Exponemos el estado como State (solo lectura)
+    val fontSize: StateFlow<TextUnit> = _fontSize
+
+    // Minimum and maximum font sizes
+    private val minSize = 12.sp
+    private val maxSize = 40.sp
+    private val stepSize = 2.sp
+
+    fun increaseFontSize() {
+        // Forma correcta de incrementar en Kotlin
+        val newSize = _fontSize.value.value + stepSize.value
+        _fontSize.value = newSize.sp
+
+        // Limitar al máximo
+        if (_fontSize.value > maxSize) {
+            _fontSize.value = maxSize
+        }
+    }
+
+    fun decreaseFontSize() {
+        // Forma correcta de decrementar en Kotlin
+        val newSize = _fontSize.value.value - stepSize.value
+        _fontSize.value = newSize.sp
+
+        // Limitar al mínimo
+        if (_fontSize.value < minSize) {
+            _fontSize.value = minSize
+        }
+    }
     // Datos de Proto DataStore
     val apps: Flow<List<Pair<AppInfo, Bitmap?>>> = appsRepo.userApps
 

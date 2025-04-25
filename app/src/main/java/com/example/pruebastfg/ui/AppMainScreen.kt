@@ -49,28 +49,36 @@ import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
 import com.example.pruebastfg.ui.screens.settings.RemoveApps
-import com.example.pruebastfg.ui.screens.settings.pwd.PasswordSetupScreen
+import com.example.pruebastfg.ui.screens.setup.ChangeLauncherSetup
+import com.example.pruebastfg.ui.screens.setup.FontSizeSetup
+import com.example.pruebastfg.ui.screens.setup.ThemePickerSetup
 import com.example.pruebastfg.ui.screens.setup.UserNameSetupScreen
 import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
 
 
 enum class AppScreens(@StringRes val title: Int) {
     Setup(title = R.string.setup),
+    FinishedSetup(title = R.string.finished_setup),
     Home(title = R.string.home),
     AddApp(title = R.string.addapps),
     RemoveApp(title = R.string.removeapps),
     FavoriteApps(title = R.string.favoriteapps),
-    Settings(title = R.string.settings),
     ColorSetting(title = R.string.colorsetting),
+    Settings(title = R.string.settings),
+
 
 }
 
 enum class SetupSubScreens(@StringRes val title: Int) {
     welcome(title = R.string.welcome),
     username(title = R.string.username),
-    modecolor(title = R.string.modecolor),
+    theme(title = R.string.theme),
     fontsize(title = R.string.fontsize),
-    launcher(title = R.string.launcher)
+    launcher(title = R.string.launcher),
+    mode(title = R.string.mode),
+    pwd(title = R.string.pwd),
+    initialapps(title = R.string.initialapps),
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -200,7 +208,10 @@ fun MainScreen(
                     } ?: SetupSubScreens.welcome, navController = navController, onNext = {
                         when (backStackEntry?.destination?.route) {
                             SetupSubScreens.welcome.name -> navController.navigate(SetupSubScreens.username.name)
-                            SetupSubScreens.username.name -> navController.navigate(AppScreens.Home.name)
+                            SetupSubScreens.username.name -> navController.navigate(SetupSubScreens.theme.name)
+                            SetupSubScreens.theme.name -> navController.navigate(SetupSubScreens.fontsize.name)
+                            SetupSubScreens.fontsize.name -> navController.navigate(SetupSubScreens.launcher.name)
+                            SetupSubScreens.launcher.name -> navController.navigate(AppScreens.Home.name)
                         }
                     }, onBack = { navController.popBackStack() })
                 }
@@ -241,6 +252,25 @@ fun MainScreen(
                         },
                         setupStatus = setupStatus!!
                     )
+                }
+                composable(route = SetupSubScreens.theme.name) {
+                    ThemePickerSetup(
+                        navController = navController,
+                        isThemeDark = isThemeDark!!,
+                        { viewModel.changeThemeToDark() },
+                        { viewModel.changeThemeToLight() },
+                        colorTheme,
+                        { viewModel.setThemeColor(it) },
+                        { navController.navigate(AppScreens.Home.name) })
+                }
+                composable(route = SetupSubScreens.fontsize.name) {
+                    FontSizeSetup(
+                        navController = navController,
+                        viewModel,
+                       )
+                }
+                composable(route = SetupSubScreens.launcher.name) {
+                    ChangeLauncherSetup(navController, )
                 }
 
                 // Pantalla de Home

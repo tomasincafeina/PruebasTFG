@@ -16,4 +16,9 @@
     <string name="favoriteapps">favoriteapps</string>
     <string name="atras">Atrás</string>
     <string name="colorsetting">Color\n</string>
+    <string name="theme">theme</string>
+    <string name="mode">mode</string>
+    <string name="pwd">password</string>
+    <string name="initialapps">initialapps</string>
+    <string name="finished_setup">finished_setup</string>
 </resources>

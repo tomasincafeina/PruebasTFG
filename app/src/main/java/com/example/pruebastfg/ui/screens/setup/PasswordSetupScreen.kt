@@ -1,15 +1,20 @@
-package com.example.pruebastfg.ui.screens.settings.pwd
+package com.example.pruebastfg.ui.screens.setup
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
-import androidx.compose.material.icons.rounded.Done
+import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -17,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -27,87 +33,93 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
 import com.example.pruebastfg.ui.sharedItems.PwdCorrectIcon
 import com.example.pruebastfg.ui.sharedItems.PwdIncorrectIcon
 
 @Composable
-fun PasswordSetupScreen(
-    onDoneClick: (pwd: String) -> Unit,
-    modifier: Modifier = Modifier
+fun UserNameSetupScreen(
+    //navController: NavHostController,
+    userName: String,
+    onNameChange: (String) -> Unit,
+    btnSaveOnClick: () -> Unit = {},
+    btnClearOnClick: () -> Unit = {},
+    btnNextOnClick: () -> Unit = {},
+    setupStatus: Boolean
 ) {
-    var pwd by remember { mutableStateOf("") }
-    val keyboardController = LocalSoftwareKeyboardController.current
+    // Focus requester to request focus for the text field
     val focusRequester = remember { FocusRequester() }
-    val pwdIsCorrectLength: Boolean = pwd.length == 4
+    val keyboardController = LocalSoftwareKeyboardController.current
 
+    // LaunchedEffect to request focus and show keyboard when the screen appears
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
         keyboardController?.show()
     }
 
     Column(
-        modifier = modifier,
+        verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(10.dp)
     ) {
-        Text(
-            modifier = Modifier.width(350.dp),
-            text = "La contraseña debe tener exactamente 4 números"
+        Icon(
+            Icons.Rounded.Person,
+            contentDescription = "persona",
+            modifier = Modifier.size(100.dp)
         )
 
-        // Mostramos el contador de dígitos
-        Text("${pwd.length}/4 números")
+        Text(
+            "¿Como te llamas?",
+            fontSize = 35.sp,
+            modifier = Modifier.padding(20.dp),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.SemiBold
+        )
 
         OutlinedTextField(
-            value = pwd,
-            onValueChange = {
-                if (it.length <= 4 && it.all { char -> char.isDigit() }) {
-                    pwd = it
-                }
-            },
-            label = {
-                Text(
-                    text = "Ingresa tu contraseña"
-                )
-            },
-            trailingIcon = {
-                if (pwd.isEmpty()) {
-
-                } else if (pwdIsCorrectLength) {
-                    PwdCorrectIcon()
-                } else {
-                    PwdIncorrectIcon()
-
-                }
-            },
-            isError = pwd.isNotEmpty() && !pwdIsCorrectLength,
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.NumberPassword,
-                imeAction = ImeAction.Done
-            ),
-            keyboardActions = KeyboardActions(
-                onDone = {
-                    if (pwdIsCorrectLength) {
-                        onDoneClick(pwd)
-                    }
-                }
-            ),
-            singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
+            value = userName,
+            onValueChange = { onNameChange(it)  },
+            label = { Text("Escribe tu nombre") },
             modifier = Modifier
                 .focusRequester(focusRequester)
-                .onKeyEvent {
-                    if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown) {
-                        if (pwd.isNotEmpty()) {
-                            pwd = pwd.dropLast(1)
-                        }
-                        true
-                    } else {
-                        false
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        keyboardController?.show()
                     }
-                }
+                },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Text,
+                imeAction = ImeAction.Done
+            )
         )
 
-
+//        Row {
+//            Button(
+//                onClick = { btnSaveOnClick }
+//            ) {
+//                Text("Guardar nombre")
+//            }
+//            Spacer(modifier = Modifier.width(8.dp))
+//            Button(
+//                onClick = btnClearOnClick
+//            ) {
+//                Text("Borrar nombre")
+//            }
+//        }
+//
+//        Spacer(modifier = Modifier.height(16.dp))
+//
+//        Button(
+//            onClick = btnNextOnClick,
+//        ) {
+//            Text("Siguiente")
+//        }
     }
 }
 

@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.tooling.preview.Preview
+
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
@@ -61,15 +63,11 @@ fun SetupBottomAppBar(
                         modifier = Modifier
                             .weight(1f)
                             .padding(bottom = 10.dp, end = 5.dp)
-                            .border(
-                                2.dp,
-                                MaterialTheme.colorScheme.surfaceDim,
-                                shape = Shapes().large
-                            )
+
                     ) {
                         Row(
                             modifier = Modifier
-                                .padding(20.dp)
+                                .padding(vertical = 18.dp)
                                 .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.Center
@@ -97,27 +95,35 @@ fun SetupBottomAppBar(
                     elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
                     onClick = { onNext() },
                     modifier = Modifier
+                        .fillMaxWidth()
                         .weight(1f)
                         .padding(bottom = 10.dp)
-                        .border(
-                            2.dp,
-                            MaterialTheme.colorScheme.surfaceDim,
-                            shape = Shapes().large
-                        )
+
                 ) {
-                    Row(
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(20.dp)
+//                            .fillMaxSize(),
+//                       contentAlignment = Alignment.Center
+//                    ) {
+//                        Text(
+//                            text = "Siguiente",
+//                            textAlign = TextAlign.Center,
+//                            fontSize = 25.sp,
+//                            fontWeight = FontWeight.SemiBold
+//                        )
+//                    }
+                    Box(
+                        contentAlignment = Alignment.Center,
                         modifier = Modifier
-                            .padding(20.dp)
-                            .fillMaxSize(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
+                            .padding(vertical = 18.dp)
                     ) {
                         Text(
-                            modifier = Modifier.fillMaxHeight(),
                             text = "Siguiente",
-                            textAlign = TextAlign.Center,
                             fontSize = 25.sp,
-                            fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                            fontWeight = FontWeight.SemiBold,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
@@ -125,3 +131,16 @@ fun SetupBottomAppBar(
         }
     )
 }
+
+
+@Preview(showBackground = true)
+@Composable
+fun SetupBottomAppBarPreview() {
+    SetupBottomAppBar(
+        currentScreen = SetupSubScreens.username,
+        navController = NavHostController(androidx.compose.ui.platform.LocalContext.current),
+        onNext = { /*TODO*/ },
+        onBack = { /*TODO*/ }
+    )
+}
+

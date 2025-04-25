@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.CardDefaults
@@ -47,14 +49,21 @@ fun WelcomeSetupScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         Text(
-            text = "Bienvenido a EasyWay UI",
-            fontSize = 20.sp,
-            fontStyle = FontStyle.Italic,
+            "Bienvenido \n a \n EasyWay UI",
+            fontSize = 45.sp,
+           // modifier = Modifier.padding(20.dp),
+            textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
+            fontStyle = FontStyle.Italic,
+            lineHeight = 60.sp
         )
-        Spacer(modifier = Modifier.height(16.dp))
+        //Spacer(modifier = Modifier.height(16.dp))
+        Icon(Icons.Rounded.Favorite, contentDescription = "logo", modifier = Modifier.size(120.dp))
         Text(
-            text = "Vamos a comenzar con el proceso de ajuste"
+            "Vamos a comenzar con el proceso de ajuste",
+            fontSize = 25.sp,
+            modifier = Modifier.padding(20.dp),
+            textAlign = TextAlign.Center,
         )
     }
     BigLowButton({ navigateForward() }, "Comenzar", false)
