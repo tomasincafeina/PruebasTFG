@@ -2,6 +2,7 @@ package com.example.pruebastfg.ui.items
 
 import android.graphics.Bitmap
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +34,7 @@ import com.example.pruebastfg.AppInfo
 
 @Composable
 fun AppItemProto(
-    appInfo: AppInfo, bitmap: Bitmap?, onClick: () -> Unit
+    appInfo: AppInfo, bitmap: Bitmap?, onClick: () -> Unit, isSelected: Boolean = false
 ) {
 //    val bitmap = remember(appInfo.icon) {
 //        appInfo.icon?.toBitmap()
@@ -56,7 +57,13 @@ fun AppItemProto(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { onClick() }
-                    .padding(10.dp),
+                    .padding(10.dp).let {
+                        if (isSelected){
+                           it.border(2.dp, MaterialTheme.colorScheme.primary)
+                        }else{
+                            it
+                        }
+                    },
                 contentAlignment = Alignment.BottomEnd
 
             ) {

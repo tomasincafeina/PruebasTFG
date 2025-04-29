@@ -46,23 +46,35 @@ fun WelcomeSetupScreen(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(25.dp)
+
     ) {
         Text(
             "Bienvenido \n a \n EasyWay UI",
             fontSize = 45.sp,
-           // modifier = Modifier.padding(20.dp),
+            // modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
             fontStyle = FontStyle.Italic,
-            lineHeight = 60.sp
+            lineHeight = 60.sp,
+            modifier = Modifier.weight(1f)
         )
         //Spacer(modifier = Modifier.height(16.dp))
-        Icon(Icons.Rounded.Favorite, contentDescription = "logo", modifier = Modifier.size(120.dp))
+        Icon(
+            Icons.Rounded.Favorite,
+            contentDescription = "logo",
+            modifier = Modifier
+                .size(120.dp)
+                .weight(1f)
+        )
         Text(
             "Vamos a comenzar con el proceso de ajuste",
             fontSize = 25.sp,
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier
+                .padding(20.dp)
+                .weight(1f),
             textAlign = TextAlign.Center,
         )
     }

@@ -40,13 +40,18 @@ fun RemoveApps(
             verticalArrangement = Arrangement.Top
         ) {
             items(apps) { (appInfo, bitmap) ->
+                var isSelected: Boolean = false
                 AppItemProto(
                     appInfo = appInfo,
                     bitmap = bitmap,
-                    onClick = { onAppClick(appInfo) })
+                    onClick = {
+                        onAppClick(appInfo)
+                        isSelected = !isSelected
+                    },
+                    isSelected = isSelected,
+                )
             }
         }
         BigLowButton(onClickTerminar, "Terminar", false)
-
     }
 }

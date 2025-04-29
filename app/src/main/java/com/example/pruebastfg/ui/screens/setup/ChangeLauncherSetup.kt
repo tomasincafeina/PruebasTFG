@@ -47,7 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import android.provider.Settings
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ButtonElevation
 
 @Composable
 fun ChangeLauncherSetup(
@@ -62,18 +65,23 @@ fun ChangeLauncherSetup(
             .fillMaxSize()
     )
     {
-
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceEvenly,
+        Text(
+            "Eligeme como tu App principal",
+            fontSize = 35.sp,
+            modifier = Modifier.padding(20.dp),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 40.sp
+        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
-                .fillMaxSize()
+                .fillMaxWidth()
         ) {
-            // ... (tu contenido existente) ...
 
-            // Botón para configurar el launcher
             Button(
+                elevation =  ButtonDefaults.buttonElevation(8.dp),
                 onClick = {
                     try {
                         // Intent específico para ajustes de launcher (puede no funcionar en todos los dispositivos)
@@ -88,133 +96,150 @@ fun ChangeLauncherSetup(
                         context.startActivity(selectorIntent)
                     }
                 },
+                colors = ButtonColors(
+                    contentColor = Color.Black,
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                ),
                 modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(0.8f),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Black,
-                    contentColor = Color.White
-                )
+                //.border(2.dp, Color.Black, CircleShape),
             ) {
-                Text("Configurar Launcher", fontSize = 18.sp)
-            }
 
-            // ... (resto de tu contenido) ...
-        }
-        Text(
-            "Eligeme como tu App principal",
-            fontSize = 35.sp,
-            modifier = Modifier.padding(20.dp),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 40.sp
-        )
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Box(
-                modifier = Modifier
-                    .border(2.dp, Color.Black, CircleShape)
-            ) {
-                Text("Cambia tu Launcher", fontSize = 15.sp, modifier = Modifier.padding(20.dp))
-            }
-            Box(
-                modifier = Modifier
-                    .border(2.dp, Color.Black, CircleShape)
-            ) {
-                Icon(
-                    imageVector = Icons.Rounded.Settings,
-                    contentDescription = "settings",
-                    tint = Color.Black,
-                    modifier = Modifier
-                        .clickable { }
-                        .size(48.dp)
-                        .padding(9.dp)
-                )
-            }
-        }
-        Box(
-            modifier = Modifier
-                .border(2.dp, Color.Black, shape = ShapeDefaults.Medium)
-                .width(350.dp)
-                .height(150.dp)
-                .align(Alignment.CenterHorizontally)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.SpaceEvenly,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Home,
-                        contentDescription = "home"
-                    )
 
-                    Text("Default Launcher")
-                    RadioButton(
-                        selected = false, onClick = { /*TODO*/ }, colors = RadioButtonColors(
-                            selectedColor = Color.Black,
-                            unselectedColor = Color.Black,
-                            disabledSelectedColor = Color.Black,
-                            disabledUnselectedColor = Color.Black
-                        )
-                    )
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.Face,
-                        contentDescription = "home"
-                    )
-                    Text("Default Launcher")
-                    RadioButton(
-                        selected = true, onClick = { /*TODO*/ }, colors = RadioButtonColors(
-                            selectedColor = Color.Black,
-                            unselectedColor = Color.Black,
-                            disabledSelectedColor = Color.Black,
-                            disabledUnselectedColor = Color.Black
-                        )
-                    )
-                }
+                Text("Cambia tu App principal", fontSize = 20.sp, modifier = Modifier.padding(20.dp))
             }
+//            Box(
+//                modifier = Modifier
+//                    .border(2.dp, Color.Black, CircleShape)
+//                    .align(Alignment.CenterVertically)
+//                    .clickable {
+//                        try {
+//                            // Intent específico para ajustes de launcher (puede no funcionar en todos los dispositivos)
+//                            val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+//                            context.startActivity(intent)
+//                        } catch (e: Exception) {
+//                            // Fallback: intent genérico para seleccionar launcher
+//                            val selectorIntent = Intent(Intent.ACTION_MAIN).apply {
+//                                addCategory(Intent.CATEGORY_HOME)
+//                                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                            }
+//                            context.startActivity(selectorIntent)
+//                        }
+//                    }
+//            ) {
+//                Icon(
+//                    imageVector = Icons.Rounded.Settings,
+//                    contentDescription = "settings",
+//                    tint = Color.Black,
+//                    modifier = Modifier
+//                        .size(48.dp)
+//                        .padding(9.dp)
+//                )
+//            }
         }
-        Row(modifier = Modifier.padding(horizontal = 10.dp)) {
+        //DOCUMENTACION esto no hace su funcion de explicar al usuario como cambiar el launcher, solo lo hace mas confuso
+//        Box(
+//            modifier = Modifier
+//                .border(2.dp, Color.Black, shape = ShapeDefaults.Medium)
+//                .width(350.dp)
+//                .height(150.dp)
+//                .align(Alignment.CenterHorizontally)
+//                .clickable {
+//                    try {
+//                        // Intent específico para ajustes de launcher (puede no funcionar en todos los dispositivos)
+//                        val intent = Intent(Settings.ACTION_HOME_SETTINGS)
+//                        context.startActivity(intent)
+//                    } catch (e: Exception) {
+//                        // Fallback: intent genérico para seleccionar launcher
+//                        val selectorIntent = Intent(Intent.ACTION_MAIN).apply {
+//                            addCategory(Intent.CATEGORY_HOME)
+//                            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+//                        }
+//                        context.startActivity(selectorIntent)
+//                    }
+//                }
+//        ) {
+//            Column(
+//                verticalArrangement = Arrangement.SpaceEvenly,
+//                horizontalAlignment = Alignment.CenterHorizontally,
+//                modifier = Modifier.fillMaxSize()
+//            ) {
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.SpaceEvenly,
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Rounded.Home,
+//                        contentDescription = "home"
+//                    )
+//
+//                    Text("Default Launcher")
+//                    RadioButton(
+//                        selected = false, onClick = { /*TODO*/ }, colors = RadioButtonColors(
+//                            selectedColor = Color.Black,
+//                            unselectedColor = Color.Black,
+//                            disabledSelectedColor = Color.Black,
+//                            disabledUnselectedColor = Color.Black
+//                        )
+//                    )
+//                }
+//                Row(
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.SpaceEvenly,
+//                    modifier = Modifier.fillMaxWidth()
+//                ) {
+//                    Icon(
+//                        imageVector = Icons.Rounded.Face,
+//                        contentDescription = "home"
+//                    )
+//                    Text("Default Launcher")
+//                    RadioButton(
+//                        selected = true, onClick = { /*TODO*/ }, colors = RadioButtonColors(
+//                            selectedColor = Color.Black,
+//                            unselectedColor = Color.Black,
+//                            disabledSelectedColor = Color.Black,
+//                            disabledUnselectedColor = Color.Black
+//                        )
+//                    )
+//                }
+//            }
+//        }
+        Column(modifier = Modifier.padding(horizontal = 20.dp)) {
             Icon(
-                imageVector = Icons.Default.Info,
+                imageVector = Icons.Outlined.Info,
                 contentDescription = "info",
-                tint = Color.DarkGray,
                 modifier = Modifier
-                    .size(48.dp)
-                    .padding(5.dp)
-            )
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant,
-                        shape = ShapeDefaults.Medium
-                    )
-            ) {
+                    .size(30.dp)
 
-                Text(
-                    "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
-                    fontSize = 15.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier
-                        .padding(15.dp)
-                        .fillMaxWidth(),
-                )
-            }
+            )
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
+                fontSize = 15.sp,
+                textAlign = TextAlign.Start,
+                modifier = Modifier.padding(3.dp)
+
+            )
+//            Box(
+//                modifier = Modifier
+//                    .fillMaxWidth()
+//                    .background(
+//                        MaterialTheme.colorScheme.surfaceVariant,
+//                        shape = ShapeDefaults.Medium
+//                    )
+//            ) {
+//
+//                Text(
+//                    "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
+//                    fontSize = 15.sp,
+//                    textAlign = TextAlign.Center,
+//                    modifier = Modifier
+//                        .padding(13.dp)
+//                        .fillMaxWidth(),
+//                )
+//            }
         }
 
     }

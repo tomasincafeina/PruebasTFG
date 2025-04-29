@@ -50,7 +50,10 @@ import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
 import com.example.pruebastfg.ui.screens.settings.RemoveApps
 import com.example.pruebastfg.ui.screens.setup.ChangeLauncherSetup
+import com.example.pruebastfg.ui.screens.setup.FinishedSetup
 import com.example.pruebastfg.ui.screens.setup.FontSizeSetup
+import com.example.pruebastfg.ui.screens.setup.ModePickerSetup
+import com.example.pruebastfg.ui.screens.setup.PasswordSetupScreen
 import com.example.pruebastfg.ui.screens.setup.ThemePickerSetup
 import com.example.pruebastfg.ui.screens.setup.UserNameSetupScreen
 import com.example.pruebastfg.ui.screens.setup.WelcomeSetupScreen
@@ -78,6 +81,7 @@ enum class SetupSubScreens(@StringRes val title: Int) {
     mode(title = R.string.mode),
     pwd(title = R.string.pwd),
     initialapps(title = R.string.initialapps),
+
 
 }
 
@@ -211,7 +215,13 @@ fun MainScreen(
                             SetupSubScreens.username.name -> navController.navigate(SetupSubScreens.theme.name)
                             SetupSubScreens.theme.name -> navController.navigate(SetupSubScreens.fontsize.name)
                             SetupSubScreens.fontsize.name -> navController.navigate(SetupSubScreens.launcher.name)
-                            SetupSubScreens.launcher.name -> navController.navigate(AppScreens.Home.name)
+                            SetupSubScreens.launcher.name -> navController.navigate(SetupSubScreens.mode.name)
+                            SetupSubScreens.mode.name -> navController.navigate(SetupSubScreens.pwd.name)
+                            SetupSubScreens.pwd.name -> navController.navigate(SetupSubScreens.initialapps.name)
+                            SetupSubScreens.initialapps.name -> navController.navigate(AppScreens.FinishedSetup.name)
+                            AppScreens.FinishedSetup.name -> navController.navigate(AppScreens.Home.name)
+
+
                         }
                     }, onBack = { navController.popBackStack() })
                 }
@@ -267,12 +277,52 @@ fun MainScreen(
                     FontSizeSetup(
                         navController = navController,
                         viewModel,
-                       )
+                    )
                 }
                 composable(route = SetupSubScreens.launcher.name) {
-                    ChangeLauncherSetup(navController, )
+                    ChangeLauncherSetup(navController)
                 }
+                composable(route = SetupSubScreens.mode.name) {
+                    ModePickerSetup(navController)
+                }
+                composable(route = SetupSubScreens.pwd.name) {
+                    PasswordSetupScreen(
+                        navController,
+                        pwd = uiState.pwd,
+                        onPasswordChange =  { viewModel.updatePassword(it) },
+                        setPassword = { viewModel.setPassword(uiState.pwd) }
+                    )
+                }
+                composable(route = SetupSubScreens.initialapps.name) {
+                    val allApps by viewModel.allApps.collectAsState()
 
+                    AllAppsListScreen(apps = allApps, onAppClickAdd = { app ->
+                        val appExists = appsProto.any { it.first.packageName == app.packageName }
+
+                        if (!appExists) {
+
+                            viewModel.toogleIsSelected(app)
+                            viewModel.addAppXX(
+                                name = app.name, packageName = app.packageName, icon = app.icon
+                            )
+                            Toast.makeText(context, "Añadiendo ${app.name}...", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            viewModel.toogleIsSelected(app)
+                            Toast.makeText(
+                                context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
+                            ).show()
+                        }
+                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
+                }
+                composable(route = AppScreens.FinishedSetup.name) {
+                    FinishedSetup(
+                        navController,
+                        { viewModel.toggleSetupDone()},
+                        {navController.navigate(AppScreens.Home.name)}
+                    )
+                }
+////////////////////////////////////////FINAL SETUP////////////////////////////////////////////
                 // Pantalla de Home
                 composable(route = AppScreens.Home.name) {
                     setupStatus?.let { it ->

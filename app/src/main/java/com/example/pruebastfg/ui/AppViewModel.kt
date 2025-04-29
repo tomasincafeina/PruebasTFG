@@ -101,6 +101,9 @@ class AppViewModel(
         "com.google.android.deskclock",   // Reloj (Google)
         "com.android.deskclock",      // Reloj (AOSP)
     )
+    fun updatePassword(password: String) {
+        _uiState.value = _uiState.value.copy(pwd = password)
+    }
 
     fun getPassword(): Flow<String> {
         return prefsRepo.getPassword()
