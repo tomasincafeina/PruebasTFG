@@ -43,7 +43,18 @@ class AppViewModel(
     val setupDone: Flow<Boolean?> = prefsRepo.getSetupStatus()
     val isThemeDark: Flow<Boolean?> = prefsRepo.isThemeDark()
     val colorTheme: Flow<String?> = prefsRepo.getThemeColor()
+    val isAssistedMode: Flow<Boolean?> = prefsRepo.getIsAssistedMode()
 
+    fun setToIndividualMode() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.setToIndividualMode(true)
+        }
+    }
+    fun setToAssistedMode() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.setToAssistedMode(true)
+        }
+    }
     // Estado mutable usando MutableState
     private val _fontSize: MutableStateFlow<TextUnit> = MutableStateFlow(16.sp)
 
@@ -53,7 +64,7 @@ class AppViewModel(
     // Minimum and maximum font sizes
     private val minSize = 12.sp
     private val maxSize = 40.sp
-    private val stepSize = 2.sp
+    private val stepSize = 5.sp
 
     fun increaseFontSize() {
         // Forma correcta de incrementar en Kotlin

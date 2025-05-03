@@ -33,6 +33,24 @@ class PreferencesRepository(context: Context) {
             androidx.datastore.preferences.core.stringPreferencesKey("theme_color")
         private val PASSWORD_KEY =
             androidx.datastore.preferences.core.stringPreferencesKey("password")
+        private val IS_ASSITED_MODE_KEY =
+            androidx.datastore.preferences.core.booleanPreferencesKey("is_assisted_mode")
+    }
+
+    fun getIsAssistedMode(): Flow<Boolean?> {
+        return dataStore.data.map { preferences ->
+            preferences[IS_ASSITED_MODE_KEY] ?: true
+        }
+    }
+    suspend fun setToIndividualMode(isAssistedMode: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[IS_ASSITED_MODE_KEY] = false
+        }
+    }
+    suspend fun setToAssistedMode(isAssistedMode: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[IS_ASSITED_MODE_KEY] = true
+        }
     }
 
     fun getPassword(): Flow<String> {

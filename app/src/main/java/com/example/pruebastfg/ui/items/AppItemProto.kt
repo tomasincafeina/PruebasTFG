@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pruebastfg.AppInfo
@@ -34,12 +35,17 @@ import com.example.pruebastfg.AppInfo
 
 @Composable
 fun AppItemProto(
-    appInfo: AppInfo, bitmap: Bitmap?, onClick: () -> Unit, isSelected: Boolean = false
+    appInfo: AppInfo,
+    bitmap: Bitmap?,
+    onClick: () -> Unit,
+    isSelected: Boolean = false,
+    fontSize: TextUnit
 ) {
 //    val bitmap = remember(appInfo.icon) {
 //        appInfo.icon?.toBitmap()
 //    }
-    Column(modifier = Modifier.padding(bottom = 10.dp),) {
+
+    Column(modifier = Modifier.padding(bottom = 10.dp)) {
         Card(
             elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
             modifier = Modifier
@@ -57,10 +63,11 @@ fun AppItemProto(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { onClick() }
-                    .padding(10.dp).let {
-                        if (isSelected){
-                           it.border(2.dp, MaterialTheme.colorScheme.primary)
-                        }else{
+                    .padding(10.dp)
+                    .let {
+                        if (isSelected) {
+                            it.border(2.dp, MaterialTheme.colorScheme.primary)
+                        } else {
                             it
                         }
                     },
@@ -105,7 +112,7 @@ fun AppItemProto(
             Text(
                 modifier = Modifier,
                 text = appInfo.name,
-                fontSize = 20.sp,
+                fontSize = fontSize?:20.sp,
                 maxLines = 2,
                 textAlign = TextAlign.Center,
             )

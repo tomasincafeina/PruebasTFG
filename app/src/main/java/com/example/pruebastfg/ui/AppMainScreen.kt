@@ -33,6 +33,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -88,7 +89,7 @@ enum class SetupSubScreens(@StringRes val title: Int) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(
-    currentScreen: AppScreens,
+    currentScreen: Enum<*>,
     canNavigateBack: Boolean,
     navigateUp: () -> Unit,
     onSettingsClick: () -> Unit,  // Callback para manejar el clic en settings
@@ -164,6 +165,8 @@ fun MainScreen(
     // Determinar la pantalla actual
     val currentScreen = AppScreens.entries.find {
         it.name == backStackEntry?.destination?.route
+    } ?: SetupSubScreens.entries.find {
+        it.name == backStackEntry?.destination?.route
     } ?: AppScreens.Home
 
     // Determinar si la pantalla actual es parte del flujo de Setup
@@ -180,6 +183,7 @@ fun MainScreen(
     val isThemeDark by remember { viewModel.isThemeDark }.collectAsState(initial = null)
     val setupStatus by remember { viewModel.setupDone }.collectAsState(initial = null)
     val colorTheme by remember { viewModel.colorTheme }.collectAsState(initial = "blue")
+    val isAssistedMode by remember { viewModel.isAssistedMode }.collectAsState(initial = null)
 
     val startDestination by viewModel.startDestination.collectAsState()
     val appsProto by viewModel.apps.collectAsState(initial = emptyList())
@@ -188,22 +192,32 @@ fun MainScreen(
     if (setupStatus != null && isThemeDark != null) { // Espera hasta que setupStatus y isThemeDark tenga un valor real
         Scaffold(containerColor = MaterialTheme.colorScheme.surface,
             topBar = {
-                AppTopBar(
-                    currentScreen = currentScreen,
-                    canNavigateBack = navController.previousBackStackEntry != null,
-                    navigateUp = { navController.popBackStack() },
-                    onSettingsClick = { navController.navigate("password") },
-                    modifier = Modifier,
-                    topBarTitle =
-                    if (currentScreen == AppScreens.Home && userName!!.isNotBlank()) {
-                        "Hola, $userName!"
-                    } else if (currentScreen == AppScreens.Home) {
-                        ""
-                    } else {
-                        currentScreen.name
-                    },
+                if (currentScreen == AppScreens.Home || currentScreen == AppScreens.Settings) {
+                    AppTopBar(
+                        currentScreen = currentScreen,
+                        canNavigateBack = navController.previousBackStackEntry != null,
+                        navigateUp = { navController.popBackStack() },
+                        onSettingsClick = {
+                            //Documentacion
+                            //Si esta en modo asistido se muestra el password y si no lo esta no pasa por el password
+                            if (isAssistedMode == true) {
+                                navController.navigate("password")
+                            } else {
+                                navController.navigate(AppScreens.Settings.name)
+                            }
+                        },
+                        modifier = Modifier,
+                        topBarTitle =
+                        if (currentScreen == AppScreens.Home && userName!!.isNotBlank()) {
+                            "Hola, $userName!"
+                        } else if (currentScreen == AppScreens.Home) {
+                            ""
+                        } else {
+                            currentScreen.name
+                        },
 
-                    )
+                        )
+                }
             }, bottomBar = {
                 // Mostrar el BottomAppBar solo si estamos en el flujo de Setup
                 if (isSetupFlow) {
@@ -283,13 +297,16 @@ fun MainScreen(
                     ChangeLauncherSetup(navController)
                 }
                 composable(route = SetupSubScreens.mode.name) {
-                    ModePickerSetup(navController)
+                    ModePickerSetup(
+                        navController,
+                        { viewModel.setToIndividualMode() },
+                        { viewModel.setToAssistedMode() })
                 }
                 composable(route = SetupSubScreens.pwd.name) {
                     PasswordSetupScreen(
                         navController,
                         pwd = uiState.pwd,
-                        onPasswordChange =  { viewModel.updatePassword(it) },
+                        onPasswordChange = { viewModel.updatePassword(it) },
                         setPassword = { viewModel.setPassword(uiState.pwd) }
                     )
                 }
@@ -318,8 +335,8 @@ fun MainScreen(
                 composable(route = AppScreens.FinishedSetup.name) {
                     FinishedSetup(
                         navController,
-                        { viewModel.toggleSetupDone()},
-                        {navController.navigate(AppScreens.Home.name)}
+                        { viewModel.toggleSetupDone() },
+                        { navController.navigate(AppScreens.Home.name) }
                     )
                 }
 ////////////////////////////////////////FINAL SETUP////////////////////////////////////////////
@@ -341,11 +358,11 @@ fun MainScreen(
                         AppsFromProto(
                             appsProto,
                             onAppClick = onAppClick,
-                            //changeSetupDoneStatus = { viewModel.toggleSetupDone() },
+
                             { navController.navigate(AppScreens.AddApp.name) },
                             { navController.navigate(AppScreens.RemoveApp.name) },
                             { navController.navigate(AppScreens.FavoriteApps.name) },
-                            //setupStatus = it
+                            viewModel.fontSize.collectAsState().value
                         )
                     }
                 }
@@ -364,7 +381,14 @@ fun MainScreen(
                     DebugSettingScreen(
                         changeSetupDoneStatus = {
                             viewModel.toggleSetupDone()
-                        }, setupStatus = setupStatus!!
+                        },
+                        setupStatus = setupStatus!!,
+                        isAssistedMode!!,
+                        setToAssistedMode = { viewModel.setToAssistedMode() },
+                        setToIndividualMode = { viewModel.setToIndividualMode() },
+                        increaseFontSize = { viewModel.increaseFontSize() },
+                        decreaseFontSize = { viewModel.decreaseFontSize() },
+                        fontSize = viewModel.fontSize.collectAsState().value
                     )
                 }
 
@@ -412,13 +436,16 @@ fun MainScreen(
 
                     RemoveApps(appsProto, onAppClick = { app ->
                         viewModel.removeApp(app.id)
-                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
+                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) },
+                        viewModel.fontSize.collectAsState().value
+                    )
                 }
                 composable(route = AppScreens.FavoriteApps.name) {
 
                     SelectFavoriteApps(appsProto, onAppClick = { app ->
                         viewModel.toggleFavorite(app.id)
-                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) }
+                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) },
+                        viewModel.fontSize.collectAsState().value
                     )
                 }
             }
@@ -474,6 +501,7 @@ fun AppsFromProto(
     goToAddApp: () -> Unit, // Callback para navegar a la pantalla de todas las apps
     goToRemoveApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
     goToFavoriteApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
+    fontSize: TextUnit,
 
     //setupStatus: Boolean // Estado actual del setup
 ) {
@@ -510,9 +538,12 @@ fun AppsFromProto(
             verticalArrangement = Arrangement.Top
         ) {
             items(apps) { (appInfo, bitmap) ->
-                AppItemProto(appInfo = appInfo,
+                AppItemProto(
+                    appInfo = appInfo,
                     bitmap = bitmap,
-                    onClick = { onAppClick(appInfo.packageName) })
+                    onClick = { onAppClick(appInfo.packageName) },
+                    fontSize = fontSize
+                )
             }
         }
     }

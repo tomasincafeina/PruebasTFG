@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
+import com.example.pruebastfg.ui.sharedItems.HybridStepper
 
 @Composable
 fun WelcomeSetupScreen(

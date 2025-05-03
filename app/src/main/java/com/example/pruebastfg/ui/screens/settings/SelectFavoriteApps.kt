@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.AppInfo
 import com.example.pruebastfg.ui.items.AppItemProto
@@ -21,7 +22,8 @@ import com.example.pruebastfg.ui.sharedItems.BigLowButton
 fun SelectFavoriteApps(
     apps: List<Pair<AppInfo, Bitmap?>>, // Lista de aplicaciones con sus iconos
     onAppClick: (AppInfo) -> Unit, // Callback cuando se hace clic en una app
-    onClickTerminar: () -> Unit
+    onClickTerminar: () -> Unit,
+    fontSize: TextUnit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -42,7 +44,8 @@ fun SelectFavoriteApps(
                 AppItemProto(
                     appInfo = appInfo,
                     bitmap = bitmap,
-                    onClick = { onAppClick(appInfo) })
+                    onClick = { onAppClick(appInfo) },
+                    fontSize = fontSize)
             }
         }
         BigLowButton(onClickTerminar, "Terminar", false)

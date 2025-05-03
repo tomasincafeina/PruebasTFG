@@ -141,8 +141,12 @@ import androidx.navigation.NavHostController
 //    }
 //}
 @Composable
-fun ModePickerSetup(navController: NavHostController) {
-    var isAssistedMode by remember { mutableStateOf(true) }
+fun ModePickerSetup(
+    navController: NavHostController,
+    setToIndividualMode: () -> Unit,
+    setToAssistedMode: () -> Unit
+) {
+    //var isAssistedMode by remember { mutableStateOf(true) }
     var selectedMode by remember { mutableStateOf<String?>(null) }
 
     Column(
@@ -168,7 +172,7 @@ fun ModePickerSetup(navController: NavHostController) {
                 description = "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
                 isSelected = selectedMode == "assisted",
                 onSelect = {
-                    isAssistedMode
+                    setToAssistedMode()
                     selectedMode = "assisted"
                 },
                 onInfoClick = { /* Mostrar diálogo con más info */ }
@@ -180,7 +184,7 @@ fun ModePickerSetup(navController: NavHostController) {
                 description = "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
                 isSelected = selectedMode == "individual",
                 onSelect = {
-                    !isAssistedMode == false
+                    setToIndividualMode()
                     selectedMode = "individual"
                 },
                 onInfoClick = { /* Mostrar diálogo con más info */ }
@@ -222,7 +226,11 @@ fun ModeOptionCard(
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(title, style = MaterialTheme.typography.headlineMedium,  fontWeight = FontWeight.SemiBold)
+                Text(
+                    title,
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
                 Spacer(Modifier.weight(1f))
                 IconButton(onClick = onInfoClick) {
                     Icon(Icons.Outlined.Info, contentDescription = "Más información")

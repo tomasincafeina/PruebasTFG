@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.AppInfo
 import com.example.pruebastfg.ui.items.AppItemProto
@@ -22,7 +23,8 @@ import com.example.pruebastfg.ui.sharedItems.BigLowButton
 fun RemoveApps(
     apps: List<Pair<AppInfo, Bitmap?>>, // Lista de aplicaciones con sus iconos
     onAppClick: (AppInfo) -> Unit, // Callback cuando se hace clic en una app
-    onClickTerminar: () -> Unit
+    onClickTerminar: () -> Unit,
+    fontSize: TextUnit
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -49,6 +51,7 @@ fun RemoveApps(
                         isSelected = !isSelected
                     },
                     isSelected = isSelected,
+                    fontSize = fontSize
                 )
             }
         }

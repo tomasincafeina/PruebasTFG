@@ -1,6 +1,7 @@
 package com.example.pruebastfg.ui.screens.setup
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Circle
 import androidx.compose.material.icons.rounded.KeyboardArrowDown
 import androidx.compose.material.icons.rounded.KeyboardArrowUp
 import androidx.compose.material3.Button
@@ -35,6 +38,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.navigation.NavHostController
 import com.example.pruebastfg.ui.AppScreens
 import com.example.pruebastfg.ui.AppViewModel
@@ -51,7 +56,6 @@ fun FontSizeSetup(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
             .fillMaxSize()
     ) {
         Text(
@@ -134,16 +138,56 @@ fun FontSizeSetup(
             )
             Spacer(modifier = Modifier.size(15.dp))
 
-            Text(
-                "Lorem ipsum odor amet, consectetuer adipiscing elit. Tempus nam tincidunt curabitur eu platea quisque.",
-                fontSize = fontSize, // Usa el tamaño seleccionado
-                textAlign = TextAlign.Center,
+//            Text(
+//                "Lorem ipsum odor amet, consectetuer adipiscing elit. Tempus nam tincidunt curabitur eu platea quisque.",
+//                fontSize = fontSize, // Usa el tamaño seleccionado
+//                textAlign = TextAlign.Center,
+//                modifier = Modifier
+//                    .padding(horizontal = 22.dp)
+//                    .fillMaxWidth(),
+//                fontWeight = FontWeight.SemiBold,
+//                lineHeight = 30.sp
+//            )
+            Card(
+                elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+                colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
                 modifier = Modifier
-                    .padding(horizontal = 22.dp)
-                    .fillMaxWidth(),
-                fontWeight = FontWeight.SemiBold,
-                lineHeight = 30.sp
-            )
+                    .padding(10.dp)
+                    .size(120.dp)
+                    .align(Alignment.CenterHorizontally)
+            ) {
+                Box(
+                    contentAlignment = Alignment.BottomEnd
+
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+
+                        Icon(
+                            imageVector = Icons.Rounded.Circle,
+                            contentDescription = "Aumentar tamaño",
+                            tint = MaterialTheme.colorScheme.surfaceTint,
+                            modifier = Modifier.size(60.dp)
+                        )
+                    }
+                }
+            }
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    modifier = Modifier,
+                    text = "EasyWay UI",
+                    fontSize = fontSize,
+                    maxLines = 2,
+                    textAlign = TextAlign.Center,
+                )
+            }
         }
     }
 }
