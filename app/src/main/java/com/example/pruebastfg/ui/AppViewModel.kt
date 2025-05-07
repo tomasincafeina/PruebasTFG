@@ -56,15 +56,15 @@ class AppViewModel(
         }
     }
     // Estado mutable usando MutableState
-    private val _fontSize: MutableStateFlow<TextUnit> = MutableStateFlow(16.sp)
+    private val _fontSize: MutableStateFlow<TextUnit> = MutableStateFlow(25.sp)
 
     // Exponemos el estado como State (solo lectura)
     val fontSize: StateFlow<TextUnit> = _fontSize
 
     // Minimum and maximum font sizes
-    private val minSize = 12.sp
-    private val maxSize = 40.sp
-    private val stepSize = 5.sp
+    private val minSize = 20.sp
+    private val maxSize = 42.5.sp
+    private val stepSize = 2.5.sp
 
     fun increaseFontSize() {
         // Forma correcta de incrementar en Kotlin

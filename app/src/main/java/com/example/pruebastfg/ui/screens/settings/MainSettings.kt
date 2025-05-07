@@ -19,6 +19,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.ui.items.SettingItem
 import com.example.pruebastfg.data.models.SettingModel
@@ -33,6 +34,7 @@ fun MainSettoingsScreen(
     goToDebugClick: () -> Unit,
     goToPasswordClick: () -> Unit,
     onClickAtras:() -> Unit,
+    fontSize: TextUnit
 ) {
     val settingsItems = remember {
         listOf(
@@ -59,7 +61,7 @@ fun MainSettoingsScreen(
             verticalArrangement = Arrangement.Top
         ) {
             items(settingsItems) { setting ->
-                SettingItem(setting)
+                SettingItem(setting, fontSize)
             }
         }
         BigLowButton(onClickAtras, "Atrás", true)

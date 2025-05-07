@@ -114,6 +114,7 @@ fun AppItemProto(
                 text = appInfo.name,
                 fontSize = fontSize?:20.sp,
                 maxLines = 2,
+                lineHeight = 35.sp,
                 textAlign = TextAlign.Center,
             )
         }

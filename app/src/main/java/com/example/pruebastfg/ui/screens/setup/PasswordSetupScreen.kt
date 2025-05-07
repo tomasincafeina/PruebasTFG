@@ -62,8 +62,16 @@ fun PasswordSetupScreen(
 ) {
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
+    val confirmPwdFocusRequester = remember { FocusRequester() }
     val pwdIsCorrectLength: Boolean = pwd.length == 4
     var isPwdVisible by remember { mutableStateOf(false) }
+
+    var confirPwd by remember { mutableStateOf("") }
+    var arePwdEqual by remember { mutableStateOf(false) }
+
+    if (pwd == confirPwd) {
+        arePwdEqual == true
+    }
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -141,10 +149,10 @@ fun PasswordSetupScreen(
                 ),
                 keyboardActions = KeyboardActions(
                     onDone = {
-                        if (pwdIsCorrectLength) {
-                            setPassword(pwd)
-                            keyboardController?.hide()
-                        }
+                        confirmPwdFocusRequester.requestFocus()
+                    },
+                    onNext = {
+                        confirmPwdFocusRequester.requestFocus()
                     }
                 ),
                 singleLine = true,
@@ -169,6 +177,84 @@ fun PasswordSetupScreen(
 
 
         }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            OutlinedTextField(
+                value = confirPwd,
+                onValueChange = { it ->
+                    // Only allow numeric input and limit to 4 characters
+                    if (it.length <= 4 && it.all { it.isDigit() }) {
+                        onPasswordChange(it)
+                    }
+                },
+                label = {
+                    Text(
+                        text = "Repite tu contraseña"
+                    )
+                },
+                trailingIcon = {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center,
+                    ) {
+                        // Validation icons (shown to the left of the visibility toggle)
+                        if (pwd.isNotEmpty()) {
+                            if (pwdIsCorrectLength) {
+                                PwdCorrectIcon()
+                            } else {
+                                PwdIncorrectIcon()
+                            }
+                        }
+                        // Password visibility toggle icon
+                        IconButton(
+                            onClick = { isPwdVisible = !isPwdVisible },
+                            modifier = Modifier.size(48.dp)
+                        ) {
+                            Icon(
+                                imageVector = if (isPwdVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                contentDescription = if (isPwdVisible) "Hide password" else "Show password",
+                                //modifier = Modifier.size(48.dp)
+                            )
+                        }
+                    }
+
+                },
+                isError = confirPwd.isNotEmpty() && !pwdIsCorrectLength,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                    imeAction = ImeAction.Done
+                ),
+                keyboardActions = KeyboardActions(
+                    onDone = {
+                        if (pwdIsCorrectLength) {
+                            setPassword(pwd)
+                            keyboardController?.hide()
+                        }
+                    }
+                ),
+                singleLine = true,
+                visualTransformation = if (isPwdVisible) {
+                    VisualTransformation.None // Show password as plain text
+                } else {
+                    PasswordVisualTransformation() // Hide password (show dots)
+                },
+                modifier = Modifier
+                    .focusRequester(confirmPwdFocusRequester)
+                    .onKeyEvent {
+                        if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown) {
+                            if (pwd.isNotEmpty()) {
+                                onPasswordChange(pwd.dropLast(1))
+                            }
+                            true
+                        } else {
+                            false
+                        }
+                    }
+            )
+        }
+
 
         // Mostramos el contador de dígitos
         Text("${pwd.length}/4 dígitos")
@@ -191,7 +277,7 @@ fun PasswordSetupScreen(
                 .fillMaxWidth()
                 .padding(20.dp)
         ) {
-            Text("Guardar contraseña", modifier = Modifier.padding(10.dp), fontSize = 20.sp)
+            Text("Guardar contraseña", modifier = Modifier.padding(10.dp), fontSize = 20.sp, color= MaterialTheme.colorScheme.onBackground)
         }
     }
 }

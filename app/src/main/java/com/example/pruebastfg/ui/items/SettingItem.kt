@@ -19,13 +19,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.pruebastfg.data.models.SettingModel
 
 
 @Composable
-fun SettingItem(setting: SettingModel) {
+fun SettingItem(
+    setting: SettingModel, fontSize: TextUnit
+) {
+    var fontSize = fontSize
+    val maxFontSize = 32.5.sp
+    if (fontSize > maxFontSize) {
+        fontSize = maxFontSize
+    }
     Card(
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
         modifier = Modifier
@@ -48,7 +56,7 @@ fun SettingItem(setting: SettingModel) {
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = setting.title, fontSize = 20.sp, maxLines = 2, textAlign = TextAlign.Center,
+                text = setting.title, fontSize = fontSize, maxLines = 2, textAlign = TextAlign.Center,
             )
         }
     }

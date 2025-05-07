@@ -62,8 +62,8 @@ fun SetupBottomAppBar(
                         onClick = { onBack() },
                         modifier = Modifier
                             .weight(1f)
-                            .padding(bottom = 10.dp, end = 5.dp)
-
+                            .padding(bottom = 10.dp, end = 5.dp),
+                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                     ) {
                         Row(
                             modifier = Modifier
@@ -97,8 +97,8 @@ fun SetupBottomAppBar(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f)
-                        .padding(bottom = 10.dp)
-
+                        .padding(bottom = 10.dp),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
                 ) {
 //                    Box(
 //                        modifier = Modifier

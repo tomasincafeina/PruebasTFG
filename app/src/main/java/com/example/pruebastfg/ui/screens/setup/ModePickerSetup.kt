@@ -147,7 +147,7 @@ fun ModePickerSetup(
     setToAssistedMode: () -> Unit
 ) {
     //var isAssistedMode by remember { mutableStateOf(true) }
-    var selectedMode by remember { mutableStateOf<String?>(null) }
+    var selectedMode by remember { mutableStateOf<String?>("assisted") }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

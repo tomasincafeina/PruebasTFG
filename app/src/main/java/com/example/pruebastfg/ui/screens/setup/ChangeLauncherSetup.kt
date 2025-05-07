@@ -66,7 +66,7 @@ fun ChangeLauncherSetup(
     )
     {
         Text(
-            "Eligeme como tu App principal",
+            "Elígeme como tu App principal",
             fontSize = 35.sp,
             modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
@@ -81,7 +81,7 @@ fun ChangeLauncherSetup(
         ) {
 
             Button(
-                elevation =  ButtonDefaults.buttonElevation(8.dp),
+                elevation = ButtonDefaults.buttonElevation(8.dp),
                 onClick = {
                     try {
                         // Intent específico para ajustes de launcher (puede no funcionar en todos los dispositivos)
@@ -107,7 +107,12 @@ fun ChangeLauncherSetup(
             ) {
 
 
-                Text("Cambia tu App principal", fontSize = 20.sp, modifier = Modifier.padding(20.dp))
+                Text(
+                    "Cambia tu App principal",
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(20.dp),
+                    color = MaterialTheme.colorScheme.onBackground
+                )
             }
 //            Box(
 //                modifier = Modifier
@@ -216,7 +221,7 @@ fun ChangeLauncherSetup(
             )
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
+                "Un launcher es una aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
                 fontSize = 15.sp,
                 textAlign = TextAlign.Start,
                 modifier = Modifier.padding(3.dp)

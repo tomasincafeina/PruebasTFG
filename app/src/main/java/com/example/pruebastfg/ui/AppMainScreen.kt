@@ -225,14 +225,24 @@ fun MainScreen(
                         it.name == backStackEntry?.destination?.route
                     } ?: SetupSubScreens.welcome, navController = navController, onNext = {
                         when (backStackEntry?.destination?.route) {
-                            SetupSubScreens.welcome.name -> navController.navigate(SetupSubScreens.username.name)
+                            SetupSubScreens.welcome.name -> navController.navigate(SetupSubScreens.mode.name)
+                            //si esta en modo asistido no te pide el nombre de usuario
+                            SetupSubScreens.mode.name -> if (isAssistedMode == true) {
+                                navController.navigate(SetupSubScreens.username.name)
+                            } else {
+                                navController.navigate(SetupSubScreens.theme.name)
+                            }
                             SetupSubScreens.username.name -> navController.navigate(SetupSubScreens.theme.name)
                             SetupSubScreens.theme.name -> navController.navigate(SetupSubScreens.fontsize.name)
-                            SetupSubScreens.fontsize.name -> navController.navigate(SetupSubScreens.launcher.name)
-                            SetupSubScreens.launcher.name -> navController.navigate(SetupSubScreens.mode.name)
-                            SetupSubScreens.mode.name -> navController.navigate(SetupSubScreens.pwd.name)
-                            SetupSubScreens.pwd.name -> navController.navigate(SetupSubScreens.initialapps.name)
-                            SetupSubScreens.initialapps.name -> navController.navigate(AppScreens.FinishedSetup.name)
+                            SetupSubScreens.fontsize.name -> navController.navigate(SetupSubScreens.initialapps.name)
+                            //si esta en modo individual no te pide contraseña
+                            SetupSubScreens.initialapps.name -> if (isAssistedMode == true) {
+                                navController.navigate(SetupSubScreens.pwd.name)
+                            } else {
+                                navController.navigate(SetupSubScreens.launcher.name)
+                            }
+                            SetupSubScreens.pwd.name -> navController.navigate(SetupSubScreens.launcher.name)
+                            SetupSubScreens.launcher.name -> navController.navigate(AppScreens.FinishedSetup.name)
                             AppScreens.FinishedSetup.name -> navController.navigate(AppScreens.Home.name)
 
 
@@ -254,11 +264,16 @@ fun MainScreen(
                 // Pantalla de Setup
                 composable(route = AppScreens.Setup.name) {
                     WelcomeSetupScreen(navController = navController,
-                        navigateForward = { navController.navigate(SetupSubScreens.username.name) },
+                        navigateForward = { navController.navigate(SetupSubScreens.mode.name) },
                         modifier = Modifier,
                         setUpStatus = { viewModel.toggleSetupDone() })
                 }
-
+                composable(route = SetupSubScreens.mode.name) {
+                    ModePickerSetup(
+                        navController,
+                        { viewModel.setToIndividualMode() },
+                        { viewModel.setToAssistedMode() })
+                }
                 // Subpantallas de Setup
                 composable(route = SetupSubScreens.username.name) {
                     UserNameSetupScreen(
@@ -293,23 +308,6 @@ fun MainScreen(
                         viewModel,
                     )
                 }
-                composable(route = SetupSubScreens.launcher.name) {
-                    ChangeLauncherSetup(navController)
-                }
-                composable(route = SetupSubScreens.mode.name) {
-                    ModePickerSetup(
-                        navController,
-                        { viewModel.setToIndividualMode() },
-                        { viewModel.setToAssistedMode() })
-                }
-                composable(route = SetupSubScreens.pwd.name) {
-                    PasswordSetupScreen(
-                        navController,
-                        pwd = uiState.pwd,
-                        onPasswordChange = { viewModel.updatePassword(it) },
-                        setPassword = { viewModel.setPassword(uiState.pwd) }
-                    )
-                }
                 composable(route = SetupSubScreens.initialapps.name) {
                     val allApps by viewModel.allApps.collectAsState()
 
@@ -331,6 +329,17 @@ fun MainScreen(
                             ).show()
                         }
                     }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
+                }
+                composable(route = SetupSubScreens.pwd.name) {
+                    PasswordSetupScreen(
+                        navController,
+                        pwd = uiState.pwd,
+                        onPasswordChange = { viewModel.updatePassword(it) },
+                        setPassword = { viewModel.setPassword(uiState.pwd) }
+                    )
+                }
+                composable(route = SetupSubScreens.launcher.name) {
+                    ChangeLauncherSetup(navController)
                 }
                 composable(route = AppScreens.FinishedSetup.name) {
                     FinishedSetup(
@@ -374,7 +383,8 @@ fun MainScreen(
                         { navController.navigate(AppScreens.ColorSetting.name) },
                         { navController.navigate("debug") },
                         { navController.navigate("password") },
-                        { navController.navigate(AppScreens.Home.name) }
+                        { navController.navigate(AppScreens.Home.name) },
+                        viewModel.fontSize.collectAsState().value
                     )
                 }
                 composable(route = "debug") {
