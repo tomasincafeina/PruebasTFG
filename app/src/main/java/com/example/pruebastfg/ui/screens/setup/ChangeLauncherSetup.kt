@@ -38,8 +38,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.AppScreens
+import com.example.pruebastfg.ui.SetupSubScreens
 import com.example.pruebastfg.ui.sharedItems.PwdCorrectIcon
 import com.example.pruebastfg.ui.sharedItems.PwdIncorrectIcon
+
+// Función para verificar si nuestra app es el launcher predeterminado
+private fun isAppDefaultLauncher(context: Context, packageName: String): Boolean {
+    val intent = Intent(Intent.ACTION_MAIN)
+    intent.addCategory(Intent.CATEGORY_HOME)
+    val resolveInfo =
+        context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+    return resolveInfo?.activityInfo?.packageName == packageName
+}
 
 @Composable
 fun ChangeLauncherSetup(
@@ -68,13 +78,24 @@ fun ChangeLauncherSetup(
             fontWeight = FontWeight.SemiBold,
             lineHeight = 40.sp
         )
+        // Mostrar mensaje si ya somos el launcher predeterminado
+        if (isDefaultLauncher) {
+            Row {
+                PwdCorrectIcon()
+                Text(
+                    "¡Ya estás usando EasyUI como launcher!",
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = 18.sp,
+                )
+            }
+            navController.navigate(SetupSubScreens.mode.name)
+        }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-
             Button(
                 elevation = ButtonDefaults.buttonElevation(8.dp),
                 onClick = {
@@ -128,37 +149,10 @@ fun ChangeLauncherSetup(
 
             )
         }
-        // Mostrar mensaje si ya somos el launcher predeterminado
-        if (isDefaultLauncher) {
-            Row {
-                PwdCorrectIcon()
-                Text(
-                    "¡Ya estás usando EasyUI como launcher!",
-                    color = MaterialTheme.colorScheme.primary,
-                    fontSize = 18.sp,
-                )
-            }
-            //navController.navigate(AppScreens.FinishedSetup.name)
-        }
-//        else {
-//            Row {
-//                PwdIncorrectIcon()
-//                Text(
-//                    "Selecciona EasyUI como tu launcher predeterminado!",
-//                    color = MaterialTheme.colorScheme.error,
-//                    fontSize = 18.sp,
-//                )
-//            }
+
 
     }
 }
 
 
-// Función para verificar si nuestra app es el launcher predeterminado
-private fun isAppDefaultLauncher(context: Context, packageName: String): Boolean {
-    val intent = Intent(Intent.ACTION_MAIN)
-    intent.addCategory(Intent.CATEGORY_HOME)
-    val resolveInfo =
-        context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
-    return resolveInfo?.activityInfo?.packageName == packageName
-}
+

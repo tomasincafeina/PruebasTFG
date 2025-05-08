@@ -42,11 +42,13 @@ class PreferencesRepository(context: Context) {
             preferences[IS_ASSITED_MODE_KEY] ?: true
         }
     }
+
     suspend fun setToIndividualMode(isAssistedMode: Boolean) {
         dataStore.edit { preferences ->
             preferences[IS_ASSITED_MODE_KEY] = false
         }
     }
+
     suspend fun setToAssistedMode(isAssistedMode: Boolean) {
         dataStore.edit { preferences ->
             preferences[IS_ASSITED_MODE_KEY] = true
@@ -58,6 +60,7 @@ class PreferencesRepository(context: Context) {
             preferences[PASSWORD_KEY] ?: ""
         }
     }
+
     suspend fun setPassword(password: String) {
         dataStore.edit { preferences ->
             preferences[PASSWORD_KEY] = password
@@ -69,6 +72,7 @@ class PreferencesRepository(context: Context) {
             preferences[THEME_COLOR_KEY] ?: "blue"
         }
     }
+
     suspend fun setThemeColor(themeColor: String) {
         dataStore.edit { preferences ->
             preferences[THEME_COLOR_KEY] = themeColor
@@ -80,12 +84,14 @@ class PreferencesRepository(context: Context) {
             preferences[THEME_MODE_KEY] ?: true
         }
     }
-    suspend fun changeThemeToDark(){
+
+    suspend fun changeThemeToDark() {
         dataStore.edit { preferences ->
             preferences[THEME_MODE_KEY] = true
         }
     }
-    suspend fun changeThemeToLight(){
+
+    suspend fun changeThemeToLight() {
         dataStore.edit { preferences ->
             preferences[THEME_MODE_KEY] = false
         }
@@ -97,16 +103,8 @@ class PreferencesRepository(context: Context) {
      * @param userName The user's name to save.
      */
     suspend fun saveUserName(userName: String, context: Context) {
-        if (userName.isBlank()) {
-            Toast.makeText(
-                context,
-                "El nombre de usuario no puede estar en blanco",
-                Toast.LENGTH_SHORT
-            ).show()
-        } else {
-            dataStore.edit { preferences ->
-                preferences[USER_NAME_KEY] = userName
-            }
+        dataStore.edit { preferences ->
+            preferences[USER_NAME_KEY] = userName
         }
     }
 
@@ -117,7 +115,7 @@ class PreferencesRepository(context: Context) {
      */
     fun getUserName(): Flow<String?> {
         return dataStore.data.map { preferences ->
-            preferences[USER_NAME_KEY] ?: "desconocido"
+            preferences[USER_NAME_KEY] ?: ""
         }
     }
 

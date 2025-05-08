@@ -54,7 +54,7 @@ fun AppItemProto(
                 .padding(10.dp),
             colors = androidx.compose.material3.CardDefaults.cardColors(
                 containerColor = if (appInfo.isFavorite == true) {
-                    Color(android.graphics.Color.parseColor("#f5cb42"))
+                    Color(android.graphics.Color.parseColor("#f7d168"))
                 } else MaterialTheme.colorScheme.secondaryContainer
             )
 

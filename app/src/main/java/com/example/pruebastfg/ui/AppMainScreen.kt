@@ -44,8 +44,10 @@ import com.example.pruebastfg.AppInfo
 import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.items.AppItem
 import com.example.pruebastfg.ui.items.AppItemProto
+import com.example.pruebastfg.ui.items.BottomIndivMode
 import com.example.pruebastfg.ui.screens.settings.pwd.PasswordScreen
 import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
+import com.example.pruebastfg.ui.screens.settings.AppsFromProto
 import com.example.pruebastfg.ui.screens.settings.DebugSettingScreen
 import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
@@ -110,18 +112,18 @@ fun AppTopBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
-        actions = {
-            if (currentScreen.name == AppScreens.Home.name) {
-                IconButton(onClick = onSettingsClick) {
-                    Icon(
-                        imageVector = Icons.Rounded.Settings, // Icono de configuración
-                        contentDescription = "Settings",
-                        modifier = Modifier.size(30.dp),
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-        },
+//        actions = {
+//            if (currentScreen.name == AppScreens.Home.name) {
+//                IconButton(onClick = onSettingsClick) {
+//                    Icon(
+//                        imageVector = Icons.Rounded.Settings, // Icono de configuración
+//                        contentDescription = "Settings",
+//                        modifier = Modifier.size(30.dp),
+//                        tint = MaterialTheme.colorScheme.onBackground
+//                    )
+//                }
+//            }
+//        },
 
         modifier = modifier,
 //        navigationIcon = {
@@ -192,7 +194,7 @@ fun MainScreen(
     if (setupStatus != null && isThemeDark != null) { // Espera hasta que setupStatus y isThemeDark tenga un valor real
         Scaffold(containerColor = MaterialTheme.colorScheme.surface,
             topBar = {
-                if (currentScreen == AppScreens.Home || currentScreen == AppScreens.Settings) {
+                if ( currentScreen == AppScreens.Settings || isAssistedMode == true && currentScreen == AppScreens.Home || currentScreen == SetupSubScreens.username) {
                     AppTopBar(
                         currentScreen = currentScreen,
                         canNavigateBack = navController.previousBackStackEntry != null,
@@ -208,10 +210,10 @@ fun MainScreen(
                         },
                         modifier = Modifier,
                         topBarTitle =
-                        if (currentScreen == AppScreens.Home && userName!!.isNotBlank()) {
+                        if (currentScreen == AppScreens.Home && userName!!.isNotBlank() || currentScreen == SetupSubScreens.username) {
                             stringResource(R.string.hola, userName!!)
-                        } else if (currentScreen == AppScreens.Home) {
-                            ""
+                        } else if (currentScreen == SetupSubScreens.username) {
+                            stringResource(R.string.hola, userName!!)
                         } else {
                             stringResource(R.string.settings)
                         },
@@ -249,6 +251,17 @@ fun MainScreen(
                         }
                     }, onBack = { navController.popBackStack() })
                 }
+                if (currentScreen == AppScreens.Home) {
+                    BottomIndivMode(
+                        {
+                            if (isAssistedMode == true) {
+                                 navController.navigate("password")
+                            } else {
+                                 navController.navigate(AppScreens.Settings.name)
+                            }
+                        }
+                    )
+                }
             }) { innerPadding ->
             NavHost(
                 //cambiar nmbre setupStatus
@@ -282,17 +295,7 @@ fun MainScreen(
                     UserNameSetupScreen(
                         navController = navController,
                         userName = uiState.userName,
-                        onNameChange = { viewModel.updateUserName(it) },
-                        btnSaveOnClick = { viewModel.saveUserName(uiState.userName, context) },
-                        btnClearOnClick = {
-                            viewModel.updateUserName("")
-                        },
-                        btnNextOnClick = {
-                            navController.navigate(AppScreens.Home.name) {
-                                popUpTo(AppScreens.Setup.name) { inclusive = true }
-                            }
-                        },
-                        setupStatus = setupStatus!!
+                        viewModel, context
                     )
                 }
                 composable(route = SetupSubScreens.theme.name) {
@@ -355,26 +358,15 @@ fun MainScreen(
                 // Pantalla de Home
                 composable(route = AppScreens.Home.name) {
                     setupStatus?.let { it ->
-//                    AppsListScreen(
-//                        apps = apps, onAppClick = onAppClick,
-//                        changeSetupDoneStatus = {
-//                            viewModel.toggleSetupDone()
-//                        },
-//                        {
-//                            navController.navigate(AppScreens.AllApps.name)
-//                        },
-//                        setupStatus = it
-//
-//                    )
-
                         AppsFromProto(
                             appsProto,
                             onAppClick = onAppClick,
 
-                            { navController.navigate(AppScreens.AddApp.name) },
-                            { navController.navigate(AppScreens.RemoveApp.name) },
-                            { navController.navigate(AppScreens.FavoriteApps.name) },
-                            viewModel.fontSize.collectAsState().value
+                            goToAddApp = { navController.navigate(AppScreens.AddApp.name) },
+                            goToRemoveApps = { navController.navigate(AppScreens.RemoveApp.name) },
+                            goToFavoriteApps = { navController.navigate(AppScreens.FavoriteApps.name) },
+                            viewModel.fontSize.collectAsState().value,
+                            isAssitedMode = isAssistedMode!!
                         )
                     }
                 }
@@ -506,64 +498,6 @@ fun AppsListScreen(
         }
 
     }
-}
-
-@Composable
-fun AppsFromProto(
-    apps: List<Pair<AppInfo, Bitmap?>>, // Lista de aplicaciones con sus iconos
-    onAppClick: (String) -> Unit, // Callback cuando se hace clic en una app
-    //changeSetupDoneStatus: () -> Unit, // Callback para cambiar el estado del setup
-    goToAddApp: () -> Unit, // Callback para navegar a la pantalla de todas las apps
-    goToRemoveApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
-    goToFavoriteApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
-    fontSize: TextUnit,
-
-    //setupStatus: Boolean // Estado actual del setup
-) {
-    if (apps.isEmpty()) Text("No hay Apps añadidas :(")
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        //Esto estaba aqui para debuggear el estado del setup pero ahora esta ne debug
-        // Mostrar el estado actual del setup
-//        Text(
-//            text = "Estado del Setup: ${if (setupStatus) "Completado" else "No completado"}",
-//            fontSize = 16.sp,
-//            modifier = Modifier.padding(5.dp)
-//        )/* Botón para navegar a la pantalla de todas las apps */
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(5.dp),
-//            horizontalArrangement = Arrangement.SpaceAround,
-//            verticalAlignment = Alignment.CenterVertically,
-//        ) {
-//            // Botón para cambiar el estado del setup
-//            Button(
-//                onClick = changeSetupDoneStatus, modifier = Modifier.weight(1f)
-//            ) {
-//                Text(text = "Setup")
-//            }
-//        }
-        // Lista de aplicaciones en un grid
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            contentPadding = PaddingValues(10.dp),
-            modifier = Modifier.fillMaxSize(),
-            horizontalArrangement = Arrangement.Center,
-            verticalArrangement = Arrangement.Top
-        ) {
-            items(apps) { (appInfo, bitmap) ->
-                AppItemProto(
-                    appInfo = appInfo,
-                    bitmap = bitmap,
-                    onClick = { onAppClick(appInfo.packageName) },
-                    fontSize = fontSize
-                )
-            }
-        }
-    }
-
 }
 
 

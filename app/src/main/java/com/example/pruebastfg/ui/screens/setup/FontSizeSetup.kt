@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
@@ -63,14 +64,14 @@ fun FontSizeSetup(
         Text(
             stringResource(R.string.ajusta_el_tamano_de_letra),
             fontSize = 35.sp,
-            modifier = Modifier.padding(20.dp),
+            modifier = Modifier.padding(20.dp).height(80.dp),
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.SemiBold,
             lineHeight = 40.sp
         )
 
         // Sección de ajuste de tamaño
-        Column {
+        Column(modifier = Modifier.height(100.dp)) {
             Text(
                 stringResource(R.string.tamano_de_letra),
                 fontSize = 20.sp,
@@ -86,6 +87,7 @@ fun FontSizeSetup(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 50.dp)
+
 
             ) {
                 // Botón para disminuir tamaño
@@ -129,7 +131,7 @@ fun FontSizeSetup(
         }
 
         // Sección de vista previa
-        Column {
+        Column(modifier = Modifier.height(300.dp)) {
             Text(
                 stringResource(R.string.vista_previa),
                 fontSize = 20.sp,
@@ -155,7 +157,7 @@ fun FontSizeSetup(
                 colors = CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer),
                 modifier = Modifier
                     .padding(10.dp)
-                    .size(120.dp)
+                    .size(180.dp)
                     .align(Alignment.CenterHorizontally)
             ) {
                 Box(
@@ -172,7 +174,7 @@ fun FontSizeSetup(
                             imageVector = Icons.Rounded.Circle,
                             contentDescription = stringResource(R.string.aumentar_tamano),
                             tint = MaterialTheme.colorScheme.surfaceTint,
-                            modifier = Modifier.size(60.dp)
+                            modifier = Modifier.size(80.dp)
                         )
                     }
                 }

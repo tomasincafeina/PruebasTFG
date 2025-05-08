@@ -147,7 +147,7 @@ class AppViewModel(
 
     // Métodos para Preferences DataStore
     fun saveUserName(name: String, context: Context) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.Main) {
             prefsRepo.saveUserName(name, context)
         }
     }

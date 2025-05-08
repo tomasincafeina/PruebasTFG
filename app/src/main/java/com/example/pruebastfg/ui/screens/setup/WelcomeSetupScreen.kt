@@ -1,5 +1,8 @@
 package com.example.pruebastfg.ui.screens.setup
 
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +26,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -34,8 +41,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.pruebastfg.R
+import com.example.pruebastfg.ui.SetupSubScreens
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 import com.example.pruebastfg.ui.sharedItems.HybridStepper
+// Función para verificar si nuestra app es el launcher predeterminado
+private fun isAppDefaultLauncher(context: Context, packageName: String): Boolean {
+    val intent = Intent(Intent.ACTION_MAIN)
+    intent.addCategory(Intent.CATEGORY_HOME)
+    val resolveInfo =
+        context.packageManager.resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY)
+    return resolveInfo?.activityInfo?.packageName == packageName
+}
 
 @Composable
 fun WelcomeSetupScreen(
@@ -44,6 +60,14 @@ fun WelcomeSetupScreen(
     modifier: Modifier = Modifier,
     setUpStatus: () -> Unit
 ) {
+    val context = LocalContext.current
+    val packageName = context.packageName
+    val isDefaultLauncher by remember {
+        mutableStateOf(isAppDefaultLauncher(context, packageName))
+    }
+    if (isDefaultLauncher) {
+        navController.navigate(SetupSubScreens.mode.name)
+    }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceEvenly,
