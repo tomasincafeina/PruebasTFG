@@ -44,12 +44,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.sharedItems.PwdCorrectIcon
 import com.example.pruebastfg.ui.sharedItems.PwdIncorrectIcon
 
@@ -82,7 +84,7 @@ fun PasswordSetupScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Text(
-            "Establece la contraseña de usuario administrador",
+            stringResource(R.string.establece_la_contrase_a_de_usuario_administrador),
             fontSize = 35.sp,
             modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
@@ -92,7 +94,7 @@ fun PasswordSetupScreen(
 
         Text(
             modifier = Modifier.width(300.dp),
-            text = "La contraseña debe tener exactamente 4 dígitos numéricos",
+            text = stringResource(R.string.digitos_contrasena),
             fontSize = MaterialTheme.typography.headlineSmall.fontSize,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center
         )
@@ -112,7 +114,7 @@ fun PasswordSetupScreen(
                 },
                 label = {
                     Text(
-                        text = "Ingresa tu contraseña"
+                        text = stringResource(R.string.ingresa_tu_contrasena)
                     )
                 },
                 trailingIcon = {
@@ -191,7 +193,7 @@ fun PasswordSetupScreen(
                 },
                 label = {
                     Text(
-                        text = "Repite tu contraseña"
+                        text = stringResource(R.string.repite_tu_contrasena)
                     )
                 },
                 trailingIcon = {

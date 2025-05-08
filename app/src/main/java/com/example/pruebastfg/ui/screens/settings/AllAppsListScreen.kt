@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.items.AppItem
 import com.example.pruebastfg.ui.models.AppModel
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
@@ -19,7 +22,8 @@ import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 @Composable
 fun AllAppsListScreen(
-    apps: List<AppModel>, onAppClickAdd: (AppModel) -> Unit, onClickTerminar: () -> Unit
+    apps: List<AppModel>, onAppClickAdd: (AppModel) -> Unit, onClickTerminar: () -> Unit,
+    isSetup: Boolean
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -40,7 +44,9 @@ fun AllAppsListScreen(
                 AppItem(app = app, onClick = { onAppClickAdd(app) })
             }
         }
-        BigLowButton(onClickTerminar, "Terminar", false)
+        if (isSetup) {
+            BigLowButton(onClickTerminar, stringResource(R.string.terminar), false)
+        }
 
     }
 }

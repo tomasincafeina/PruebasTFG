@@ -1,39 +1,19 @@
 package com.example.pruebastfg.ui.screens.setup
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.rounded.Face
-import androidx.compose.material.icons.rounded.Home
-import androidx.compose.material.icons.rounded.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonColors
-import androidx.compose.material3.ShapeDefaults
-import androidx.compose.material3.Tab
-import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,12 +23,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.R
 
 
 //@Composable
@@ -154,7 +135,7 @@ fun ModePickerSetup(
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
         Text(
-            "Elige que tipo de uso le quieres dar \n a EasyUI",
+            stringResource(R.string.uso_easyui),
             fontSize = 35.sp,
             modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
@@ -168,7 +149,7 @@ fun ModePickerSetup(
             verticalArrangement = Arrangement.Center
         ) {
             ModeOptionCard(
-                title = "Asistido",
+                title = stringResource(R.string.asistido),
                 description = "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
                 isSelected = selectedMode == "assisted",
                 onSelect = {
@@ -180,7 +161,7 @@ fun ModePickerSetup(
 
             // Opción Individual
             ModeOptionCard(
-                title = "Individual",
+                title = stringResource(R.string.individual),
                 description = "Un launcher un la aplicación que se abre al iniciar el dispositivo. Cuando selecciones EasyUI será la aplicación que se abre al iniciar el dispositivo. ",
                 isSelected = selectedMode == "individual",
                 onSelect = {
@@ -233,7 +214,7 @@ fun ModeOptionCard(
                 )
                 Spacer(Modifier.weight(1f))
                 IconButton(onClick = onInfoClick) {
-                    Icon(Icons.Outlined.Info, contentDescription = "Más información")
+                    Icon(Icons.Outlined.Info, contentDescription = stringResource(R.string.mas_informacion))
                 }
             }
             Text(description, modifier = Modifier.padding(top = 8.dp))

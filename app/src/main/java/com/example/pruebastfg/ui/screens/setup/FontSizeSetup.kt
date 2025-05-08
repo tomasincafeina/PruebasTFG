@@ -40,7 +40,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.AppScreens
 import com.example.pruebastfg.ui.AppViewModel
 
@@ -59,7 +61,7 @@ fun FontSizeSetup(
             .fillMaxSize()
     ) {
         Text(
-            "Ajusta el tamaño de letra",
+            stringResource(R.string.ajusta_el_tamano_de_letra),
             fontSize = 35.sp,
             modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
@@ -70,7 +72,7 @@ fun FontSizeSetup(
         // Sección de ajuste de tamaño
         Column {
             Text(
-                "Tamaño de letra",
+                stringResource(R.string.tamano_de_letra),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
@@ -95,7 +97,7 @@ fun FontSizeSetup(
                     Box(modifier = Modifier.clickable { viewModel.decreaseFontSize() }) {
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowDown,
-                            contentDescription = "Disminuir tamaño",
+                            contentDescription = stringResource(R.string.disminuir_tamano),
                             tint = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.size(48.dp)
                         )
@@ -117,7 +119,7 @@ fun FontSizeSetup(
                     ) {
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowUp,
-                            contentDescription = "Aumentar tamaño",
+                            contentDescription = stringResource(R.string.aumentar_tamano),
                             tint = MaterialTheme.colorScheme.onBackground,
                             modifier = Modifier.size(48.dp)
                         )
@@ -129,7 +131,7 @@ fun FontSizeSetup(
         // Sección de vista previa
         Column {
             Text(
-                "Vista previa",
+                stringResource(R.string.vista_previa),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
@@ -168,7 +170,7 @@ fun FontSizeSetup(
 
                         Icon(
                             imageVector = Icons.Rounded.Circle,
-                            contentDescription = "Aumentar tamaño",
+                            contentDescription = stringResource(R.string.aumentar_tamano),
                             tint = MaterialTheme.colorScheme.surfaceTint,
                             modifier = Modifier.size(60.dp)
                         )
@@ -182,7 +184,7 @@ fun FontSizeSetup(
             ) {
                 Text(
                     modifier = Modifier,
-                    text = "EasyWay UI",
+                    text = stringResource(R.string.easyway_ui),
                     fontSize = fontSize,
                     maxLines = 2,
                     textAlign = TextAlign.Center,

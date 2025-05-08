@@ -19,14 +19,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.items.SettingItem
 import com.example.pruebastfg.data.models.SettingModel
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 @Composable
-fun MainSettoingsScreen(
+fun MainSettingsScreen(
     goToAddAppClick: () -> Unit,
     goToRemoveAppClick: () -> Unit,
     goToFavoriteAppsClick: () -> Unit,
@@ -38,12 +40,12 @@ fun MainSettoingsScreen(
 ) {
     val settingsItems = remember {
         listOf(
-            SettingModel("Añadir", Icons.Rounded.AddCircle, goToAddAppClick),
-            SettingModel("Eliminar", Icons.Rounded.Clear, goToRemoveAppClick),
-            SettingModel("Favoritos", Icons.Rounded.Star, goToFavoriteAppsClick),
-            SettingModel("Color", Icons.Rounded.Edit, goToColorSettingClick),
-            SettingModel("Debug", Icons.Rounded.Build, goToDebugClick),
-            SettingModel("Contraseña", Icons.Rounded.Lock, goToPasswordClick)
+            SettingModel(R.string.anadir, Icons.Rounded.AddCircle, goToAddAppClick),
+            SettingModel(R.string.eliminar, Icons.Rounded.Clear, goToRemoveAppClick),
+            SettingModel(R.string.favoritos, Icons.Rounded.Star, goToFavoriteAppsClick),
+            SettingModel(R.string.color, Icons.Rounded.Edit, goToColorSettingClick),
+            SettingModel(R.string.debug, Icons.Rounded.Build, goToDebugClick),
+            SettingModel(R.string.contrasena, Icons.Rounded.Lock, goToPasswordClick)
         )
     }
     Column(
@@ -64,6 +66,6 @@ fun MainSettoingsScreen(
                 SettingItem(setting, fontSize)
             }
         }
-        BigLowButton(onClickAtras, "Atrás", true)
+        BigLowButton(onClickAtras, stringResource(R.string.atras), true)
     }
 }

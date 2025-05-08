@@ -11,9 +11,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.AppInfo
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.items.AppItemProto
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
@@ -48,6 +50,6 @@ fun SelectFavoriteApps(
                     fontSize = fontSize)
             }
         }
-        BigLowButton(onClickTerminar, "Terminar", false)
+        BigLowButton(onClickTerminar, stringResource(R.string.terminar), false)
     }
 }

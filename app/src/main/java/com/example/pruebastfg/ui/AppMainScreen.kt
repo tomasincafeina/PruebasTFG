@@ -32,6 +32,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
 import androidx.navigation.NavHostController
@@ -48,7 +49,7 @@ import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
 import com.example.pruebastfg.ui.screens.settings.DebugSettingScreen
 import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
-import com.example.pruebastfg.ui.screens.settings.MainSettoingsScreen
+import com.example.pruebastfg.ui.screens.settings.MainSettingsScreen
 import com.example.pruebastfg.ui.screens.settings.RemoveApps
 import com.example.pruebastfg.ui.screens.setup.ChangeLauncherSetup
 import com.example.pruebastfg.ui.screens.setup.FinishedSetup
@@ -94,7 +95,6 @@ fun AppTopBar(
     navigateUp: () -> Unit,
     onSettingsClick: () -> Unit,  // Callback para manejar el clic en settings
     modifier: Modifier = Modifier,
-
     topBarTitle: String
 ) {
     // Usamos CenterAlignedTopAppBar para centrar el título correctamente
@@ -209,11 +209,11 @@ fun MainScreen(
                         modifier = Modifier,
                         topBarTitle =
                         if (currentScreen == AppScreens.Home && userName!!.isNotBlank()) {
-                            "Hola, $userName!"
+                            stringResource(R.string.hola, userName!!)
                         } else if (currentScreen == AppScreens.Home) {
                             ""
                         } else {
-                            currentScreen.name
+                            stringResource(R.string.settings)
                         },
 
                         )
@@ -225,7 +225,8 @@ fun MainScreen(
                         it.name == backStackEntry?.destination?.route
                     } ?: SetupSubScreens.welcome, navController = navController, onNext = {
                         when (backStackEntry?.destination?.route) {
-                            SetupSubScreens.welcome.name -> navController.navigate(SetupSubScreens.mode.name)
+                            SetupSubScreens.welcome.name -> navController.navigate(SetupSubScreens.launcher.name)
+                            SetupSubScreens.launcher.name -> navController.navigate(SetupSubScreens.mode.name)
                             //si esta en modo asistido no te pide el nombre de usuario
                             SetupSubScreens.mode.name -> if (isAssistedMode == true) {
                                 navController.navigate(SetupSubScreens.username.name)
@@ -239,10 +240,9 @@ fun MainScreen(
                             SetupSubScreens.initialapps.name -> if (isAssistedMode == true) {
                                 navController.navigate(SetupSubScreens.pwd.name)
                             } else {
-                                navController.navigate(SetupSubScreens.launcher.name)
+                                navController.navigate(AppScreens.FinishedSetup.name)
                             }
-                            SetupSubScreens.pwd.name -> navController.navigate(SetupSubScreens.launcher.name)
-                            SetupSubScreens.launcher.name -> navController.navigate(AppScreens.FinishedSetup.name)
+                            SetupSubScreens.pwd.name -> navController.navigate(AppScreens.FinishedSetup.name)
                             AppScreens.FinishedSetup.name -> navController.navigate(AppScreens.Home.name)
 
 
@@ -264,9 +264,12 @@ fun MainScreen(
                 // Pantalla de Setup
                 composable(route = AppScreens.Setup.name) {
                     WelcomeSetupScreen(navController = navController,
-                        navigateForward = { navController.navigate(SetupSubScreens.mode.name) },
+                        navigateForward = { navController.navigate(SetupSubScreens.launcher.name) },
                         modifier = Modifier,
                         setUpStatus = { viewModel.toggleSetupDone() })
+                }
+                composable(route = SetupSubScreens.launcher.name) {
+                    ChangeLauncherSetup(navController)
                 }
                 composable(route = SetupSubScreens.mode.name) {
                     ModePickerSetup(
@@ -328,7 +331,9 @@ fun MainScreen(
                                 context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
                             ).show()
                         }
-                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
+                    },
+                        onClickTerminar = { navController.navigate(AppScreens.Home.name) },
+                        isSetup = setupStatus!!)
                 }
                 composable(route = SetupSubScreens.pwd.name) {
                     PasswordSetupScreen(
@@ -338,9 +343,7 @@ fun MainScreen(
                         setPassword = { viewModel.setPassword(uiState.pwd) }
                     )
                 }
-                composable(route = SetupSubScreens.launcher.name) {
-                    ChangeLauncherSetup(navController)
-                }
+
                 composable(route = AppScreens.FinishedSetup.name) {
                     FinishedSetup(
                         navController,
@@ -376,7 +379,7 @@ fun MainScreen(
                     }
                 }
                 composable(route = AppScreens.Settings.name) {
-                    MainSettoingsScreen(
+                    MainSettingsScreen(
                         { navController.navigate(AppScreens.AddApp.name) },
                         { navController.navigate(AppScreens.RemoveApp.name) },
                         { navController.navigate(AppScreens.FavoriteApps.name) },
@@ -440,7 +443,9 @@ fun MainScreen(
                                 context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
                             ).show()
                         }
-                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) })
+                    },
+                        onClickTerminar = { navController.navigate(AppScreens.Home.name) },
+                        isSetup = setupStatus!!)
                 }
                 composable(route = AppScreens.RemoveApp.name) {
 
@@ -515,6 +520,7 @@ fun AppsFromProto(
 
     //setupStatus: Boolean // Estado actual del setup
 ) {
+    if (apps.isEmpty()) Text("No hay Apps añadidas :(")
     Column(
         modifier = Modifier.fillMaxSize()
     ) {

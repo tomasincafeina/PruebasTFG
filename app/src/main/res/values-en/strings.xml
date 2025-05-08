@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">PruebasTFG</string>
+    <string name="preference_file_key">preference_file\n</string>
+    <string name="setup">Setup</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="back_button">back_button\n</string>
+    <string name="welcome">Welcome</string>
+    <string name="username">username</string>
+    <string name="modecolor">modecolor</string>
+    <string name="fontsize">fontsize</string>
+    <string name="launcher">launcher</string>
+    <string name="addapps">Add Apps</string>
+    <string name="removeapps">Remove Apps</string>
+    <string name="terminar">Finish</string>
+    <string name="favoriteapps">favorite apps</string>
+    <string name="atras">Back</string>
+    <string name="colorsetting">Color\n</string>
+    <string name="theme">theme</string>
+    <string name="mode">mode</string>
+    <string name="pwd">password</string>
+    <string name="initialapps">initial apps</string>
+    <string name="finished_setup">finished setup</string>
+    <string name="eligeme_como_tu_app_principal">Choose me as your main app</string>
+    <string name="cambia_tu_app_principal">Change your main app</string>
+    <string name="explicacion_launcher">"A launcher is an app that opens when the device starts. When you select EasyUI, it will be the app that opens on startup."</string>
+    <string name="proceso_de_ajuste_terminado">The setup process is complete!</string>
+    <string name="disfruta_de_easy_ui">Enjoy Easy UI</string>
+    <string name="ajusta_el_tamano_de_letra">Adjust the font size</string>
+    <string name="tamano_de_letra">Font size</string>
+    <string name="disminuir_tamano">Decrease size</string>
+    <string name="aumentar_tamano">Increase size</string>
+    <string name="vista_previa">Preview</string>
+    <string name="easyway_ui">EasyWay UI</string>
+    <string name="uso_easyui">Choose the type of use \n for EasyUI</string>
+    <string name="asistido">Assisted</string>
+    <string name="individual">Individual</string>
+    <string name="mas_informacion">More information</string>
+    <string name="establece_la_contrase_a_de_usuario_administrador">Set the administrator user password</string>
+    <string name="digitos_contrasena">The password must be exactly 4 numeric digits</string>
+    <string name="ingresa_tu_contrasena">Enter your password</string>
+    <string name="repite_tu_contrasena">Repeat your password</string>
+    <string name="color_a_tu_gusto">Set the color to your liking</string>
+    <string name="elige_el_color">Choose the color</string>
+    <string name="como_te_llamas">What´s your name?</string>
+    <string name="escribe_tu_nombre">Write your name</string>
+    <string name="bienvenido_a_easyway_ui">Welcome \n to \n EasyWay UI</string>
+    <string name="vamos_a_comenzar_con_el_proceso_de_ajuste">Let´s start the setup process</string>
+    <string name="comenzar">Start</string>
+    <string name="contrasena">Password</string>
+    <string name="debug">Debug</string>
+    <string name="color">Color</string>
+    <string name="favoritos">Favorites</string>
+    <string name="eliminar">Delete</string>
+    <string name="anadir">Add</string>
+    <string name="modo">Mode</string>
+    <string name="siguiente">Next</string>
+    <string name="hola">Hello, %1$s!</string>
+
+</resources>

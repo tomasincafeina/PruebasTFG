@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import androidx.compose.ui.tooling.preview.Preview
 
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 @Composable
@@ -74,15 +76,16 @@ fun SetupBottomAppBar(
                         ) {
                             Icon(
                                 imageVector = Icons.Rounded.ArrowBack,
-                                contentDescription = "Atrás",
+                                contentDescription = stringResource(R.string.atras),
                                 modifier = Modifier.size(30.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "Atrás",
+                                text = stringResource(R.string.atras),
                                 textAlign = TextAlign.Center,
                                 fontSize = 25.sp,
-                                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold
+                                fontWeight = androidx.compose.ui.text.font.FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onBackground
                             )
                         }
                     }
@@ -119,11 +122,12 @@ fun SetupBottomAppBar(
                             .padding(vertical = 18.dp)
                     ) {
                         Text(
-                            text = "Siguiente",
+                            text = stringResource(R.string.siguiente),
                             fontSize = 25.sp,
                             fontWeight = FontWeight.SemiBold,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth(),
+                            color = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }

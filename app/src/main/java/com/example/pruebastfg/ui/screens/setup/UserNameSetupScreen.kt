@@ -21,11 +21,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.R
 
 @Composable
 fun UserNameSetupScreen(
@@ -44,10 +46,10 @@ fun UserNameSetupScreen(
             .fillMaxWidth()
             .padding(10.dp)
     ) {
-        Icon(Icons.Rounded.Person, contentDescription = "persona", modifier = Modifier.size(100.dp))
+        Icon(Icons.Rounded.Person, contentDescription = "person", modifier = Modifier.size(100.dp))
         //Text(text = setupStatus.toString())
         Text(
-            "¿Como te llamas?",
+            stringResource(R.string.como_te_llamas),
             fontSize = 35.sp,
             modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
@@ -56,7 +58,7 @@ fun UserNameSetupScreen(
         OutlinedTextField(
             value = userName,
             onValueChange = { onNameChange(it) },
-            label = { Text("Escribe tu nombre") },
+            label = { Text(stringResource(R.string.escribe_tu_nombre)) },
         )
 
         Row {

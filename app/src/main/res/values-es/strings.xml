@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name" translatable="false">PruebasTFG</string>
     <string name="preference_file_key">preference_file\n</string>
@@ -5,7 +6,7 @@
     <string name="home">Home</string>
     <string name="settings">Ajustes</string>
     <string name="back_button">back_button\n</string>
-    <string name="welcome">Welcome</string>
+    <string name="welcome">Bienvenido</string>
     <string name="username">username</string>
     <string name="modecolor">modecolor</string>
     <string name="fontsize">fontsize</string>

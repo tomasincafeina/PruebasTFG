@@ -29,6 +29,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -69,16 +70,17 @@ fun ThemePickerSetup(
 
     ) {
         Text(
-            "Pon el color a tu gusto",
+            stringResource(R.string.color_a_tu_gusto),
             fontSize = 35.sp,
             modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            lineHeight = 30.sp
         )
         //Spacer(modifier = Modifier.heightIn(min = 20.dp))
         Column {
             Text(
-                "Modo",
+                stringResource(R.string.modo),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Start,
                 modifier = Modifier
@@ -136,7 +138,7 @@ fun ThemePickerSetup(
         }
         Column {
             Text(
-                "Eliger el color",
+                stringResource(R.string.elige_el_color),
                 fontSize = 20.sp,
                 textAlign = TextAlign.Start,
                 modifier = Modifier

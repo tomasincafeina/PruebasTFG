@@ -53,7 +53,7 @@ fun WelcomeSetupScreen(
 
     ) {
         Text(
-            "Bienvenido \n a \n EasyWay UI",
+            stringResource(R.string.bienvenido_a_easyway_ui),
             fontSize = 45.sp,
             // modifier = Modifier.padding(20.dp),
             textAlign = TextAlign.Center,
@@ -71,7 +71,7 @@ fun WelcomeSetupScreen(
                 .weight(1f)
         )
         Text(
-            "Vamos a comenzar con el proceso de ajuste",
+            stringResource(R.string.vamos_a_comenzar_con_el_proceso_de_ajuste),
             fontSize = 25.sp,
             modifier = Modifier
                 .padding(20.dp)
@@ -79,6 +79,6 @@ fun WelcomeSetupScreen(
             textAlign = TextAlign.Center,
         )
     }
-    BigLowButton({ navigateForward() }, "Comenzar", false)
+    BigLowButton({ navigateForward() }, stringResource(R.string.comenzar), false)
 
 }

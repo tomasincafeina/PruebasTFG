@@ -14,6 +14,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -22,6 +23,7 @@ import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 
 @Composable
@@ -39,7 +41,7 @@ fun FinishedSetup(
     )
     {
         Text(
-            "¡Ya hemos completado el proceso de ajuste!",
+            stringResource(R.string.proceso_de_ajuste_terminado),
             fontSize = 35.sp,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -48,12 +50,16 @@ fun FinishedSetup(
             modifier = Modifier.weight(1f)
 
         )
-        Icon(Icons.Rounded.Favorite, contentDescription = "logo", modifier = Modifier.size(120.dp).weight(1f))
+        Icon(Icons.Rounded.Favorite, contentDescription = "logo", modifier = Modifier
+            .size(120.dp)
+            .weight(1f))
 
         Text(
-            "Disfruta de Easy UI",
+            stringResource(R.string.disfruta_de_easy_ui),
             fontSize = 25.sp,
-            modifier = Modifier.padding(20.dp).weight(1f),
+            modifier = Modifier
+                .padding(20.dp)
+                .weight(1f),
             textAlign = TextAlign.Center,
         )
 
@@ -61,6 +67,6 @@ fun FinishedSetup(
     BigLowButton({
         toogleSetupStatus()
         onClickFinished()
-    }, "Terminar", false)
+    }, stringResource(R.string.terminar) , false)
 }
 
