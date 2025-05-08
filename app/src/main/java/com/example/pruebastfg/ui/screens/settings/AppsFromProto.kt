@@ -22,6 +22,8 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,15 +41,22 @@ import com.example.pruebastfg.AppInfo
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.ShapeDefaults
+import androidx.compose.material3.Shapes
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Shape
 import com.example.pruebastfg.ui.items.AppItemProto
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -60,7 +69,8 @@ fun AppsFromProto(
     goToRemoveApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
     goToFavoriteApps: () -> Unit, // Callback para navegar a la pantalla de borrar apps
     fontSize: TextUnit,
-    isAssitedMode: Boolean
+    isAssitedMode: Boolean,
+    goToSettings: () -> Unit, // Callback para navegar a la pantalla de ajustes
     //setupStatus: Boolean // Estado actual del setup
 ) {
     // Estado para el texto de búsqueda
@@ -79,19 +89,51 @@ fun AppsFromProto(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        if (isAssitedMode == false){
+        if (isAssitedMode == false) {
             // Barra de búsqueda
-            SearchBar(
-                query = searchText,
-                onQueryChange = { searchText = it },
-                onSearch = {},
-                active = false,
-                onActiveChange = {},
-                placeholder = { Text("Buscar aplicación...") },
-                leadingIcon = { Icon(Icons.Default.Search, null) },
-                modifier = Modifier.fillMaxWidth().padding(10.dp),
-                windowInsets = WindowInsets(0, 0, 0, 0)
-            ) {}
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                SearchBar(
+                    query = searchText,
+                    onQueryChange = { searchText = it },
+                    onSearch = {},
+                    active = false,
+                    onActiveChange = {},
+                    placeholder = { Text("Buscar aplicación...") },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp),
+                    shape = MaterialTheme.shapes.extraLarge,
+                    windowInsets = WindowInsets(0.dp)
+                ) {}
+
+                Box(
+                    modifier = Modifier
+                        .size(56.dp)  // Standard FAB size
+                ) {
+                    IconButton(
+                        onClick = { goToSettings() },
+                        modifier = Modifier
+                            .matchParentSize(),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                        )
+                    ) {
+                        Icon(
+                            Icons.Rounded.Settings,
+                            contentDescription = "Settings",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+            }
         }
         if (apps.isEmpty()) {
             Column(
@@ -112,7 +154,9 @@ fun AppsFromProto(
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,
-                        modifier = Modifier.fillMaxSize().clickable {goToAddApp()}
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clickable { goToAddApp() }
                     ) {
 
                         Icon(

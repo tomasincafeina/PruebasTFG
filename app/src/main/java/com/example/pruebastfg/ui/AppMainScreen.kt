@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.widget.Toast
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -31,6 +32,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -112,8 +114,8 @@ fun AppTopBar(
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.secondaryContainer
         ),
-//        actions = {
-//            if (currentScreen.name == AppScreens.Home.name) {
+        actions = {
+            if (currentScreen.name == AppScreens.Home.name) {
 //                IconButton(onClick = onSettingsClick) {
 //                    Icon(
 //                        imageVector = Icons.Rounded.Settings, // Icono de configuración
@@ -122,8 +124,30 @@ fun AppTopBar(
 //                        tint = MaterialTheme.colorScheme.onBackground
 //                    )
 //                }
-//            }
-//        },
+                Box(
+                    modifier = Modifier.padding(
+                        10.dp
+                    )
+                        .size(56.dp)  // Standard FAB size
+                ) {
+                    IconButton(
+                        onClick = { onSettingsClick() },
+                        modifier = Modifier
+                            .matchParentSize(),
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                            contentColor = MaterialTheme.colorScheme.onBackground
+                        )
+                    ) {
+                        Icon(
+                            Icons.Rounded.Settings,
+                            contentDescription = "Settings",
+                            modifier = Modifier.size(30.dp)
+                        )
+                    }
+                }
+            }
+        },
 
         modifier = modifier,
 //        navigationIcon = {
@@ -251,17 +275,17 @@ fun MainScreen(
                         }
                     }, onBack = { navController.popBackStack() })
                 }
-                if (currentScreen == AppScreens.Home) {
-                    BottomIndivMode(
-                        {
-                            if (isAssistedMode == true) {
-                                 navController.navigate("password")
-                            } else {
-                                 navController.navigate(AppScreens.Settings.name)
-                            }
-                        }
-                    )
-                }
+//                if (currentScreen == AppScreens.Home) {
+//                    BottomIndivMode(
+//                        {
+//                            if (isAssistedMode == true) {
+//                                 navController.navigate("password")
+//                            } else {
+//                                 navController.navigate(AppScreens.Settings.name)
+//                            }
+//                        }
+//                    )
+//                }
             }) { innerPadding ->
             NavHost(
                 //cambiar nmbre setupStatus
@@ -361,12 +385,12 @@ fun MainScreen(
                         AppsFromProto(
                             appsProto,
                             onAppClick = onAppClick,
-
                             goToAddApp = { navController.navigate(AppScreens.AddApp.name) },
                             goToRemoveApps = { navController.navigate(AppScreens.RemoveApp.name) },
                             goToFavoriteApps = { navController.navigate(AppScreens.FavoriteApps.name) },
                             viewModel.fontSize.collectAsState().value,
-                            isAssitedMode = isAssistedMode!!
+                            isAssitedMode = isAssistedMode!!,
+                            {navController.navigate(AppScreens.Settings.name)}
                         )
                     }
                 }
