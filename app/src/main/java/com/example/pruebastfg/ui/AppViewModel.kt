@@ -44,6 +44,27 @@ class AppViewModel(
     val isThemeDark: Flow<Boolean?> = prefsRepo.isThemeDark()
     val colorTheme: Flow<String?> = prefsRepo.getThemeColor()
     val isAssistedMode: Flow<Boolean?> = prefsRepo.getIsAssistedMode()
+    val isHighContrast: Flow<Boolean?> = prefsRepo.getHighContrast()
+
+    fun getHighContrast(): Flow<Boolean?> {
+        return prefsRepo.getHighContrast()
+    }
+
+    fun setHighContrastTrue() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.setHighContrastTrue(true)
+        }
+    }
+    fun setHighContrastFalse() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.setHighContrastFalse(false)
+        }
+    }
+    fun toogleHighContrast() {
+        viewModelScope.launch(Dispatchers.IO) {
+            prefsRepo.toogleHighContrast()
+        }
+    }
 
     fun setToIndividualMode() {
         viewModelScope.launch(Dispatchers.IO) {

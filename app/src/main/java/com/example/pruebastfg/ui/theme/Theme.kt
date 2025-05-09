@@ -229,6 +229,22 @@ val PurpleLightColorScheme = lightColorScheme(
     surfaceContainerHigh = PurplesurfaceContainerHighLight,
     surfaceContainerHighest = PurplesurfaceContainerHighestLight,
 )
+val HighContrastDarkColorScheme = darkColorScheme(
+    surface = HighContrastBlack,
+    secondaryContainer = HighContrastWhite,
+    primaryContainer = HighContrastWhite,
+    onPrimaryContainer = HighContrastWhite,
+    onBackground = HighContrastBlack
+
+)
+val HighContrastLightColorScheme = lightColorScheme(
+    surface = HighContrastWhite,
+    secondaryContainer = HighContrastBlack,
+    primaryContainer = HighContrastBlack,
+    onPrimaryContainer = HighContrastBlack,
+    onBackground = HighContrastWhite
+)
+
 @Composable
 fun PruebasTFGTheme(
     viewModel: AppViewModel,
@@ -236,14 +252,60 @@ fun PruebasTFGTheme(
 ) {
     val isThemeDark = viewModel.isThemeDark.collectAsState(initial = null)
     val colorTheme = viewModel.colorTheme.collectAsState(initial = "blue")
+    val highContrast = viewModel.isHighContrast.collectAsState(initial = false)
 
     //val colors = if (isThemeDark.value == true) BlueDarkColorScheme else BlueLightColorScheme
-    val colors = when (colorTheme.value) {
+    var colors = when (colorTheme.value) {
         "blue" -> if (isThemeDark.value == true) BlueDarkColorScheme else BlueLightColorScheme
         "green" -> if (isThemeDark.value == true) GreenDarkColorScheme else GreenLightColorScheme
         "purple" -> if (isThemeDark.value == true) PurpleDarkColorScheme else PurpleLightColorScheme
         else -> if (isThemeDark.value == true) BlueDarkColorScheme else BlueLightColorScheme
     }
+    if (highContrast.value == true) {
+        colors = when (colorTheme.value) {
+            "blue" -> if (isThemeDark.value == true)
+                BlueDarkColorScheme.copy(
+                    secondaryContainer = BlueHighContrastSecondaryContainerDark,
+                    surface = BlueHighContrastSurfaceDark,
+                    onBackground = HighContrastBlack
+                )
+            else
+                BlueLightColorScheme.copy(
+                    secondaryContainer = BlueHighContrastSecondaryContainerLight,
+                    surface = BlueHighContrastSurfaceLight,
+                    onBackground = HighContrastWhite
+                )
+
+            "green" -> if (isThemeDark.value == true)
+                GreenDarkColorScheme.copy(
+                    secondaryContainer = GreenHighContrastSecondaryContainerDark,
+                    surface = GreenHighContrastSurfaceDark,
+                    onBackground = HighContrastBlack
+                )
+            else
+                GreenLightColorScheme.copy(
+                    secondaryContainer = GreenHighContrastSecondaryContainerLight,
+                    surface = GreenHighContrastSurfaceLight,
+                    onBackground = HighContrastWhite
+                )
+
+            "purple" -> if (isThemeDark.value == true)
+                PurpleDarkColorScheme.copy(
+                    secondaryContainer = PurpleHighContrastSecondaryContainerDark,
+                    surface = PurpleHighContrastSurfaceDark,
+                    onBackground = HighContrastBlack
+                )
+            else
+                PurpleLightColorScheme.copy(
+                    secondaryContainer = PurpleHighContrastSecondaryContainerLight,
+                    surface = PurpleHighContrastSurfaceLight,
+                    onBackground = HighContrastWhite
+                )
+
+            else -> colors // fallback
+        }
+    }
+
 
     MaterialTheme(
         colorScheme = colors,

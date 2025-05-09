@@ -32,6 +32,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.res.stringResource
@@ -134,15 +135,12 @@ fun AppTopBar(
                         onClick = { onSettingsClick() },
                         modifier = Modifier
                             .matchParentSize(),
-                        colors = IconButtonDefaults.iconButtonColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
-                            contentColor = MaterialTheme.colorScheme.onBackground
-                        )
                     ) {
                         Icon(
                             Icons.Rounded.Settings,
                             contentDescription = "Settings",
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(30.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -210,6 +208,7 @@ fun MainScreen(
     val setupStatus by remember { viewModel.setupDone }.collectAsState(initial = null)
     val colorTheme by remember { viewModel.colorTheme }.collectAsState(initial = "blue")
     val isAssistedMode by remember { viewModel.isAssistedMode }.collectAsState(initial = null)
+    val isHighContrast by remember { viewModel.isHighContrast }.collectAsState(initial = false)
 
     val startDestination by viewModel.startDestination.collectAsState()
     val appsProto by viewModel.apps.collectAsState(initial = emptyList())
@@ -246,7 +245,7 @@ fun MainScreen(
                 }
             }, bottomBar = {
                 // Mostrar el BottomAppBar solo si estamos en el flujo de Setup
-                if (isSetupFlow) {
+                if (isSetupFlow && currentScreen != SetupSubScreens.pwd) {
                     SetupBottomAppBar(currentScreen = SetupSubScreens.entries.find {
                         it.name == backStackEntry?.destination?.route
                     } ?: SetupSubScreens.welcome, navController = navController, onNext = {
@@ -326,6 +325,8 @@ fun MainScreen(
                     ThemePickerSetup(
                         navController = navController,
                         isThemeDark = isThemeDark!!,
+                        isHighContrast = isHighContrast!!,
+                        toogleHighContrast = { viewModel.toogleHighContrast() },
                         { viewModel.changeThemeToDark() },
                         { viewModel.changeThemeToLight() },
                         colorTheme,
@@ -417,7 +418,10 @@ fun MainScreen(
                         setToIndividualMode = { viewModel.setToIndividualMode() },
                         increaseFontSize = { viewModel.increaseFontSize() },
                         decreaseFontSize = { viewModel.decreaseFontSize() },
-                        fontSize = viewModel.fontSize.collectAsState().value
+                        fontSize = viewModel.fontSize.collectAsState().value,
+                        isHighContrast = isHighContrast?: false,
+                        setHighContrastTrue = { viewModel.setHighContrastTrue() },
+                        setHighContrastFalse = { viewModel.setHighContrastFalse() }
                     )
                 }
 
@@ -433,6 +437,8 @@ fun MainScreen(
                 composable(route = AppScreens.ColorSetting.name) {
                     ThemeSettingScreen(
                         isThemeDark = isThemeDark!!,
+                        isHighContrast = isHighContrast!!,
+                        toogleHighContrast = { viewModel.toogleHighContrast() },
                         { viewModel.changeThemeToDark() },
                         { viewModel.changeThemeToLight() },
                         colorTheme,

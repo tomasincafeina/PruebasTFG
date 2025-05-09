@@ -32,7 +32,10 @@ fun DebugSettingScreen(
     setToIndividualMode: () -> Unit,
     increaseFontSize: () -> Unit,
     decreaseFontSize: () -> Unit,
-    fontSize: TextUnit
+    fontSize: TextUnit,
+    isHighContrast: Boolean,
+    setHighContrastTrue: () -> Unit,
+    setHighContrastFalse: () -> Unit
 ) {
     val colorScheme = MaterialTheme.colorScheme
     val colors = listOf(
@@ -92,6 +95,20 @@ fun DebugSettingScreen(
             ) {
                 Text(text = "Setup")
             }
+        }
+        Spacer(modifier = Modifier.height(40.dp))
+        Column(modifier = Modifier.fillMaxWidth()) {
+            Button(
+                onClick = setHighContrastTrue,
+            ) {
+                Text("Cambiar modo alto contraste true")
+            }
+            Button(
+                onClick = setHighContrastFalse,
+            ) {
+                Text("Cambiar modo alto contraste false")
+            }
+            Text("Valor de isHighContrast: ${isHighContrast.toString()}")
         }
         Spacer(modifier = Modifier.height(40.dp))
         Text(

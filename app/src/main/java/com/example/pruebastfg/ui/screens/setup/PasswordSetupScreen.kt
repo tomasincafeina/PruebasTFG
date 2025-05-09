@@ -3,9 +3,13 @@ package com.example.pruebastfg.ui.screens.setup
 import android.content.Intent
 import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -16,16 +20,21 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material.icons.rounded.ArrowBack
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Done
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,6 +43,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -52,6 +62,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import com.example.pruebastfg.R
+import com.example.pruebastfg.ui.AppScreens
+import com.example.pruebastfg.ui.SetupBottomAppBar
 import com.example.pruebastfg.ui.sharedItems.PwdCorrectIcon
 import com.example.pruebastfg.ui.sharedItems.PwdIncorrectIcon
 
@@ -66,221 +78,218 @@ fun PasswordSetupScreen(
     val focusRequester = remember { FocusRequester() }
     val confirmPwdFocusRequester = remember { FocusRequester() }
     val pwdIsCorrectLength: Boolean = pwd.length == 4
+
     var isPwdVisible by remember { mutableStateOf(false) }
-
     var confirPwd by remember { mutableStateOf("") }
-    var arePwdEqual by remember { mutableStateOf(false) }
-
-    if (pwd == confirPwd) {
-        arePwdEqual == true
-    }
+    val arePwdEqual = pwd == confirPwd && pwdIsCorrectLength
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
         keyboardController?.show()
     }
+    Column(verticalArrangement = Arrangement.SpaceBetween) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                stringResource(R.string.establece_la_contrase_a_de_usuario_administrador),
+                fontSize = 35.sp,
+                modifier = Modifier.padding(20.dp),
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.SemiBold,
+                lineHeight = 40.sp
+            )
 
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(
-            stringResource(R.string.establece_la_contrase_a_de_usuario_administrador),
-            fontSize = 35.sp,
-            modifier = Modifier.padding(20.dp),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.SemiBold,
-            lineHeight = 40.sp
-        )
+            Text(
+                modifier = Modifier.width(300.dp),
+                text = stringResource(R.string.digitos_contrasena),
+                fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(50.dp))
 
-        Text(
-            modifier = Modifier.width(300.dp),
-            text = stringResource(R.string.digitos_contrasena),
-            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
-        )
-        Spacer(modifier = Modifier.height(50.dp))
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            OutlinedTextField(
-                value = pwd,
-                onValueChange = { it ->
-                    // Only allow numeric input and limit to 4 characters
-                    if (it.length <= 4 && it.all { it.isDigit() }) {
-                        onPasswordChange(it)
-                    }
-                },
-                label = {
-                    Text(
-                        text = stringResource(R.string.ingresa_tu_contrasena)
-                    )
-                },
-                trailingIcon = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        // Validation icons (shown to the left of the visibility toggle)
-                        if (pwd.isNotEmpty()) {
-                            if (pwdIsCorrectLength) {
-                                PwdCorrectIcon()
-                            } else {
-                                PwdIncorrectIcon()
-                            }
+            // 🔐 First Password Field
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                OutlinedTextField(
+                    value = pwd,
+                    onValueChange = {
+                        if (it.length <= 4 && it.all(Char::isDigit)) {
+                            onPasswordChange(it)
                         }
-                        // Password visibility toggle icon
-                        IconButton(
-                            onClick = { isPwdVisible = !isPwdVisible },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isPwdVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = if (isPwdVisible) "Hide password" else "Show password",
-                                //modifier = Modifier.size(48.dp)
-                            )
-                        }
-                    }
-
-                },
-                isError = pwd.isNotEmpty() && !pwdIsCorrectLength,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.NumberPassword,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        confirmPwdFocusRequester.requestFocus()
                     },
-                    onNext = {
-                        confirmPwdFocusRequester.requestFocus()
-                    }
-                ),
-                singleLine = true,
-                visualTransformation = if (isPwdVisible) {
-                    VisualTransformation.None // Show password as plain text
-                } else {
-                    PasswordVisualTransformation() // Hide password (show dots)
-                },
-                modifier = Modifier
-                    .focusRequester(focusRequester)
-                    .onKeyEvent {
-                        if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown) {
+                    label = { Text(text = stringResource(R.string.ingresa_tu_contrasena)) },
+                    trailingIcon = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
                             if (pwd.isNotEmpty()) {
-                                onPasswordChange(pwd.dropLast(1))
+                                if (pwdIsCorrectLength) PwdCorrectIcon() else PwdIncorrectIcon()
                             }
-                            true
-                        } else {
-                            false
+                            IconButton(onClick = { isPwdVisible = !isPwdVisible }) {
+                                Icon(
+                                    imageVector = if (isPwdVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = if (isPwdVisible) "Hide password" else "Show password"
+                                )
+                            }
                         }
-                    }
-            )
+                    },
+                    isError = pwd.isNotEmpty() && !pwdIsCorrectLength,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.NumberPassword,
+                        imeAction = ImeAction.Next
+                    ),
+                    keyboardActions = KeyboardActions(onNext = { confirmPwdFocusRequester.requestFocus() }),
+                    singleLine = true,
+                    visualTransformation = if (isPwdVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .onKeyEvent {
+                            if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown && pwd.isNotEmpty()) {
+                                onPasswordChange(pwd.dropLast(1))
+                                true
+                            } else false
+                        }
+                )
+            }
 
-
-        }
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-        ) {
-            OutlinedTextField(
-                value = confirPwd,
-                onValueChange = { it ->
-                    // Only allow numeric input and limit to 4 characters
-                    if (it.length <= 4 && it.all { it.isDigit() }) {
-                        onPasswordChange(it)
-                    }
-                },
-                label = {
+            // 🔐 Confirm Password Field
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                OutlinedTextField(
+                    value = confirPwd,
+                    onValueChange = {
+                        if (it.length <= 4 && it.all(Char::isDigit)) {
+                            confirPwd = it
+                        }
+                    },
+                    label = { Text(text = stringResource(R.string.repite_tu_contrasena)) },
+                    trailingIcon = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            if (confirPwd.isNotEmpty()) {
+                                if (arePwdEqual) PwdCorrectIcon() else PwdIncorrectIcon()
+                            }
+                            IconButton(onClick = { isPwdVisible = !isPwdVisible }) {
+                                Icon(
+                                    imageVector = if (isPwdVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                                    contentDescription = if (isPwdVisible) "Hide password" else "Show password"
+                                )
+                            }
+                        }
+                    },
+                    isError = confirPwd.isNotEmpty() && !arePwdEqual,
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.NumberPassword,
+                        imeAction = ImeAction.Done
+                    ),
+                    keyboardActions = KeyboardActions(
+                        onDone = {
+                            if (arePwdEqual) {
+                                setPassword(pwd)
+                                keyboardController?.hide()
+                            }
+                        }
+                    ),
+                    singleLine = true,
+                    visualTransformation = if (isPwdVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                    modifier = Modifier
+                        .focusRequester(confirmPwdFocusRequester)
+                        .onKeyEvent {
+                            if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown && confirPwd.isNotEmpty()) {
+                                confirPwd = confirPwd.dropLast(1)
+                                true
+                            } else false
+                        }
+                )
+                if (confirPwd.isNotEmpty() && pwd.isNotEmpty() && !arePwdEqual && confirPwd.length == 4) {
                     Text(
-                        text = stringResource(R.string.repite_tu_contrasena)
+                        text = "Las contraseñas no coinciden. Asegúrate de que ambas sean iguales.",
+                        color = MaterialTheme.colorScheme.error,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier
+                            .padding(top = 8.dp)
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp),
+                        textAlign = TextAlign.Center
                     )
-                },
-                trailingIcon = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center,
-                    ) {
-                        // Validation icons (shown to the left of the visibility toggle)
-                        if (pwd.isNotEmpty()) {
-                            if (pwdIsCorrectLength) {
-                                PwdCorrectIcon()
-                            } else {
-                                PwdIncorrectIcon()
-                            }
-                        }
-                        // Password visibility toggle icon
-                        IconButton(
-                            onClick = { isPwdVisible = !isPwdVisible },
-                            modifier = Modifier.size(48.dp)
-                        ) {
-                            Icon(
-                                imageVector = if (isPwdVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = if (isPwdVisible) "Hide password" else "Show password",
-                                //modifier = Modifier.size(48.dp)
-                            )
-                        }
-                    }
+                }
 
-                },
-                isError = confirPwd.isNotEmpty() && !pwdIsCorrectLength,
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
-                ),
-                keyboardActions = KeyboardActions(
-                    onDone = {
-                        if (pwdIsCorrectLength) {
-                            setPassword(pwd)
-                            keyboardController?.hide()
-                        }
-                    }
-                ),
-                singleLine = true,
-                visualTransformation = if (isPwdVisible) {
-                    VisualTransformation.None // Show password as plain text
-                } else {
-                    PasswordVisualTransformation() // Hide password (show dots)
-                },
-                modifier = Modifier
-                    .focusRequester(confirmPwdFocusRequester)
-                    .onKeyEvent {
-                        if (it.key == Key.Backspace && it.type == KeyEventType.KeyDown) {
-                            if (pwd.isNotEmpty()) {
-                                onPasswordChange(pwd.dropLast(1))
-                            }
-                            true
-                        } else {
-                            false
-                        }
-                    }
-            )
+            }
+
+            //Text("${pwd.length}/4 dígitos")
         }
+        BottomBarNavigation(
+            arePwdEqual,
+            { navController.popBackStack() },
+            { navController.navigate(AppScreens.FinishedSetup.name) })
+    }
+}
 
+@Composable
+fun BottomBarNavigation(
+    isOK: Boolean,
+    onBack: () -> Unit,
+    onNext: () -> Unit
+) {
 
-        // Mostramos el contador de dígitos
-        Text("${pwd.length}/4 dígitos")
-
-        Button(
-            onClick = {
-                setPassword(pwd)
-                keyboardController?.hide()
-                focusRequester.freeFocus()
-            },
-            enabled = pwdIsCorrectLength,
-            elevation = ButtonDefaults.buttonElevation(8.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                contentColor = Color.Black,
-                disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant,
-                disabledContentColor = MaterialTheme.colorScheme.onSurfaceVariant
-            ),
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(20.dp)
+                .padding(horizontal = 10.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            Text("Guardar contraseña", modifier = Modifier.padding(10.dp), fontSize = 20.sp, color= MaterialTheme.colorScheme.onBackground)
-        }
+            ElevatedCard(
+                shape = Shapes().large,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                onClick = { onNext() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
+                enabled = isOK
+            ) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.padding(vertical = 18.dp)
+                ) {
+                    Text(
+                        text = stringResource(R.string.siguiente),
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+            ElevatedCard(
+                shape = Shapes().large,
+                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+                onClick = { onBack() },
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+            ) {
+                Row(
+                    modifier = Modifier
+                        .padding(vertical = 18.dp)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.ArrowBack,
+                        contentDescription = stringResource(R.string.atras),
+                        modifier = Modifier.size(30.dp),
+                        tint = MaterialTheme.colorScheme.onBackground
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(
+                        text = stringResource(R.string.atras),
+                        textAlign = TextAlign.Center,
+                        fontSize = 25.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
     }
 }
 

@@ -31,7 +31,7 @@ fun ThemeColorPickerItem(
         modifier = Modifier
             .aspectRatio(1f)
             .border(
-                width = if (colorTheme == item.themeName) 2.dp else 2.dp,
+                width = if (colorTheme == item.themeName) 4.dp else 2.dp,
                 color = if (colorTheme == item.themeName) {
                     MaterialTheme.colorScheme.onSurface
                 } else {

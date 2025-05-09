@@ -50,13 +50,16 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.ShapeDefaults
 import androidx.compose.material3.Shapes
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Shape
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.items.AppItemProto
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -94,9 +97,9 @@ fun AppsFromProto(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
+                    .padding(horizontal = 10.dp),
+                verticalAlignment = Alignment.Bottom,
+                //horizontalArrangement = Arrangement.Center,
             ) {
                 SearchBar(
                     query = searchText,
@@ -104,18 +107,22 @@ fun AppsFromProto(
                     onSearch = {},
                     active = false,
                     onActiveChange = {},
-                    placeholder = { Text("Buscar aplicación...") },
-                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+                    placeholder = { Text(stringResource(R.string.buscar_aplicacion), color = MaterialTheme.colorScheme.onBackground) },
+                    leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search" , tint = MaterialTheme.colorScheme.onBackground)},
                     modifier = Modifier
                         .weight(1f)
                         .padding(end = 8.dp),
                     shape = MaterialTheme.shapes.extraLarge,
-                    windowInsets = WindowInsets(0.dp)
+                    windowInsets = WindowInsets(0.dp),
+                    colors = SearchBarDefaults.colors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
                 ) {}
 
                 Box(
                     modifier = Modifier
-                        .size(56.dp)  // Standard FAB size
+                        .size(56.dp)
+                        .height(56.dp)// Standard FAB size
                 ) {
                     IconButton(
                         onClick = { goToSettings() },
@@ -129,7 +136,8 @@ fun AppsFromProto(
                         Icon(
                             Icons.Rounded.Settings,
                             contentDescription = "Settings",
-                            modifier = Modifier.size(30.dp)
+                            modifier = Modifier.size(30.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
                         )
                     }
                 }
@@ -138,13 +146,14 @@ fun AppsFromProto(
         if (apps.isEmpty()) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
                 modifier = Modifier.padding(30.dp)
             ) {
                 Text(
-                    "No hay aplicaciones añadidas",
+                    stringResource(R.string.no_hay_aplicaciones_anadidas),
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
-                    lineHeight = 60.sp
+                    lineHeight = 40.sp
                 )
                 Spacer(modifier = Modifier.height(40.dp))
                 Card(

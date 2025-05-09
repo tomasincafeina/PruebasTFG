@@ -57,5 +57,7 @@
     <string name="modo">Mode</string>
     <string name="siguiente">Next</string>
     <string name="hola">Hello, %1$s!</string>
+    <string name="buscar_aplicacion">Search application ...</string>
+    <string name="no_hay_aplicaciones_anadidas">There`s no apps added</string>
 
 </resources>

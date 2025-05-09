@@ -29,12 +29,38 @@ class PreferencesRepository(context: Context) {
             androidx.datastore.preferences.core.booleanPreferencesKey("setup_done")
         private val THEME_MODE_KEY =
             androidx.datastore.preferences.core.booleanPreferencesKey("theme_mode")
+        private val THEME_HIGHT_CONTRAST_KEY =
+            androidx.datastore.preferences.core.booleanPreferencesKey("theme_high_contrast")
         private val THEME_COLOR_KEY =
             androidx.datastore.preferences.core.stringPreferencesKey("theme_color")
         private val PASSWORD_KEY =
             androidx.datastore.preferences.core.stringPreferencesKey("password")
         private val IS_ASSITED_MODE_KEY =
             androidx.datastore.preferences.core.booleanPreferencesKey("is_assisted_mode")
+    }
+
+    fun getHighContrast(): Flow<Boolean?> {
+        return dataStore.data.map { preferences ->
+            preferences[THEME_HIGHT_CONTRAST_KEY] ?: false
+        }
+    }
+
+    suspend fun setHighContrastTrue(isHighContrast: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[THEME_HIGHT_CONTRAST_KEY] = true
+        }
+    }
+
+    suspend fun setHighContrastFalse(isHighContrast: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[THEME_HIGHT_CONTRAST_KEY] = false
+        }
+    }
+    suspend fun toogleHighContrast() {
+        dataStore.edit { preferences ->
+            val currentStatus = preferences[THEME_HIGHT_CONTRAST_KEY] ?: false
+            preferences[THEME_HIGHT_CONTRAST_KEY] = !currentStatus
+        }
     }
 
     fun getIsAssistedMode(): Flow<Boolean?> {

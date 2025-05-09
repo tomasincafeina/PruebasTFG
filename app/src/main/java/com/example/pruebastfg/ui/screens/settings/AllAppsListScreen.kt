@@ -80,10 +80,10 @@ fun AllAppsListScreen(
             onSearch = {},
             active = false,
             onActiveChange = {},
-            placeholder = { Text("Buscar aplicación...") },
+            placeholder = { Text(stringResource(R.string.buscar_aplicacion)) },
             leadingIcon = { Icon(Icons.Default.Search, null) },
             modifier = Modifier.fillMaxWidth().padding(10.dp),
-            windowInsets = WindowInsets(0, 0, 0, 0) // ✅ desactiva insets
+            windowInsets = WindowInsets(0, 0, 0, 0)
         ) {}
         // Lista de aplicaciones en un grid
         LazyVerticalGrid(

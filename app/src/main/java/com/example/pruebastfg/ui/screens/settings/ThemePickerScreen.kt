@@ -1,5 +1,6 @@
 package com.example.pruebastfg.ui.screens.settings
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -18,9 +19,13 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Contrast
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +43,8 @@ import com.example.pruebastfg.ui.theme.PurpleprimaryLight
 @Composable
 fun ThemeSettingScreen(
     isThemeDark: Boolean,
+    isHighContrast: Boolean,
+    toogleHighContrast: () -> Unit,
     changeThemeToDark: () -> Unit,
     changeThemeToLight: () -> Unit,
     colorTheme: String?,
@@ -98,46 +105,78 @@ fun ThemeSettingScreen(
                 .fillMaxWidth()
                 .padding(8.dp)
         ) {
-            Card(
-                shape = CircleShape,
-                colors = if (isThemeDark == true) {
-                    androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+
+                if (isThemeDark == true) {
+                    Card(
+                        shape = CircleShape,
+                        colors = if (isThemeDark == true) {
+                            androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                        } else {
+                            androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                        }
+                    ) {
+                        Box(modifier = Modifier.clickable { changeThemeToLight() }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.outline_light_mode_20),
+                                contentDescription = "light_mode",
+                                modifier = Modifier
+                                    .size(150.dp)
+                                    .padding(10.dp),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
                 } else {
-                    androidx.compose.material3.CardDefaults.cardColors()
+                    Card(
+                        shape = CircleShape,
+                        colors = if (isThemeDark == true) {
+                            androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                        } else {
+                            androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                        }
+                    ) {
+                        Box(modifier = Modifier.clickable { changeThemeToDark() }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.outline_dark_mode_20),
+                                contentDescription = "dark_mode",
+                                modifier = Modifier
+                                    .size(150.dp),
+                                tint = MaterialTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
                 }
-            ) {
-                Box(modifier = Modifier.clickable { changeThemeToLight() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.outline_light_mode_20),
-                        contentDescription = "light_mode",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(10.dp),
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
+                if (isThemeDark==true) {
+                    Text("Claro")
+                }else{
+                    Text("Oscuro")
                 }
+
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Card(
-                shape = CircleShape,
-                colors = if (isThemeDark == true) {
-                    androidx.compose.material3.CardDefaults.cardColors()
-                } else {
-                    androidx.compose.material3.CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                Card(
+                    shape = CircleShape,
+                    colors = if (isHighContrast == true) {
+                        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
+                    } else {
+                        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
+                    }
+                ) {
+                    Box(modifier = Modifier.clickable { toogleHighContrast() }) {
+                        Icon(
+                            imageVector = Icons.Rounded.Contrast,
+                            contentDescription = "dark_mode",
+                            modifier = Modifier
+                                .size(150.dp)
+                                .padding(10.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
                 }
-            ) {
-                Box(modifier = Modifier.clickable { changeThemeToDark() }) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.outline_dark_mode_20),
-                        contentDescription = "dark_mode",
-                        modifier = Modifier
-                            .size(100.dp)
-                            .padding(10.dp),
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                }
+                Text("Alto contraste")
             }
-
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),

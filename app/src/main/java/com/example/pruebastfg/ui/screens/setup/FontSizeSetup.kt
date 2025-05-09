@@ -93,14 +93,14 @@ fun FontSizeSetup(
                 // Botón para disminuir tamaño
                 Card(
                     shape = CircleShape,
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 ) {
                     Box(modifier = Modifier.clickable { viewModel.decreaseFontSize() }) {
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowDown,
                             contentDescription = stringResource(R.string.disminuir_tamano),
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(48.dp)
                         )
                     }
@@ -111,7 +111,7 @@ fun FontSizeSetup(
                 Text("Aa", fontSize = fontSize)
                 Card(
                     shape = CircleShape,
-                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onBackground),
+                    border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
                     colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
                 ) {
                     // Botón para aumentar tamaño
@@ -122,7 +122,7 @@ fun FontSizeSetup(
                         Icon(
                             imageVector = Icons.Rounded.KeyboardArrowUp,
                             contentDescription = stringResource(R.string.aumentar_tamano),
-                            tint = MaterialTheme.colorScheme.onBackground,
+                            tint = MaterialTheme.colorScheme.onSurface,
                             modifier = Modifier.size(48.dp)
                         )
                     }

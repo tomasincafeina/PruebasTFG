@@ -77,7 +77,8 @@ fun SetupBottomAppBar(
                             Icon(
                                 imageVector = Icons.Rounded.ArrowBack,
                                 contentDescription = stringResource(R.string.atras),
-                                modifier = Modifier.size(30.dp)
+                                modifier = Modifier.size(30.dp),
+                                tint = MaterialTheme.colorScheme.onBackground
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(

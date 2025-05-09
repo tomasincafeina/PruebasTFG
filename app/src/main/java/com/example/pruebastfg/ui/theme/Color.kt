@@ -2,6 +2,29 @@ package com.example.pruebastfg.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
+//HIGH CONTRAST LIGHT
+val HighContrastBlack = Color(0xFF121212)
+val HighContrastWhite = Color(0xFFFFFFFF)
+val HighContrastBlue = Color(0xFFAAC9FF)
+val HighContrastGreen = Color(0xFFD0FF91)
+val HighContrastPurple = Color(0xFFBD96FF)
+
+val BlueHighContrastSecondaryContainerDark = Color(0xFFC6DAFF) // Deep Navy
+val BlueHighContrastSurfaceDark = Color(0xFF101B2C) // Very dark blue-gray
+val BlueHighContrastSecondaryContainerLight = Color(0xFF294370) // Bold medium navy
+val BlueHighContrastSurfaceLight = Color(0xFFEDF3FE) // Bright bluish surface
+
+val GreenHighContrastSecondaryContainerDark = Color(0xFFDFFDD0) // Deep moss green
+val GreenHighContrastSurfaceDark = Color(0xFF121D0F) // Nearly black green-tinted
+val GreenHighContrastSecondaryContainerLight = Color(0xFF375B12) // Bold olive
+val GreenHighContrastSurfaceLight = Color(0xFFF3FAE9) // Off-white with green hint
+
+val PurpleHighContrastSecondaryContainerDark = Color(0xFFDDCFFD) // Rich purple-black
+val PurpleHighContrastSurfaceDark = Color(0xFF191226) // Dark with violet hue
+val PurpleHighContrastSecondaryContainerLight = Color(0xFF463A72) // Vivid purple
+val PurpleHighContrastSurfaceLight = Color(0xFFF7F1FB) // Light lavender-tinted white
+
+
 //BLUE
 //BLUE LIGHT
 val BlueprimaryLight = Color(0xFF415F91)

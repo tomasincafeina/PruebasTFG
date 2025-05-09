@@ -53,11 +53,13 @@ fun SettingItem(
             Icon(
                 imageVector = setting.icon, // Icono de configuración
                 contentDescription = "Icono de configuración",
-                modifier = Modifier.size(80.dp)
+                modifier = Modifier.size(80.dp),
+                tint = MaterialTheme.colorScheme.onBackground
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(setting.title), fontSize = fontSize, maxLines = 2, textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onBackground
             )
         }
     }

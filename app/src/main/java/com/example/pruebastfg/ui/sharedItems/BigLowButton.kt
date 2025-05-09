@@ -53,7 +53,8 @@ fun BigLowButton(onButtonClick: () -> Unit, text: String, isAtras: Boolean, modi
                     Icon(
                         imageVector = Icons.Rounded.ArrowBack,
                         contentDescription = text,
-                        modifier = Modifier.size(30.dp)
+                        modifier = Modifier.size(30.dp),
+                        tint = MaterialTheme.colorScheme.onBackground
                     )
                 }
                 Spacer(modifier = Modifier.width(8.dp))

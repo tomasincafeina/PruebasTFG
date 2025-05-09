@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material3.Card
@@ -132,7 +134,8 @@ fun ModePickerSetup(
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceEvenly
+        verticalArrangement = Arrangement.SpaceEvenly,
+
     ) {
         Text(
             stringResource(R.string.uso_easyui),
@@ -146,7 +149,10 @@ fun ModePickerSetup(
         // Opción Asistido
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier.verticalScroll(
+                rememberScrollState()
+            )
         ) {
             ModeOptionCard(
                 title = stringResource(R.string.asistido),
@@ -195,12 +201,12 @@ fun ModeOptionCard(
             .padding(5.dp)
             .border(
                 width = if (isSelected) 2.dp else 0.dp,
-                color = if (isSelected) MaterialTheme.colorScheme.primary
+                color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
                 else Color.Transparent,
                 shape = MaterialTheme.shapes.medium
             ),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) MaterialTheme.colorScheme.secondaryContainer
+            containerColor = if (isSelected) MaterialTheme.colorScheme.primaryContainer
             else MaterialTheme.colorScheme.surfaceVariant
         ),
         onClick = onSelect
