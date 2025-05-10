@@ -97,7 +97,7 @@ fun AppsFromProto(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 10.dp),
+                    .padding(vertical = 5.dp,horizontal = 20.dp),
                 verticalAlignment = Alignment.Bottom,
                 //horizontalArrangement = Arrangement.Center,
             ) {
@@ -111,7 +111,7 @@ fun AppsFromProto(
                     leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search" , tint = MaterialTheme.colorScheme.onBackground)},
                     modifier = Modifier
                         .weight(1f)
-                        .padding(end = 8.dp),
+                        .padding(end = 10.dp),
                     shape = MaterialTheme.shapes.extraLarge,
                     windowInsets = WindowInsets(0.dp),
                     colors = SearchBarDefaults.colors(

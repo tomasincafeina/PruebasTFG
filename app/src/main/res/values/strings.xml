@@ -9,7 +9,7 @@
     <string name="username">username</string>
     <string name="modecolor">modecolor</string>
     <string name="fontsize">fontsize</string>
-    <string name="launcher">launcher</string>
+    <string name="launcher">Launcher</string>
     <string name="addapps">AddApps</string>
     <string name="removeapps">RemoveApps</string>
     <string name="terminar">Terminar</string>
@@ -17,7 +17,7 @@
     <string name="atras">Atrás</string>
     <string name="colorsetting">Color\n</string>
     <string name="theme">theme</string>
-    <string name="mode">mode</string>
+    <string name="mode">Mode</string>
     <string name="pwd">password</string>
     <string name="initialapps">initialapps</string>
     <string name="finished_setup">finished_setup</string>
@@ -47,7 +47,7 @@
     <string name="bienvenido_a_easyway_ui">Bienvenido \n a \n EasyWay UI</string>
     <string name="vamos_a_comenzar_con_el_proceso_de_ajuste">Vamos a comenzar con el proceso de ajuste</string>
     <string name="comenzar">Comenzar</string>
-    <string name="contrasena">Contraseña</string>
+    <string name="reset_contrasena">Reiniciar contraseña</string>
     <string name="debug">Debug</string>
     <string name="color">Color</string>
     <string name="favoritos">Favoritos</string>
@@ -58,4 +58,8 @@
     <string name="hola">Hola, %1$s!</string>
     <string name="buscar_aplicacion">Buscar aplicación...</string>
     <string name="no_hay_aplicaciones_anadidas">No hay aplicaciones añadidas</string>
+    <string name="launchersetting" translatable="false">LauncherSetting</string>
+    <string name="changepwd" translatable="false" />
+    <string name="password" translatable="false" />
+    <string name="contrasena_incorrecta">Contraseña incorrecta</string>
 </resources>

@@ -142,6 +142,7 @@ class AppViewModel(
     }
 
     fun setPassword(password: String) {
+        if (password.isNotBlank())
         viewModelScope.launch(Dispatchers.IO) {
             prefsRepo.setPassword(password)
         }

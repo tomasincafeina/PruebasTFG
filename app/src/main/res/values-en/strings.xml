@@ -10,7 +10,7 @@
     <string name="username">username</string>
     <string name="modecolor">modecolor</string>
     <string name="fontsize">fontsize</string>
-    <string name="launcher">launcher</string>
+    <string name="launcher">Launcher</string>
     <string name="addapps">Add Apps</string>
     <string name="removeapps">Remove Apps</string>
     <string name="terminar">Finish</string>
@@ -18,7 +18,7 @@
     <string name="atras">Back</string>
     <string name="colorsetting">Color\n</string>
     <string name="theme">theme</string>
-    <string name="mode">mode</string>
+    <string name="mode">Mode</string>
     <string name="pwd">password</string>
     <string name="initialapps">initial apps</string>
     <string name="finished_setup">finished setup</string>
@@ -48,7 +48,7 @@
     <string name="bienvenido_a_easyway_ui">Welcome \n to \n EasyWay UI</string>
     <string name="vamos_a_comenzar_con_el_proceso_de_ajuste">Let´s start the setup process</string>
     <string name="comenzar">Start</string>
-    <string name="contrasena">Password</string>
+    <string name="reset_contrasena">Reset password</string>
     <string name="debug">Debug</string>
     <string name="color">Color</string>
     <string name="favoritos">Favorites</string>
@@ -59,5 +59,6 @@
     <string name="hola">Hello, %1$s!</string>
     <string name="buscar_aplicacion">Search application ...</string>
     <string name="no_hay_aplicaciones_anadidas">There`s no apps added</string>
+    <string name="contrasena_incorrecta">Wrong Password</string>
 
 </resources>

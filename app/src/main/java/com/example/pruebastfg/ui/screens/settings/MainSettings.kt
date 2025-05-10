@@ -9,11 +9,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccessibilityNew
 import androidx.compose.material.icons.rounded.AddCircle
 import androidx.compose.material.icons.rounded.Build
 import androidx.compose.material.icons.rounded.Clear
+import androidx.compose.material.icons.rounded.ColorLens
 import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material.icons.rounded.Lock
+import androidx.compose.material.icons.rounded.Home
+import androidx.compose.material.icons.rounded.LockReset
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -36,6 +39,8 @@ fun MainSettingsScreen(
     goToDebugClick: () -> Unit,
     goToPasswordClick: () -> Unit,
     onClickAtras:() -> Unit,
+    goToChangeLauncherClick: () -> Unit,
+    goToChangeModeClick: () -> Unit,
     fontSize: TextUnit
 ) {
     val settingsItems = remember {
@@ -43,9 +48,11 @@ fun MainSettingsScreen(
             SettingModel(R.string.anadir, Icons.Rounded.AddCircle, goToAddAppClick),
             SettingModel(R.string.eliminar, Icons.Rounded.Clear, goToRemoveAppClick),
             SettingModel(R.string.favoritos, Icons.Rounded.Star, goToFavoriteAppsClick),
-            SettingModel(R.string.color, Icons.Rounded.Edit, goToColorSettingClick),
+            SettingModel(R.string.color, Icons.Rounded.ColorLens, goToColorSettingClick),
+            SettingModel(R.string.reset_contrasena, Icons.Rounded.LockReset, goToPasswordClick),
+            SettingModel(R.string.launcher, Icons.Rounded.Home, goToChangeLauncherClick),
+            SettingModel(R.string.mode, Icons.Rounded.AccessibilityNew, goToChangeModeClick),
             SettingModel(R.string.debug, Icons.Rounded.Build, goToDebugClick),
-            SettingModel(R.string.contrasena, Icons.Rounded.Lock, goToPasswordClick)
         )
     }
     Column(

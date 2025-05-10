@@ -51,10 +51,13 @@ import com.example.pruebastfg.ui.items.BottomIndivMode
 import com.example.pruebastfg.ui.screens.settings.pwd.PasswordScreen
 import com.example.pruebastfg.ui.screens.settings.AllAppsListScreen
 import com.example.pruebastfg.ui.screens.settings.AppsFromProto
+import com.example.pruebastfg.ui.screens.settings.ChangeLauncherSetting
+import com.example.pruebastfg.ui.screens.settings.ChangePwdSetting
 import com.example.pruebastfg.ui.screens.settings.DebugSettingScreen
 import com.example.pruebastfg.ui.screens.settings.ThemeSettingScreen
 import com.example.pruebastfg.ui.screens.settings.SelectFavoriteApps
 import com.example.pruebastfg.ui.screens.settings.MainSettingsScreen
+import com.example.pruebastfg.ui.screens.settings.ModeSetting
 import com.example.pruebastfg.ui.screens.settings.RemoveApps
 import com.example.pruebastfg.ui.screens.setup.ChangeLauncherSetup
 import com.example.pruebastfg.ui.screens.setup.FinishedSetup
@@ -75,6 +78,10 @@ enum class AppScreens(@StringRes val title: Int) {
     FavoriteApps(title = R.string.favoriteapps),
     ColorSetting(title = R.string.colorsetting),
     Settings(title = R.string.settings),
+    ChangeLauncher(title = R.string.launchersetting),
+    Mode(title = R.string.mode),
+    ChangePwd(title = R.string.changepwd),
+    Password(title = R.string.password),
 
 
 }
@@ -126,9 +133,10 @@ fun AppTopBar(
 //                    )
 //                }
                 Box(
-                    modifier = Modifier.padding(
-                        10.dp
-                    )
+                    modifier = Modifier
+                        .padding(
+                            10.dp
+                        )
                         .size(56.dp)  // Standard FAB size
                 ) {
                     IconButton(
@@ -209,15 +217,17 @@ fun MainScreen(
     val colorTheme by remember { viewModel.colorTheme }.collectAsState(initial = "blue")
     val isAssistedMode by remember { viewModel.isAssistedMode }.collectAsState(initial = null)
     val isHighContrast by remember { viewModel.isHighContrast }.collectAsState(initial = false)
+    val password by remember { viewModel.getPassword() }.collectAsState(initial = "")
 
     val startDestination by viewModel.startDestination.collectAsState()
     val appsProto by viewModel.apps.collectAsState(initial = emptyList())
 
     val uiState by viewModel.uiState.collectAsState()
     if (setupStatus != null && isThemeDark != null) { // Espera hasta que setupStatus y isThemeDark tenga un valor real
-        Scaffold(containerColor = MaterialTheme.colorScheme.surface,
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.surface,
             topBar = {
-                if ( currentScreen == AppScreens.Settings || isAssistedMode == true && currentScreen == AppScreens.Home || currentScreen == SetupSubScreens.username) {
+                if (currentScreen == AppScreens.Settings || isAssistedMode == true && currentScreen == AppScreens.Home || currentScreen == SetupSubScreens.username) {
                     AppTopBar(
                         currentScreen = currentScreen,
                         canNavigateBack = navController.previousBackStackEntry != null,
@@ -233,13 +243,13 @@ fun MainScreen(
                         },
                         modifier = Modifier,
                         topBarTitle =
-                        if (currentScreen == AppScreens.Home && userName!!.isNotBlank() || currentScreen == SetupSubScreens.username) {
-                            stringResource(R.string.hola, userName!!)
-                        } else if (currentScreen == SetupSubScreens.username) {
-                            stringResource(R.string.hola, userName!!)
-                        } else {
-                            stringResource(R.string.settings)
-                        },
+                            if (currentScreen == AppScreens.Home && userName!!.isNotBlank() || currentScreen == SetupSubScreens.username) {
+                                stringResource(R.string.hola, userName!!)
+                            } else if (currentScreen == SetupSubScreens.username) {
+                                stringResource(R.string.hola, userName!!)
+                            } else {
+                                stringResource(R.string.settings)
+                            },
 
                         )
                 }
@@ -258,6 +268,7 @@ fun MainScreen(
                             } else {
                                 navController.navigate(SetupSubScreens.theme.name)
                             }
+
                             SetupSubScreens.username.name -> navController.navigate(SetupSubScreens.theme.name)
                             SetupSubScreens.theme.name -> navController.navigate(SetupSubScreens.fontsize.name)
                             SetupSubScreens.fontsize.name -> navController.navigate(SetupSubScreens.initialapps.name)
@@ -267,6 +278,7 @@ fun MainScreen(
                             } else {
                                 navController.navigate(AppScreens.FinishedSetup.name)
                             }
+
                             SetupSubScreens.pwd.name -> navController.navigate(AppScreens.FinishedSetup.name)
                             AppScreens.FinishedSetup.name -> navController.navigate(AppScreens.Home.name)
 
@@ -299,7 +311,8 @@ fun MainScreen(
             ) {
                 // Pantalla de Setup
                 composable(route = AppScreens.Setup.name) {
-                    WelcomeSetupScreen(navController = navController,
+                    WelcomeSetupScreen(
+                        navController = navController,
                         navigateForward = { navController.navigate(SetupSubScreens.launcher.name) },
                         modifier = Modifier,
                         setUpStatus = { viewModel.toggleSetupDone() })
@@ -342,26 +355,33 @@ fun MainScreen(
                 composable(route = SetupSubScreens.initialapps.name) {
                     val allApps by viewModel.allApps.collectAsState()
 
-                    AllAppsListScreen(apps = allApps, onAppClickAdd = { app ->
-                        val appExists = appsProto.any { it.first.packageName == app.packageName }
+                    AllAppsListScreen(
+                        apps = allApps, onAppClickAdd = { app ->
+                            val appExists =
+                                appsProto.any { it.first.packageName == app.packageName }
 
-                        if (!appExists) {
+                            if (!appExists) {
 
-                            viewModel.toogleIsSelected(app)
-                            viewModel.addAppXX(
-                                name = app.name, packageName = app.packageName, icon = app.icon
-                            )
-                            Toast.makeText(context, "Añadiendo ${app.name}...", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            viewModel.toogleIsSelected(app)
-                            Toast.makeText(
-                                context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
+                                viewModel.toogleIsSelected(app)
+                                viewModel.addAppXX(
+                                    name = app.name, packageName = app.packageName, icon = app.icon
+                                )
+                                Toast.makeText(
+                                    context,
+                                    "Añadiendo ${app.name}...",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            } else {
+                                viewModel.toogleIsSelected(app)
+                                Toast.makeText(
+                                    context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
                         onClickTerminar = { navController.navigate(AppScreens.Home.name) },
-                        isSetup = setupStatus!!)
+                        isSetup = setupStatus!!
+                    )
                 }
                 composable(route = SetupSubScreens.pwd.name) {
                     PasswordSetupScreen(
@@ -376,7 +396,11 @@ fun MainScreen(
                     FinishedSetup(
                         navController,
                         { viewModel.toggleSetupDone() },
-                        { navController.navigate(AppScreens.Home.name) }
+                        {
+                            navController.navigate(AppScreens.Home.name) {
+                                popUpTo(0)
+                            }
+                        }
                     )
                 }
 ////////////////////////////////////////FINAL SETUP////////////////////////////////////////////
@@ -391,9 +415,20 @@ fun MainScreen(
                             goToFavoriteApps = { navController.navigate(AppScreens.FavoriteApps.name) },
                             viewModel.fontSize.collectAsState().value,
                             isAssitedMode = isAssistedMode!!,
-                            {navController.navigate(AppScreens.Settings.name)}
+                            { navController.navigate(AppScreens.Settings.name) }
                         )
                     }
+                }
+                composable(route = AppScreens.Password.name) {
+                    PasswordScreen(
+                        {
+                            navController.navigate(AppScreens.Settings.name)
+                        },
+                        actualPwd = password,
+                        {
+                            navController.navigate(AppScreens.ChangePwd.name)
+                        },
+                    )
                 }
                 composable(route = AppScreens.Settings.name) {
                     MainSettingsScreen(
@@ -402,9 +437,27 @@ fun MainScreen(
                         { navController.navigate(AppScreens.FavoriteApps.name) },
                         { navController.navigate(AppScreens.ColorSetting.name) },
                         { navController.navigate("debug") },
-                        { navController.navigate("password") },
+                        { navController.navigate(AppScreens.ChangePwd.name) },
                         { navController.navigate(AppScreens.Home.name) },
-                        viewModel.fontSize.collectAsState().value
+                        goToChangeLauncherClick = { navController.navigate(AppScreens.ChangeLauncher.name) },
+                        goToChangeModeClick = { navController.navigate(AppScreens.Mode.name) },
+                        viewModel.fontSize.collectAsState().value,
+                    )
+                }
+                composable(route = AppScreens.Mode.name) {
+                    ModeSetting(
+                        { viewModel.setToIndividualMode() },
+                        { viewModel.setToAssistedMode() },
+                        { navController.navigate(AppScreens.Settings.name) },
+                        isAssistedMode!!,
+                        { navController.navigate(AppScreens.ChangePwd.name) }
+                    )
+                }
+                composable(route = AppScreens.ChangeLauncher.name) {
+                    ChangeLauncherSetting(
+                        onClickExit = {
+                            navController.navigate(AppScreens.Settings.name)
+                        },
                     )
                 }
                 composable(route = "debug") {
@@ -419,20 +472,23 @@ fun MainScreen(
                         increaseFontSize = { viewModel.increaseFontSize() },
                         decreaseFontSize = { viewModel.decreaseFontSize() },
                         fontSize = viewModel.fontSize.collectAsState().value,
-                        isHighContrast = isHighContrast?: false,
+                        isHighContrast = isHighContrast ?: false,
                         setHighContrastTrue = { viewModel.setHighContrastTrue() },
                         setHighContrastFalse = { viewModel.setHighContrastFalse() }
                     )
                 }
+                composable(route = R.string.launcher.toString()) {
+                    ChangeLauncherSetup(navController)
+                }
 
-                composable(route = "password") {
+                composable(route = AppScreens.ChangePwd.name) {
                     val password by viewModel.getPassword().collectAsState(initial = "")
-                    PasswordScreen(onDoneClick = {
-                        navController.navigate(AppScreens.Settings.name)
-                    }, password)
-//                    PasswordSetupScreen(
-//                        onDoneClick = { viewModel.setPassword(it) }
-//                    )
+                    ChangePwdSetting(
+                        {navController.navigate(AppScreens.Settings.name)},
+                        pwd = password,
+                        onPasswordChange = { viewModel.updatePassword(it) },
+                        setPassword = { viewModel.setPassword(uiState.pwd) }
+                    )
                 }
                 composable(route = AppScreens.ColorSetting.name) {
                     ThemeSettingScreen(
@@ -443,45 +499,54 @@ fun MainScreen(
                         { viewModel.changeThemeToLight() },
                         colorTheme,
                         { viewModel.setThemeColor(it) },
-                        { navController.navigate(AppScreens.Home.name) })
+                        { navController.navigate(AppScreens.Settings.name) })
                 }
                 composable(route = AppScreens.AddApp.name) {
                     val allApps by viewModel.allApps.collectAsState()
 
-                    AllAppsListScreen(apps = allApps, onAppClickAdd = { app ->
-                        val appExists = appsProto.any { it.first.packageName == app.packageName }
+                    AllAppsListScreen(
+                        apps = allApps, onAppClickAdd = { app ->
+                            val appExists =
+                                appsProto.any { it.first.packageName == app.packageName }
 
-                        if (!appExists) {
+                            if (!appExists) {
 
-                            viewModel.toogleIsSelected(app)
-                            viewModel.addAppXX(
-                                name = app.name, packageName = app.packageName, icon = app.icon
-                            )
-                            Toast.makeText(context, "Añadiendo ${app.name}...", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            viewModel.toogleIsSelected(app)
-                            Toast.makeText(
-                                context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                    },
-                        onClickTerminar = { navController.navigate(AppScreens.Home.name) },
-                        isSetup = setupStatus!!)
+                                viewModel.toogleIsSelected(app)
+                                viewModel.addAppXX(
+                                    name = app.name, packageName = app.packageName, icon = app.icon
+                                )
+                                Toast.makeText(
+                                    context,
+                                    "Añadiendo ${app.name}...",
+                                    Toast.LENGTH_SHORT
+                                )
+                                    .show()
+                            } else {
+                                viewModel.toogleIsSelected(app)
+                                Toast.makeText(
+                                    context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        },
+                        onClickTerminar = { navController.navigate(AppScreens.Settings.name) },
+                        isSetup = setupStatus!!
+                    )
                 }
                 composable(route = AppScreens.RemoveApp.name) {
 
-                    RemoveApps(appsProto, onAppClick = { app ->
-                        viewModel.removeApp(app.id)
-                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) },
+                    RemoveApps(
+                        appsProto, onAppClick = { app ->
+                            viewModel.removeApp(app.id)
+                        }, onClickTerminar = { navController.navigate(AppScreens.Settings.name) },
                         viewModel.fontSize.collectAsState().value
                     )
                 }
                 composable(route = AppScreens.FavoriteApps.name) {
 
-                    SelectFavoriteApps(appsProto, onAppClick = { app ->
-                        viewModel.toggleFavorite(app.id)
-                    }, onClickTerminar = { navController.navigate(AppScreens.Home.name) },
+                    SelectFavoriteApps(
+                        appsProto, onAppClick = { app ->
+                            viewModel.toggleFavorite(app.id)
+                        }, onClickTerminar = { navController.navigate(AppScreens.Settings.name) },
                         viewModel.fontSize.collectAsState().value
                     )
                 }

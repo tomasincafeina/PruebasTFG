@@ -1,5 +1,7 @@
 package com.example.pruebastfg.ui.screens.settings
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -9,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -27,14 +30,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.items.ThemeColorPickerItem
 import com.example.pruebastfg.data.models.ThemeColorPickerModel
+import com.example.pruebastfg.ui.screens.setup.HighContrastToggle
 import com.example.pruebastfg.ui.sharedItems.BigLowButton
 import com.example.pruebastfg.ui.theme.BlueprimaryLight
 import com.example.pruebastfg.ui.theme.GreenprimaryLight
@@ -155,28 +161,7 @@ fun ThemeSettingScreen(
 
             }
             Spacer(modifier = Modifier.width(16.dp))
-            Column(verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-                Card(
-                    shape = CircleShape,
-                    colors = if (isHighContrast == true) {
-                        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-                    } else {
-                        CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
-                    }
-                ) {
-                    Box(modifier = Modifier.clickable { toogleHighContrast() }) {
-                        Icon(
-                            imageVector = Icons.Rounded.Contrast,
-                            contentDescription = "dark_mode",
-                            modifier = Modifier
-                                .size(150.dp)
-                                .padding(10.dp),
-                            tint = MaterialTheme.colorScheme.onBackground
-                        )
-                    }
-                }
-                Text("Alto contraste")
-            }
+            HighContrastToggle(isHighContrast = isHighContrast, onToggle = { toogleHighContrast() })
         }
         LazyVerticalGrid(
             columns = GridCells.Fixed(3),
@@ -207,4 +192,46 @@ fun ThemeSettingScreen(
     }
     BigLowButton(onClickTerminar, stringResource(R.string.terminar), false)
 
+}
+
+
+@Composable
+fun HighContrastToggle(
+    isHighContrast: Boolean,
+    onToggle: () -> Unit
+) {
+    val rotation by animateFloatAsState(
+        targetValue = if (isHighContrast) 180f else 0f,
+        label = "Contrast Rotation"
+    )
+
+    val containerColor by animateColorAsState(
+        targetValue = if (isHighContrast)
+            MaterialTheme.colorScheme.secondaryContainer
+        else
+            MaterialTheme.colorScheme.surface,
+        label = "Contrast Card Color"
+    )
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Card(
+            shape = CircleShape,
+            colors = CardDefaults.cardColors(containerColor = containerColor)
+        ) {
+            Box(modifier = Modifier
+                .clickable { onToggle() }
+            ) {
+                Icon(
+                    imageVector = Icons.Rounded.Contrast,
+                    contentDescription = "High Contrast Mode",
+                    modifier = Modifier
+                        .size(150.dp)
+                        .rotate(rotation),
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        Text("Alto contraste")
+    }
 }

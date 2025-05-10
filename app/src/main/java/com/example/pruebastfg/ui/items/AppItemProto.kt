@@ -51,7 +51,8 @@ fun AppItemProto(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1f) // Make the card square
-                .padding(10.dp),
+                .padding(10.dp)
+            ,
             colors = androidx.compose.material3.CardDefaults.cardColors(
                 containerColor = if (appInfo.isFavorite == true) {
                     Color(android.graphics.Color.parseColor("#f7d168"))

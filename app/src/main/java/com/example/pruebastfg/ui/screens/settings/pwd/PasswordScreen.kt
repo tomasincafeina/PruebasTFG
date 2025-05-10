@@ -1,17 +1,30 @@
 package com.example.pruebastfg.ui.screens.settings.pwd
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material.icons.rounded.Close
+import androidx.compose.material.icons.rounded.LockReset
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,6 +41,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.sp
+import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.sharedItems.PwdIncorrectIcon
 import kotlinx.coroutines.delay
 
@@ -35,13 +54,16 @@ import kotlinx.coroutines.delay
 fun PasswordScreen(
     onDoneClick: (hideKeyboard: () -> Unit) -> Unit,
     actualPwd: String,
-    modifier: Modifier = Modifier
+    goToResetPwd: () -> Unit,
 ) {
     var pwd by remember { mutableStateOf("") }
     val keyboardController = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     val pwdIsCorrect = pwd == actualPwd
     val pwdIsCorrectLength: Boolean = pwd.length == 4
+
+    var isPwdVisible by remember { mutableStateOf(false) }
+
 
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -75,18 +97,19 @@ fun PasswordScreen(
 //    }
 
     Column(
-        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Spacer(modifier = Modifier.height(100.dp))
 
         Text(
-            modifier = Modifier.width(300.dp),
-            text = "La contraseña debe tener exactamente 4 dígitos numéricos",
-            fontSize = MaterialTheme.typography.headlineSmall.fontSize,
-            textAlign = androidx.compose.ui.text.style.TextAlign.Center
+            modifier = Modifier.width(400.dp),
+            text = "Escribe tu contraseña de administrador",
+            fontSize = 40.sp,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            lineHeight = 40.sp,
 
-        )
+            )
         Spacer(modifier = Modifier.height(50.dp))
 
 
@@ -103,8 +126,16 @@ fun PasswordScreen(
                 )
             },
             trailingIcon = {
-                if (!pwdIsCorrect && pwdIsCorrectLength) {
-                    PwdIncorrectIcon()
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (!pwdIsCorrect && pwdIsCorrectLength) {
+                        PwdIncorrectIcon()
+                    }
+                    IconButton(onClick = { isPwdVisible = !isPwdVisible }) {
+                        Icon(
+                            imageVector = if (isPwdVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                            contentDescription = if (isPwdVisible) "Hide password" else "Show password"
+                        )
+                    }
                 }
             },
             isError = pwd.isNotEmpty() && pwdIsCorrectLength && !pwdIsCorrect,
@@ -120,7 +151,7 @@ fun PasswordScreen(
                 }
             ),
             singleLine = true,
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (isPwdVisible) VisualTransformation.None else PasswordVisualTransformation(),
             modifier = Modifier
                 .focusRequester(focusRequester)
                 .onKeyEvent {
@@ -135,13 +166,58 @@ fun PasswordScreen(
                 }
         )
         // Mostramos el contador de dígitos
-        Text("${pwd.length}/4 dígitos")
+//        Text("${pwd.length}/4 dígitos")
+        // Si la contraseña es incorrecta, mostramos un mensaje de error
+        if (pwd.isNotEmpty() && pwdIsCorrectLength && !pwdIsCorrect) {
+            Column(verticalArrangement = Arrangement.SpaceEvenly, horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    text = stringResource(R.string.contrasena_incorrecta),
+                    color = MaterialTheme.colorScheme.error,
+                    fontSize = 20.sp,
+                )
+                Spacer(modifier = Modifier.height(40.dp))
+                Text(
+                    "Si has olvidado la contraseña restablecela",
+                    textAlign = TextAlign.Center,
+                    fontSize = 20.sp,
+                )
+                Card(
+                    shape = Shapes().large,
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    onClick = goToResetPwd,
+                    modifier = Modifier
+                        .width(350.dp)
+                        .padding(10.dp)
+                        .padding(bottom = 10.dp),
+                    colors = androidx.compose.material3.CardDefaults.cardColors(MaterialTheme.colorScheme.secondaryContainer)
+                ){
+                    Row(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Icon(
+                            Icons.Rounded.LockReset,
+                            contentDescription = "Reset Password",
+                            modifier = Modifier.size(35.dp),
+                            tint = MaterialTheme.colorScheme.onBackground
+                        )
+                        Text(
+                            text = "Restablecer contraseña",
+                            textAlign = TextAlign.Center,
+                            fontSize = 20.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                    }
+                }
+            }
+        }
 
 
     }
 }
-
-
 
 
 //NO LO USO PQ ES MEJOR USAR EL TECLADO INTERNO DEL DISPOSITIVO PARA INTRODUCIR LA CONTRASEÑA
