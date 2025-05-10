@@ -26,15 +26,19 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
+import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -50,22 +54,27 @@ import com.example.pruebastfg.ui.sharedItems.BigLowButton
 @Composable
 fun AllAppsListScreen(
     apps: List<AppModel>,
-    onAppClickAdd: (AppModel) -> Unit,
-    onClickTerminar: () -> Unit,
+    onClickTerminar: (List<AppModel>) -> Unit,
     isSetup: Boolean
 ) {
-    // Estado para el texto de búsqueda
     var searchText by remember { mutableStateOf("") }
 
-    // Filtrar apps basado en el texto de búsqueda
-    val filteredApps = remember(apps, searchText) {
-        if (searchText.isBlank()) {
-            apps
-        } else {
-            apps.filter { app ->
-                app.name.contains(searchText, ignoreCase = true)
-            }
+    // Esta es la copia editable y 100% reactiva
+    val selectableApps = remember {
+        mutableStateListOf<AppModel>().apply {
+            addAll(apps.map { it.copy() })
         }
+    }
+
+    // ⚠️ Asegúrate de actualizar si la lista original cambia (ej. al volver atrás)
+    LaunchedEffect(apps) {
+        selectableApps.clear()
+        selectableApps.addAll(apps.map { it.copy() })
+    }
+
+    val filteredApps = remember(searchText, selectableApps) {
+        if (searchText.isBlank()) selectableApps
+        else selectableApps.filter { it.name.contains(searchText, ignoreCase = true) }
     }
 
     Column(
@@ -80,30 +89,48 @@ fun AllAppsListScreen(
             onSearch = {},
             active = false,
             onActiveChange = {},
-            placeholder = { Text(stringResource(R.string.buscar_aplicacion)) },
-            leadingIcon = { Icon(Icons.Default.Search, null) },
-            modifier = Modifier.fillMaxWidth().padding(10.dp),
-            windowInsets = WindowInsets(0, 0, 0, 0)
+            placeholder = { Text(stringResource(R.string.buscar_aplicacion), color = MaterialTheme.colorScheme.onBackground) },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search" , tint = MaterialTheme.colorScheme.onBackground)},
+            modifier = Modifier
+                .padding(end = 10.dp),
+            shape = MaterialTheme.shapes.extraLarge,
+            windowInsets = WindowInsets(0.dp),
+            colors = SearchBarDefaults.colors(
+                containerColor = MaterialTheme.colorScheme.secondaryContainer
+            )
         ) {}
-        // Lista de aplicaciones en un grid
+
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             contentPadding = PaddingValues(10.dp),
             modifier = Modifier
                 .weight(1f)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalArrangement = Arrangement.Top
+                .fillMaxWidth()
         ) {
-            items(filteredApps) { app ->
-                AppItem(app = app, onClick = { onAppClickAdd(app) })
+            items(filteredApps, key = { it.packageName }) { app ->
+                AppItem(app = app, onClick = {
+                    val index = selectableApps.indexOfFirst { it.packageName == app.packageName }
+                    if (index != -1) {
+                        val updated = app.copy(isSelected = !app.isSelected)
+                        selectableApps[index] = updated // 💥 ¡Esto sí lo detecta Compose!
+                    }
+                })
             }
         }
 
         if (isSetup) {
-            BigLowButton(onClickTerminar, stringResource(R.string.terminar), false)
+            val selectedApps = selectableApps.filter { it.isSelected }
+
+            BigLowButton({
+                onClickTerminar(selectedApps)
+                // Limpieza opcional
+                selectableApps.replaceAll { it.copy(isSelected = false) }
+            }, stringResource(R.string.terminar), false
+            )
+
         }
     }
-
 }
+
+
 

@@ -35,6 +35,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.TextUnit
@@ -62,6 +63,7 @@ import com.example.pruebastfg.ui.screens.settings.RemoveApps
 import com.example.pruebastfg.ui.screens.setup.ChangeLauncherSetup
 import com.example.pruebastfg.ui.screens.setup.FinishedSetup
 import com.example.pruebastfg.ui.screens.setup.FontSizeSetup
+import com.example.pruebastfg.ui.screens.setup.InitialAppAdd
 import com.example.pruebastfg.ui.screens.setup.ModePickerSetup
 import com.example.pruebastfg.ui.screens.setup.PasswordSetupScreen
 import com.example.pruebastfg.ui.screens.setup.ThemePickerSetup
@@ -255,7 +257,7 @@ fun MainScreen(
                 }
             }, bottomBar = {
                 // Mostrar el BottomAppBar solo si estamos en el flujo de Setup
-                if (isSetupFlow && currentScreen != SetupSubScreens.pwd) {
+                if (isSetupFlow && currentScreen != SetupSubScreens.pwd && currentScreen != SetupSubScreens.initialapps) {
                     SetupBottomAppBar(currentScreen = SetupSubScreens.entries.find {
                         it.name == backStackEntry?.destination?.route
                     } ?: SetupSubScreens.welcome, navController = navController, onNext = {
@@ -355,32 +357,19 @@ fun MainScreen(
                 composable(route = SetupSubScreens.initialapps.name) {
                     val allApps by viewModel.allApps.collectAsState()
 
-                    AllAppsListScreen(
-                        apps = allApps, onAppClickAdd = { app ->
-                            val appExists =
-                                appsProto.any { it.first.packageName == app.packageName }
-
-                            if (!appExists) {
-
-                                viewModel.toogleIsSelected(app)
+                    InitialAppAdd(
+                        apps = allApps,
+                        onClickTerminar = { selectedApps ->
+                            selectedApps.forEach {
                                 viewModel.addAppXX(
-                                    name = app.name, packageName = app.packageName, icon = app.icon
-                                )
-                                Toast.makeText(
-                                    context,
-                                    "Añadiendo ${app.name}...",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            } else {
-                                viewModel.toogleIsSelected(app)
-                                Toast.makeText(
-                                    context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
-                                ).show()
+                                    it.name,
+                                    it.packageName,
+                                    it.icon
+                                ) // o llamar directamente al repositorio
                             }
                         },
-                        onClickTerminar = { navController.navigate(AppScreens.Home.name) },
-                        isSetup = setupStatus!!
+                        onBack = { navController.popBackStack() },
+                        onNext = { navController.navigate(SetupSubScreens.pwd.name) },
                     )
                 }
                 composable(route = SetupSubScreens.pwd.name) {
@@ -505,31 +494,38 @@ fun MainScreen(
                     val allApps by viewModel.allApps.collectAsState()
 
                     AllAppsListScreen(
-                        apps = allApps, onAppClickAdd = { app ->
-                            val appExists =
-                                appsProto.any { it.first.packageName == app.packageName }
+                        apps = allApps,
+//                        onAppClickAdd = {
+//                            app ->
+//                            val appExists =
+//                                appsProto.any { it.first.packageName == app.packageName }
+//
+//                            if (!appExists) {
+//
+//                                viewModel.addAppXX(
+//                                    name = app.name, packageName = app.packageName, icon = app.icon
+//                                )
+//                                Toast.makeText(
+//                                    context,
+//                                    "Añadiendo ${app.name}...",
+//                                    Toast.LENGTH_SHORT
+//                                )
+//                                    .show()
+//                            } else {
+//                                Toast.makeText(
+//                                    context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
+//                                ).show()
+//                            }
 
-                            if (!appExists) {
-
-                                viewModel.toogleIsSelected(app)
-                                viewModel.addAppXX(
-                                    name = app.name, packageName = app.packageName, icon = app.icon
-                                )
-                                Toast.makeText(
-                                    context,
-                                    "Añadiendo ${app.name}...",
-                                    Toast.LENGTH_SHORT
-                                )
-                                    .show()
-                            } else {
-                                viewModel.toogleIsSelected(app)
-                                Toast.makeText(
-                                    context, "${app.name} ya está en la lista", Toast.LENGTH_SHORT
-                                ).show()
+//                        },
+                        onClickTerminar = {selectedApps ->
+                            selectedApps.forEach {
+                                viewModel.addAppXX(it.name, it.packageName, it.icon) // o llamar directamente al repositorio
+                                }
+                            navController.navigate(AppScreens.Settings.name)
                             }
-                        },
-                        onClickTerminar = { navController.navigate(AppScreens.Settings.name) },
-                        isSetup = setupStatus!!
+                        ,
+                        isSetup = setupStatus!!,
                     )
                 }
                 composable(route = AppScreens.RemoveApp.name) {

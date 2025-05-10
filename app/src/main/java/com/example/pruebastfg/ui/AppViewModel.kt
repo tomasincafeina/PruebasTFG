@@ -142,7 +142,6 @@ class AppViewModel(
     }
 
     fun setPassword(password: String) {
-        if (password.isNotBlank())
         viewModelScope.launch(Dispatchers.IO) {
             prefsRepo.setPassword(password)
         }
@@ -198,10 +197,6 @@ class AppViewModel(
             }
         }
         return result
-    }
-
-    fun toogleIsSelected(app: AppModel) {
-        app.isSelected = !app.isSelected
     }
 
     fun toggleFavorite(appId: String) {

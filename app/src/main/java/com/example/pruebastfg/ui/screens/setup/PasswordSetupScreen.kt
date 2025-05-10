@@ -64,6 +64,7 @@ import androidx.navigation.NavHostController
 import com.example.pruebastfg.R
 import com.example.pruebastfg.ui.AppScreens
 import com.example.pruebastfg.ui.SetupBottomAppBar
+import com.example.pruebastfg.ui.sharedItems.BottomBarNavigation
 import com.example.pruebastfg.ui.sharedItems.PwdCorrectIcon
 import com.example.pruebastfg.ui.sharedItems.PwdIncorrectIcon
 
@@ -221,77 +222,12 @@ fun PasswordSetupScreen(
         BottomBarNavigation(
             arePwdEqual,
             { navController.popBackStack() },
-            { navController.navigate(AppScreens.FinishedSetup.name) })
+            { navController.navigate(AppScreens.FinishedSetup.name) }
+        )
     }
 }
 
-@Composable
-fun BottomBarNavigation(
-    isOK: Boolean,
-    onBack: () -> Unit,
-    onNext: () -> Unit
-) {
 
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 10.dp, vertical = 8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            ElevatedCard(
-                shape = Shapes().large,
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                onClick = { onNext() },
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer),
-                enabled = isOK
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.padding(vertical = 18.dp)
-                ) {
-                    Text(
-                        text = stringResource(R.string.siguiente),
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-            ElevatedCard(
-                shape = Shapes().large,
-                elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
-                onClick = { onBack() },
-                modifier = Modifier.fillMaxWidth(),
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.secondaryContainer)
-            ) {
-                Row(
-                    modifier = Modifier
-                        .padding(vertical = 18.dp)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Rounded.ArrowBack,
-                        contentDescription = stringResource(R.string.atras),
-                        modifier = Modifier.size(30.dp),
-                        tint = MaterialTheme.colorScheme.onBackground
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        text = stringResource(R.string.atras),
-                        textAlign = TextAlign.Center,
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-                }
-            }
-    }
-}
 
 
 //NO LO USO PQ ES MEJOR USAR EL TECLADO INTERNO DEL DISPOSITIVO PARA INTRODUCIR LA CONTRASEÑA

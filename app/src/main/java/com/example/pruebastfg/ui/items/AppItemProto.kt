@@ -64,14 +64,7 @@ fun AppItemProto(
                 modifier = Modifier
                     .fillMaxSize()
                     .clickable { onClick() }
-                    .padding(10.dp)
-                    .let {
-                        if (isSelected) {
-                            it.border(2.dp, MaterialTheme.colorScheme.primary)
-                        } else {
-                            it
-                        }
-                    },
+                    .padding(10.dp),
                 contentAlignment = Alignment.BottomEnd
 
             ) {
